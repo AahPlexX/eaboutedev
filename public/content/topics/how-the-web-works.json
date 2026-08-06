@@ -1,0 +1,466 @@
+{
+  "version": 1,
+  "slug": "how-the-web-works",
+  "title": "How the Web Works",
+  "eyebrow": "Foundation · Request to response",
+  "summary": "Follow one web address from your browser through DNS, the network, a server, and back into a rendered page.",
+  "category": "Web foundations",
+  "level": "Foundational",
+  "estimatedMinutes": 22,
+  "icon": "◎",
+  "accent": "oklch(0.67 0.18 250)",
+  "aliases": [
+    "internet request lifecycle",
+    "browser to server",
+    "website loading",
+    "http lifecycle",
+    "dns and http"
+  ],
+  "keywords": [
+    "browser",
+    "url",
+    "dns",
+    "ip address",
+    "tcp",
+    "tls",
+    "http",
+    "server",
+    "response",
+    "rendering"
+  ],
+  "prerequisites": [
+    "None — start here."
+  ],
+  "learningOutcomes": [
+    "Explain what a browser does after you enter a URL.",
+    "Separate DNS, transport security, HTTP, and rendering.",
+    "Locate a failure by the stage where it occurs."
+  ],
+  "heroVisual": {
+    "kind": "flow",
+    "title": "A web page is a round trip",
+    "caption": "The browser asks several systems for help before it can draw the result.",
+    "nodes": [
+      {
+        "label": "Address",
+        "detail": "The URL identifies the scheme, host, path, and optional query."
+      },
+      {
+        "label": "Lookup",
+        "detail": "DNS maps the host name to an address the network can route to."
+      },
+      {
+        "label": "Connection",
+        "detail": "The browser creates a transport connection and usually protects it with TLS."
+      },
+      {
+        "label": "Request",
+        "detail": "HTTP describes what resource the browser wants and what it can accept."
+      },
+      {
+        "label": "Response",
+        "detail": "The server returns status, headers, and a body."
+      },
+      {
+        "label": "Render",
+        "detail": "The browser parses resources, builds internal models, lays out, and paints."
+      }
+    ]
+  },
+  "sections": [
+    {
+      "id": "url",
+      "title": "1. The URL tells the browser where to begin",
+      "summary": "A URL is a structured address, not one undivided string.",
+      "visual": {
+        "kind": "layers",
+        "title": "Read a URL in layers",
+        "caption": "Each segment narrows the request.",
+        "nodes": [
+          {
+            "label": "Scheme",
+            "detail": "https chooses the communication rules."
+          },
+          {
+            "label": "Host",
+            "detail": "example.com identifies the named destination."
+          },
+          {
+            "label": "Path",
+            "detail": "/guides/web identifies a resource."
+          },
+          {
+            "label": "Query",
+            "detail": "?level=beginner supplies optional input."
+          },
+          {
+            "label": "Fragment",
+            "detail": "#dns moves within the returned document."
+          }
+        ]
+      },
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "When you press Enter, the browser first parses the address. It checks the scheme, normalizes the host, identifies the requested path, and decides whether a cached result, service worker, extension, or browser policy can answer before the network is used."
+        },
+        {
+          "type": "table",
+          "columns": [
+            "Part",
+            "Example",
+            "Job"
+          ],
+          "rows": [
+            [
+              "Scheme",
+              "https",
+              "Selects the protocol and security expectations."
+            ],
+            [
+              "Host",
+              "developer.mozilla.org",
+              "Names the destination."
+            ],
+            [
+              "Path",
+              "/en-US/docs/Web",
+              "Names a resource at that destination."
+            ],
+            [
+              "Query",
+              "?q=http",
+              "Sends optional key-value input."
+            ],
+            [
+              "Fragment",
+              "#overview",
+              "Points to a location inside the response; it is not sent in an HTTP request."
+            ]
+          ],
+          "caption": "The practical parts of a URL"
+        },
+        {
+          "type": "callout",
+          "tone": "definition",
+          "title": "URL versus domain",
+          "body": "A domain is one part of a URL. The full URL can also contain a scheme, port, path, query, and fragment."
+        }
+      ]
+    },
+    {
+      "id": "dns",
+      "title": "2. DNS finds a routable address",
+      "summary": "People use names; networks route to addresses.",
+      "blocks": [
+        {
+          "type": "steps",
+          "items": [
+            {
+              "title": "Check nearby answers",
+              "explanation": "The browser, operating system, and local network may already know the result.",
+              "result": "A cached address can avoid a new lookup."
+            },
+            {
+              "title": "Ask a resolver",
+              "explanation": "A recursive resolver follows or uses cached referrals through the DNS hierarchy.",
+              "result": "It returns records such as A or AAAA."
+            },
+            {
+              "title": "Respect the lifetime",
+              "explanation": "The record time-to-live controls how long an answer may be reused.",
+              "result": "Later requests can use the cache until it expires."
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "note",
+          "title": "DNS does not fetch the page",
+          "body": "DNS answers where a named host can be reached. HTTP later asks that host for a resource."
+        },
+        {
+          "type": "checklist",
+          "items": [
+            "A DNS error happens before an HTTP status exists.",
+            "Changing DNS can take time because valid cached answers remain until their lifetime ends.",
+            "One host name can map to multiple addresses for resilience or traffic distribution."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "connection",
+      "title": "3. The browser creates a protected connection",
+      "summary": "Transport moves bytes; TLS protects their confidentiality and authenticity.",
+      "visual": {
+        "kind": "cycle",
+        "title": "Connection setup",
+        "caption": "Modern HTTP can use different transports, but the responsibilities remain distinct.",
+        "nodes": [
+          {
+            "label": "Route",
+            "detail": "Packets travel across networks toward the destination."
+          },
+          {
+            "label": "Negotiate",
+            "detail": "Client and server agree on transport and security details."
+          },
+          {
+            "label": "Authenticate",
+            "detail": "The certificate helps the browser verify the server identity."
+          },
+          {
+            "label": "Protect",
+            "detail": "Session keys encrypt later application data."
+          }
+        ]
+      },
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "With HTTPS, the browser validates the server certificate and negotiates encryption before sensitive HTTP content is exchanged. HTTP/1.1 and HTTP/2 commonly run over TCP plus TLS; HTTP/3 runs over QUIC, which integrates transport and security differently."
+        },
+        {
+          "type": "table",
+          "columns": [
+            "Layer",
+            "Primary responsibility",
+            "Typical failure"
+          ],
+          "rows": [
+            [
+              "DNS",
+              "Name to address",
+              "Host cannot be resolved."
+            ],
+            [
+              "Transport",
+              "Reliable or multiplexed byte delivery",
+              "Connection timeout or reset."
+            ],
+            [
+              "TLS",
+              "Encrypted authenticated session",
+              "Certificate or handshake error."
+            ],
+            [
+              "HTTP",
+              "Request and response meaning",
+              "4xx or 5xx status."
+            ]
+          ],
+          "caption": "Do not collapse these layers into “the internet”"
+        },
+        {
+          "type": "callout",
+          "tone": "tip",
+          "title": "Debug from the outside inward",
+          "body": "Confirm the URL, then DNS, then connection/TLS, then HTTP, then browser rendering. Each stage depends on the previous stage succeeding."
+        }
+      ]
+    },
+    {
+      "id": "http",
+      "title": "4. HTTP carries a meaningful request and response",
+      "summary": "HTTP messages explain intent and outcome.",
+      "blocks": [
+        {
+          "type": "code",
+          "language": "HTTP",
+          "code": "GET /guides/web HTTP/1.1\nHost: example.com\nAccept: text/html",
+          "explanation": "A request method expresses the action, the target identifies the resource, and headers carry additional context."
+        },
+        {
+          "type": "code",
+          "language": "HTTP",
+          "code": "HTTP/1.1 200 OK\nContent-Type: text/html; charset=utf-8\nCache-Control: max-age=300\n\n<!doctype html>...",
+          "explanation": "A response status summarizes the outcome, headers describe handling, and the body contains the representation."
+        },
+        {
+          "type": "cards",
+          "items": [
+            {
+              "title": "Methods",
+              "summary": "GET reads, POST submits, PUT replaces, PATCH changes part, and DELETE requests removal.",
+              "whenToUse": "Choose the method whose semantics match the operation.",
+              "example": "GET /articles/42"
+            },
+            {
+              "title": "Status classes",
+              "summary": "1xx information, 2xx success, 3xx redirection, 4xx client-side issue, 5xx server-side issue.",
+              "whenToUse": "Use the class to locate responsibility before reading the exact code.",
+              "example": "404 means the selected resource was not found."
+            },
+            {
+              "title": "Headers",
+              "summary": "Metadata controls representation, caching, authentication, content negotiation, and more.",
+              "whenToUse": "Use standardized fields before inventing a custom protocol.",
+              "example": "Content-Type: application/json"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "warning",
+          "title": "A successful connection can return an unsuccessful HTTP result",
+          "body": "Receiving 404 or 500 proves that DNS, routing, connection, TLS, and enough HTTP communication worked to deliver the status."
+        }
+      ]
+    },
+    {
+      "id": "render",
+      "title": "5. The browser turns resources into pixels",
+      "summary": "A response is input; rendering is a separate pipeline.",
+      "blocks": [
+        {
+          "type": "steps",
+          "items": [
+            {
+              "title": "Parse HTML",
+              "explanation": "The browser builds a document tree from markup.",
+              "result": "Elements and text become nodes."
+            },
+            {
+              "title": "Resolve styles",
+              "explanation": "CSS rules are matched and computed.",
+              "result": "Each visible element receives final style values."
+            },
+            {
+              "title": "Run JavaScript",
+              "explanation": "Scripts may read or change the document, styles, and application state.",
+              "result": "The document can evolve after the first response."
+            },
+            {
+              "title": "Layout",
+              "explanation": "The browser determines sizes and positions.",
+              "result": "Boxes receive geometry."
+            },
+            {
+              "title": "Paint and composite",
+              "explanation": "Visual layers are drawn and combined.",
+              "result": "Pixels appear and update on screen."
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "tip",
+          "title": "Loading is not one finish line",
+          "body": "The first byte, first content, interactive state, and complete loading are different milestones. A fast server can still lead to a slow page if the browser has excessive work."
+        },
+        {
+          "type": "checklist",
+          "items": [
+            "Reserve media space to prevent layout shifts.",
+            "Reduce blocking work needed for the first useful view.",
+            "Cache immutable assets with content-based file names.",
+            "Measure with real user conditions, not only a fast development computer."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "diagnose",
+      "title": "6. Diagnose failures by stage",
+      "summary": "Symptoms become useful when mapped to the system that could produce them.",
+      "blocks": [
+        {
+          "type": "table",
+          "columns": [
+            "Symptom",
+            "Likely stage",
+            "First evidence"
+          ],
+          "rows": [
+            [
+              "Name not found",
+              "DNS",
+              "Resolver result and host spelling."
+            ],
+            [
+              "Certificate warning",
+              "TLS",
+              "Certificate identity, validity, and chain."
+            ],
+            [
+              "404 Not Found",
+              "HTTP routing/content",
+              "Request URL and server route."
+            ],
+            [
+              "HTML loads but looks unstyled",
+              "Asset/request/rendering",
+              "CSS request status and console."
+            ],
+            [
+              "Page freezes after load",
+              "JavaScript/main thread",
+              "Console, performance trace, long tasks."
+            ]
+          ],
+          "caption": "A stage-based troubleshooting map"
+        },
+        {
+          "type": "checklist",
+          "items": [
+            "Reproduce with the exact URL and environment.",
+            "Record the earliest failing stage.",
+            "Inspect browser Network and Console evidence.",
+            "Change one cause at a time.",
+            "Verify the original symptom after the fix."
+          ]
+        }
+      ]
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Browser",
+      "definition": "A client application that requests, interprets, and presents web resources."
+    },
+    {
+      "term": "DNS",
+      "definition": "The distributed naming system that maps domain names to records such as IP addresses."
+    },
+    {
+      "term": "HTTP",
+      "definition": "An application protocol that defines request and response semantics."
+    },
+    {
+      "term": "TLS",
+      "definition": "A protocol that authenticates peers and protects data in transit."
+    },
+    {
+      "term": "Rendering",
+      "definition": "The browser work that converts document, style, script, and media inputs into a visual result."
+    }
+  ],
+  "related": [
+    "html-css-and-javascript",
+    "apis-and-data-exchange",
+    "git-and-github"
+  ],
+  "sources": [
+    {
+      "label": "MDN — Overview of HTTP",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Overview",
+      "accessed": "2026-08-05"
+    },
+    {
+      "label": "IETF RFC 9110 — HTTP Semantics",
+      "url": "https://www.rfc-editor.org/rfc/rfc9110.html",
+      "accessed": "2026-08-05"
+    },
+    {
+      "label": "WHATWG URL Standard",
+      "url": "https://url.spec.whatwg.org/",
+      "accessed": "2026-08-05"
+    },
+    {
+      "label": "MDN — How browsers load websites",
+      "url": "https://developer.mozilla.org/en-US/docs/Learn_web_development/Getting_started/Web_standards/How_browsers_load_websites",
+      "accessed": "2026-08-05"
+    }
+  ]
+}

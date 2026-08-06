@@ -1,0 +1,489 @@
+{
+  "version": 1,
+  "slug": "apis-and-data-exchange",
+  "title": "APIs and Data Exchange",
+  "eyebrow": "System boundaries · Contracts and communication",
+  "summary": "See how software exposes capabilities, validates messages, reports outcomes, and evolves contracts without surprising its consumers.",
+  "category": "Architecture",
+  "level": "Intermediate",
+  "estimatedMinutes": 30,
+  "icon": "⇄",
+  "accent": "oklch(0.67 0.19 310)",
+  "aliases": [
+    "api basics",
+    "rest api",
+    "graphql",
+    "webhooks",
+    "json api",
+    "service communication"
+  ],
+  "keywords": [
+    "api",
+    "contract",
+    "http",
+    "rest",
+    "graphql",
+    "json",
+    "schema",
+    "authentication",
+    "pagination",
+    "idempotency",
+    "webhook",
+    "versioning"
+  ],
+  "prerequisites": [
+    "How the Web Works",
+    "HTML, CSS, and JavaScript for browser API examples"
+  ],
+  "learningOutcomes": [
+    "Describe an API as a contract rather than a URL.",
+    "Design predictable requests, responses, errors, and pagination.",
+    "Choose among request-response, GraphQL, events, and webhooks."
+  ],
+  "heroVisual": {
+    "kind": "flow",
+    "title": "An API call crosses a governed boundary",
+    "caption": "The contract covers more than the success payload.",
+    "nodes": [
+      {
+        "label": "Consumer",
+        "detail": "Chooses an operation and supplies input."
+      },
+      {
+        "label": "Transport",
+        "detail": "Carries the message, often with HTTP."
+      },
+      {
+        "label": "Gateway or handler",
+        "detail": "Authenticates, validates, limits, and routes."
+      },
+      {
+        "label": "Domain logic",
+        "detail": "Applies business rules."
+      },
+      {
+        "label": "Data and services",
+        "detail": "Read or change authoritative state."
+      },
+      {
+        "label": "Response or event",
+        "detail": "Communicates outcome in a documented shape."
+      }
+    ]
+  },
+  "sections": [
+    {
+      "id": "contract",
+      "title": "1. An API is a contract between software boundaries",
+      "summary": "The contract defines capabilities, inputs, outcomes, and change rules.",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "An application programming interface is the agreed surface one software component uses to request behavior or data from another. The interface can be local or remote; a web API commonly uses HTTP, but HTTP alone does not make the contract understandable."
+        },
+        {
+          "type": "cards",
+          "items": [
+            {
+              "title": "Operation",
+              "summary": "What the consumer can ask the provider to do.",
+              "whenToUse": "Name it in domain language.",
+              "example": "Create an invoice"
+            },
+            {
+              "title": "Input",
+              "summary": "Required and optional values, types, formats, constraints, and defaults.",
+              "whenToUse": "Validate at the boundary.",
+              "example": "currency must be an ISO code"
+            },
+            {
+              "title": "Outcome",
+              "summary": "Success shape, errors, side effects, and timing.",
+              "whenToUse": "Document all expected status paths.",
+              "example": "201 with invoice resource"
+            },
+            {
+              "title": "Change policy",
+              "summary": "How compatible additions, deprecations, and breaking changes are handled.",
+              "whenToUse": "Give consumers a migration path.",
+              "example": "deprecation date and replacement"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "definition",
+          "title": "Contract",
+          "body": "A testable agreement about behavior and data at a boundary. Documentation describes it; validation and tests enforce it."
+        }
+      ]
+    },
+    {
+      "id": "http-resource",
+      "title": "2. HTTP APIs model resources and operations",
+      "summary": "Use HTTP semantics instead of tunneling every action through one generic endpoint.",
+      "blocks": [
+        {
+          "type": "table",
+          "columns": [
+            "Intent",
+            "Method",
+            "Example outcome"
+          ],
+          "rows": [
+            [
+              "Read a collection",
+              "GET /articles",
+              "200 with a page of articles."
+            ],
+            [
+              "Read one item",
+              "GET /articles/42",
+              "200 or 404."
+            ],
+            [
+              "Create under a collection",
+              "POST /articles",
+              "201 with a location or representation."
+            ],
+            [
+              "Replace a known item",
+              "PUT /articles/42",
+              "200/204, or 201 if creation is allowed."
+            ],
+            [
+              "Change selected fields",
+              "PATCH /articles/42",
+              "200/204 with validation errors when needed."
+            ],
+            [
+              "Remove",
+              "DELETE /articles/42",
+              "204 or an explicit domain result."
+            ]
+          ],
+          "caption": "Common HTTP resource operations"
+        },
+        {
+          "type": "callout",
+          "tone": "note",
+          "title": "REST is an architectural style",
+          "body": "A JSON-over-HTTP endpoint is not automatically RESTful. The useful goal is a coherent interface that respects HTTP semantics, representations, links where helpful, cache behavior, and stateless requests."
+        },
+        {
+          "type": "code",
+          "language": "HTTP",
+          "code": "POST /invoices HTTP/1.1\nContent-Type: application/json\nIdempotency-Key: 8f4b...\n\n{\"customerId\":\"cus_19\",\"currency\":\"USD\"}",
+          "explanation": "A retried creation request can reuse a client-supplied idempotency key when the API defines that behavior."
+        }
+      ]
+    },
+    {
+      "id": "messages",
+      "title": "3. Messages need explicit schemas and errors",
+      "summary": "Predictable data shapes reduce hidden assumptions between teams and systems.",
+      "blocks": [
+        {
+          "type": "code",
+          "language": "JSON",
+          "code": "{\n  \"id\": \"inv_42\",\n  \"status\": \"open\",\n  \"amount\": { \"currency\": \"USD\", \"minorUnits\": 12500 },\n  \"createdAt\": \"2026-08-05T18:42:00Z\"\n}",
+          "explanation": "Names, units, time zones, nullability, and enumerated states are part of the contract."
+        },
+        {
+          "type": "code",
+          "language": "JSON",
+          "code": "{\n  \"type\": \"https://example.com/problems/invalid-currency\",\n  \"title\": \"Currency is not supported\",\n  \"status\": 422,\n  \"detail\": \"Use one of USD, EUR, or CAD.\",\n  \"instance\": \"/requests/req_9\"\n}",
+          "explanation": "A structured error gives machines stable fields and people a useful explanation."
+        },
+        {
+          "type": "checklist",
+          "items": [
+            "Document required, optional, nullable, and omitted fields separately.",
+            "Specify units, precision, character encoding, and time-zone rules.",
+            "Reject unknown or invalid values according to an explicit policy.",
+            "Use stable machine-readable error codes or types.",
+            "Never expose secrets or internal stack traces."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "security",
+      "title": "4. Authentication and authorization answer different questions",
+      "summary": "Identity does not automatically grant permission.",
+      "blocks": [
+        {
+          "type": "table",
+          "columns": [
+            "Control",
+            "Question"
+          ],
+          "rows": [
+            [
+              "Authentication",
+              "Who or what is calling?"
+            ],
+            [
+              "Authorization",
+              "May this caller perform this action on this resource?"
+            ],
+            [
+              "Rate limiting",
+              "How much work may this caller request in a period?"
+            ],
+            [
+              "Validation",
+              "Is the supplied input acceptable?"
+            ],
+            [
+              "Audit logging",
+              "What security-relevant action occurred, when, and under which identity?"
+            ]
+          ],
+          "caption": "Security controls are complementary"
+        },
+        {
+          "type": "callout",
+          "tone": "warning",
+          "title": "Do not place secrets in browser-delivered code",
+          "body": "Anything sent to a browser can be inspected by the person controlling that browser. Keep privileged credentials in a trusted server environment."
+        }
+      ],
+      "visual": {
+        "kind": "layers",
+        "title": "A protected request",
+        "caption": "Each control has a distinct responsibility.",
+        "nodes": [
+          {
+            "label": "TLS",
+            "detail": "Protects data in transit and authenticates the server."
+          },
+          {
+            "label": "Authentication",
+            "detail": "Establishes which principal is making the request."
+          },
+          {
+            "label": "Authorization",
+            "detail": "Checks whether that principal may perform this action on this resource."
+          },
+          {
+            "label": "Validation",
+            "detail": "Checks that input is structurally and semantically acceptable."
+          },
+          {
+            "label": "Audit",
+            "detail": "Records security-relevant decisions and changes."
+          }
+        ]
+      }
+    },
+    {
+      "id": "scale",
+      "title": "5. Pagination, caching, retries, and idempotency make APIs operable",
+      "summary": "Production behavior includes limits and failure recovery.",
+      "blocks": [
+        {
+          "type": "cards",
+          "items": [
+            {
+              "title": "Pagination",
+              "summary": "Returns bounded portions of a collection.",
+              "whenToUse": "Use cursor pagination for stable traversal through changing ordered data.",
+              "example": "nextCursor"
+            },
+            {
+              "title": "Caching",
+              "summary": "Reuses representations while they remain valid.",
+              "whenToUse": "Use validators such as ETag where revalidation is useful.",
+              "example": "If-None-Match"
+            },
+            {
+              "title": "Timeouts",
+              "summary": "Bound how long a caller waits.",
+              "whenToUse": "Set timeouts at every remote boundary.",
+              "example": "Abort after a known deadline"
+            },
+            {
+              "title": "Retries",
+              "summary": "Repeat eligible transient operations.",
+              "whenToUse": "Use backoff, jitter, limits, and idempotent behavior.",
+              "avoidWhen": "Do not retry every status blindly.",
+              "example": "Retry 503, not invalid input"
+            },
+            {
+              "title": "Idempotency",
+              "summary": "Repeated equivalent requests have the defined same effect.",
+              "whenToUse": "Make safe retries possible for sensitive writes.",
+              "example": "Idempotency-Key"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "warning",
+          "title": "Retries can multiply an outage",
+          "body": "A retry policy without backoff, jitter, limits, and a total deadline can create synchronized extra load exactly when a dependency is unhealthy."
+        },
+        {
+          "type": "checklist",
+          "items": [
+            "Define maximum page size and stable ordering.",
+            "Return enough metadata or links to continue.",
+            "State which responses may be cached and by whom.",
+            "Classify retryable versus permanent failures.",
+            "Propagate correlation identifiers for diagnosis."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "styles",
+      "title": "6. Choose the interaction style that matches the job",
+      "summary": "Different API styles optimize different forms of coupling and timing.",
+      "blocks": [
+        {
+          "type": "table",
+          "columns": [
+            "Style",
+            "Strength",
+            "Trade-off"
+          ],
+          "rows": [
+            [
+              "HTTP resource API",
+              "Simple request-response semantics and broad tooling.",
+              "Consumers may make several requests for complex views."
+            ],
+            [
+              "GraphQL",
+              "Consumers select fields through a typed query schema.",
+              "Cost control, caching, and resolver behavior need deliberate design."
+            ],
+            [
+              "Webhook",
+              "Provider calls a consumer when an event occurs.",
+              "Delivery, retries, signatures, ordering, and replay must be handled."
+            ],
+            [
+              "Event stream or broker",
+              "Producers and consumers can be decoupled in time.",
+              "Event evolution, ordering, duplication, and observability become core concerns."
+            ],
+            [
+              "Local library API",
+              "Fast in-process calls with language-native types.",
+              "Version coupling and process boundaries differ from network APIs."
+            ]
+          ],
+          "caption": "API interaction styles"
+        },
+        {
+          "type": "callout",
+          "tone": "tip",
+          "title": "Use the smallest style that meets the real interaction",
+          "body": "Do not introduce an event platform for one synchronous request, or a custom query language where a bounded resource API is enough."
+        }
+      ]
+    },
+    {
+      "id": "evolution",
+      "title": "7. Evolve contracts without silent breakage",
+      "summary": "Compatibility is a product promise enforced by evidence.",
+      "blocks": [
+        {
+          "type": "steps",
+          "items": [
+            {
+              "title": "Classify the change",
+              "explanation": "Additive optional fields differ from renamed or removed behavior.",
+              "result": "The compatibility risk is explicit."
+            },
+            {
+              "title": "Publish the contract",
+              "explanation": "Generate or maintain a machine-readable schema where practical.",
+              "result": "Consumers and tests share one definition."
+            },
+            {
+              "title": "Test consumers",
+              "explanation": "Use contract tests, examples, and representative clients.",
+              "result": "Unexpected breakage appears before release."
+            },
+            {
+              "title": "Deprecate visibly",
+              "explanation": "Announce the replacement, migration, and end date.",
+              "result": "Consumers can plan."
+            },
+            {
+              "title": "Observe real use",
+              "explanation": "Measure versions, fields, errors, and deprecated operations.",
+              "result": "Removal is based on evidence."
+            }
+          ]
+        },
+        {
+          "type": "checklist",
+          "items": [
+            "Adding a field does not break consumers that reject unknown fields.",
+            "Changing enum values or nullability can be breaking.",
+            "Behavioral changes matter even when the JSON shape is unchanged.",
+            "Version identifiers do not replace migration support."
+          ]
+        }
+      ]
+    }
+  ],
+  "glossary": [
+    {
+      "term": "API",
+      "definition": "A defined interface through which software requests capabilities or data from another boundary."
+    },
+    {
+      "term": "Schema",
+      "definition": "A machine-readable or documented definition of a data shape and its constraints."
+    },
+    {
+      "term": "Idempotency",
+      "definition": "A defined property where repeating an equivalent operation does not create additional unintended effects."
+    },
+    {
+      "term": "Cursor pagination",
+      "definition": "Pagination that continues from an opaque position in an ordered result set."
+    },
+    {
+      "term": "Webhook",
+      "definition": "An HTTP request sent by a provider to a registered consumer when an event occurs."
+    }
+  ],
+  "related": [
+    "how-the-web-works",
+    "the-seven-types-of-databases",
+    "html-css-and-javascript"
+  ],
+  "sources": [
+    {
+      "label": "IETF RFC 9110 — HTTP Semantics",
+      "url": "https://www.rfc-editor.org/rfc/rfc9110.html",
+      "accessed": "2026-08-05"
+    },
+    {
+      "label": "OpenAPI Specification",
+      "url": "https://spec.openapis.org/oas/latest.html",
+      "accessed": "2026-08-05"
+    },
+    {
+      "label": "GraphQL Specification",
+      "url": "https://spec.graphql.org/",
+      "accessed": "2026-08-05"
+    },
+    {
+      "label": "IETF RFC 8259 — JSON",
+      "url": "https://www.rfc-editor.org/rfc/rfc8259",
+      "accessed": "2026-08-05"
+    },
+    {
+      "label": "MDN — Fetch API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API",
+      "accessed": "2026-08-05"
+    }
+  ]
+}

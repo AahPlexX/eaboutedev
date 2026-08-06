@@ -1,0 +1,601 @@
+{
+  "version": 1,
+  "slug": "the-seven-types-of-databases",
+  "title": "The 7 Types of Databases",
+  "eyebrow": "Data systems · Practical selection model",
+  "summary": "Compare seven useful database families by the shape of their data, the questions they answer well, and the trade-offs they introduce.",
+  "category": "Data",
+  "level": "Foundational",
+  "estimatedMinutes": 36,
+  "icon": "▦",
+  "accent": "oklch(0.72 0.17 70)",
+  "aliases": [
+    "database types",
+    "db types",
+    "sql vs nosql",
+    "which database",
+    "data storage models"
+  ],
+  "keywords": [
+    "relational",
+    "document",
+    "key value",
+    "graph",
+    "time series",
+    "search engine",
+    "vector database",
+    "sql",
+    "nosql",
+    "transactions",
+    "indexes"
+  ],
+  "prerequisites": [
+    "How the Web Works helps explain where a database sits in a system."
+  ],
+  "learningOutcomes": [
+    "Recognize seven practical database families.",
+    "Choose a starting database from access patterns and guarantees.",
+    "Explain when multiple specialized stores are justified."
+  ],
+  "heroVisual": {
+    "kind": "map",
+    "title": "Seven families, seven optimized question shapes",
+    "caption": "The taxonomy is a practical decision model, not a universal law.",
+    "nodes": [
+      {
+        "label": "Relational",
+        "detail": "Rows, columns, constraints, joins, and transactions."
+      },
+      {
+        "label": "Document",
+        "detail": "Nested records retrieved around an aggregate."
+      },
+      {
+        "label": "Key–value",
+        "detail": "Direct lookup from a unique key to a value."
+      },
+      {
+        "label": "Graph",
+        "detail": "Nodes and relationships traversed together."
+      },
+      {
+        "label": "Time-series",
+        "detail": "Measurements ordered and aggregated over time."
+      },
+      {
+        "label": "Search engine",
+        "detail": "Text and fields ranked by relevance."
+      },
+      {
+        "label": "Vector",
+        "detail": "Items retrieved by mathematical similarity."
+      }
+    ]
+  },
+  "sections": [
+    {
+      "id": "selection",
+      "title": "1. Start with questions, not product names",
+      "summary": "A database is chosen to serve access patterns and guarantees, not fashion.",
+      "blocks": [
+        {
+          "type": "steps",
+          "items": [
+            {
+              "title": "Name the records",
+              "explanation": "List the facts the system must preserve.",
+              "result": "You can describe the durable data without implementation terms."
+            },
+            {
+              "title": "Name the reads",
+              "explanation": "Write the most important questions and their required speed.",
+              "result": "Access patterns become explicit."
+            },
+            {
+              "title": "Name the writes",
+              "explanation": "Estimate frequency, concurrency, and conflict behavior.",
+              "result": "The consistency pressure becomes visible."
+            },
+            {
+              "title": "Name the guarantees",
+              "explanation": "Decide which operations must be atomic, durable, ordered, or auditable.",
+              "result": "Correctness requirements constrain the options."
+            },
+            {
+              "title": "Name the operating limits",
+              "explanation": "Set scale, recovery, latency, cost, team skill, and compliance boundaries.",
+              "result": "The choice reflects the whole system."
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "warning",
+          "title": "“NoSQL” is not one database type",
+          "body": "It groups several different data models and trade-offs. Document, key–value, graph, time-series, search, and vector stores should be evaluated separately."
+        },
+        {
+          "type": "callout",
+          "tone": "tip",
+          "title": "Default responsibly",
+          "body": "A relational database is often a strong default for business systems because constraints, transactions, and flexible querying protect evolving data. Move away from the default only for a demonstrated pressure."
+        }
+      ]
+    },
+    {
+      "id": "relational",
+      "title": "2. Relational databases: connected facts with strong rules",
+      "summary": "Tables and constraints make relationships explicit and enforceable.",
+      "visual": {
+        "kind": "layers",
+        "title": "A relational model",
+        "caption": "The schema protects meaning before a query runs.",
+        "nodes": [
+          {
+            "label": "Table",
+            "detail": "Groups records of one relation."
+          },
+          {
+            "label": "Row",
+            "detail": "Represents one tuple or record."
+          },
+          {
+            "label": "Column",
+            "detail": "Defines an attribute and data type."
+          },
+          {
+            "label": "Key",
+            "detail": "Uniquely identifies or links records."
+          },
+          {
+            "label": "Constraint",
+            "detail": "Rejects invalid states."
+          },
+          {
+            "label": "Transaction",
+            "detail": "Commits related changes as one unit."
+          }
+        ]
+      },
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "Relational databases store data in tables and use keys to connect records. SQL expresses selection, joins, aggregation, and change. The database can enforce uniqueness, references, types, and transactional invariants centrally."
+        },
+        {
+          "type": "code",
+          "language": "SQL",
+          "code": "SELECT customer.name, SUM(invoice.total) AS lifetime_value\nFROM customer\nJOIN invoice ON invoice.customer_id = customer.id\nGROUP BY customer.id, customer.name\nORDER BY lifetime_value DESC;",
+          "explanation": "A join combines related records while aggregation answers a cross-record business question."
+        },
+        {
+          "type": "cards",
+          "items": [
+            {
+              "title": "Use when",
+              "summary": "Correctness spans multiple records, relationships matter, and queries will evolve.",
+              "whenToUse": "Orders, billing, inventory, permissions, clinical or financial records.",
+              "example": "PostgreSQL"
+            },
+            {
+              "title": "Avoid forcing it",
+              "summary": "A single operation must traverse a massive relationship graph or ingest a specialized signal stream.",
+              "whenToUse": "Keep the relational system as source of truth and add a specialized projection only when measured.",
+              "example": "Relational plus search index"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "document",
+      "title": "3. Document databases: records shaped like application aggregates",
+      "summary": "A document keeps related nested data together.",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "A document database stores self-contained records, commonly represented with JSON-like fields and nested arrays. It fits data that is usually created, retrieved, and changed as one aggregate and whose optional fields vary."
+        },
+        {
+          "type": "code",
+          "language": "JSON",
+          "code": "{\n  \"id\": \"course-42\",\n  \"title\": \"Web foundations\",\n  \"lessons\": [\n    { \"title\": \"HTTP\", \"durationMinutes\": 18 },\n    { \"title\": \"Rendering\", \"durationMinutes\": 22 }\n  ]\n}",
+          "explanation": "The course and its ordered lessons can be loaded together when that is the dominant access pattern."
+        },
+        {
+          "type": "callout",
+          "tone": "warning",
+          "title": "Flexible schema does not mean no schema",
+          "body": "Applications still depend on field meanings, types, required values, migrations, indexes, and validation. The rules may be enforced in different places, but they still exist."
+        },
+        {
+          "type": "cards",
+          "items": [
+            {
+              "title": "Use when",
+              "summary": "The aggregate is naturally nested and most reads retrieve it as a whole.",
+              "whenToUse": "Content, product catalogs, profiles, event payloads.",
+              "example": "MongoDB document"
+            },
+            {
+              "title": "Avoid when",
+              "summary": "Many independent records must be joined and changed together under strict invariants.",
+              "whenToUse": "Complex financial ledgers or highly connected normalized business data.",
+              "example": "Prefer relational constraints"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "key-value",
+      "title": "4. Key–value databases: the shortest path to a known item",
+      "summary": "A unique key directly addresses a value.",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "A key–value database optimizes operations such as get, set, increment, and expire. The database may treat the value as opaque or expose limited data structures. It is excellent when the application already knows the exact key."
+        },
+        {
+          "type": "table",
+          "columns": [
+            "Good fit",
+            "Example key",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Session",
+              "session:8f21",
+              "User identity and expiry."
+            ],
+            [
+              "Cache",
+              "article:42:v7",
+              "Precomputed response."
+            ],
+            [
+              "Rate limit",
+              "login:ip:203.0.113.8",
+              "Attempt count with expiry."
+            ],
+            [
+              "Feature state",
+              "flag:new-editor:user:19",
+              "Boolean or small configuration."
+            ]
+          ],
+          "caption": "Key design is part of the data model"
+        },
+        {
+          "type": "callout",
+          "tone": "warning",
+          "title": "Caching changes correctness",
+          "body": "Define expiration, invalidation, stampede protection, stale behavior, and what happens when the cache is unavailable."
+        },
+        {
+          "type": "cards",
+          "items": [
+            {
+              "title": "Use when",
+              "summary": "The primary operation is direct lookup or simple atomic mutation by key.",
+              "whenToUse": "Caching, sessions, counters, queues, ephemeral coordination.",
+              "example": "Redis"
+            },
+            {
+              "title": "Avoid when",
+              "summary": "Users need open-ended filtering, joins, or rich ad hoc queries.",
+              "whenToUse": "Reporting and exploratory analysis.",
+              "example": "Use a query-oriented primary store"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "graph",
+      "title": "5. Graph databases: relationships are first-class data",
+      "summary": "Graph stores optimize connected paths and neighborhoods.",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "A graph database models nodes, relationships, and properties. Its strength appears when the number or depth of connections is central to the question, such as shortest paths, recommendations, dependency chains, or fraud rings."
+        },
+        {
+          "type": "cards",
+          "items": [
+            {
+              "title": "Use when",
+              "summary": "Queries repeatedly traverse variable-depth relationships.",
+              "whenToUse": "Social connections, identity graphs, network topology, recommendations.",
+              "example": "Neo4j"
+            },
+            {
+              "title": "Avoid when",
+              "summary": "Data is mostly independent rows with straightforward filters and aggregates.",
+              "whenToUse": "Standard transactional records.",
+              "example": "A relational database may be simpler"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "note",
+          "title": "Relational databases can represent graphs",
+          "body": "The choice changes when graph traversal is a dominant workload and graph-specific query and storage behavior materially simplify it."
+        }
+      ],
+      "visual": {
+        "kind": "map",
+        "title": "Graph question shape",
+        "caption": "The work follows edges rather than joining many tables repeatedly.",
+        "nodes": [
+          {
+            "label": "Person",
+            "detail": "A node with properties."
+          },
+          {
+            "label": "BOUGHT",
+            "detail": "A typed relationship."
+          },
+          {
+            "label": "Product",
+            "detail": "A neighboring node."
+          },
+          {
+            "label": "SIMILAR_TO",
+            "detail": "Another relationship."
+          },
+          {
+            "label": "Recommendation",
+            "detail": "A result derived from a path."
+          }
+        ]
+      }
+    },
+    {
+      "id": "time-search-vector",
+      "title": "6. Time-series, search, and vector databases",
+      "summary": "These stores optimize specialized retrieval rather than general business transactions.",
+      "blocks": [
+        {
+          "type": "cards",
+          "items": [
+            {
+              "title": "Time-series",
+              "summary": "Measurements are indexed by time and commonly grouped, downsampled, retained, and queried over windows.",
+              "whenToUse": "Metrics, sensors, observability, market ticks.",
+              "avoidWhen": "Avoid treating mutable business entities as measurements.",
+              "example": "CPU usage per host per minute"
+            },
+            {
+              "title": "Search engine",
+              "summary": "Documents and fields are analyzed into an inverted index so terms can be filtered and ranked.",
+              "whenToUse": "Site search, logs, product discovery.",
+              "avoidWhen": "Avoid using a search index as the sole authoritative transaction store.",
+              "example": "Elasticsearch"
+            },
+            {
+              "title": "Vector",
+              "summary": "Items are encoded as numeric vectors and retrieved by approximate similarity.",
+              "whenToUse": "Semantic retrieval, recommendations, image or text similarity.",
+              "avoidWhen": "Avoid expecting similarity to enforce exact rules or truth.",
+              "example": "pgvector nearest-neighbor query"
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "columns": [
+            "Family",
+            "Optimized question",
+            "Typical companion"
+          ],
+          "rows": [
+            [
+              "Time-series",
+              "How did a measurement change over a time window?",
+              "Relational asset metadata."
+            ],
+            [
+              "Search",
+              "Which records match these words and filters, ranked usefully?",
+              "Authoritative transactional store."
+            ],
+            [
+              "Vector",
+              "Which items are mathematically similar to this item or query?",
+              "Source documents and metadata store."
+            ]
+          ],
+          "caption": "Specialized stores are often projections of authoritative data"
+        },
+        {
+          "type": "callout",
+          "tone": "warning",
+          "title": "A vector database does not understand meaning like a person",
+          "body": "An embedding model produces coordinates. Similarity finds nearby coordinates; the result can still be irrelevant, outdated, unsafe, or false and must be evaluated."
+        }
+      ]
+    },
+    {
+      "id": "polyglot",
+      "title": "7. Use more than one database only for proven pressure",
+      "summary": "Polyglot persistence can improve a system or multiply its failure modes.",
+      "blocks": [
+        {
+          "type": "steps",
+          "items": [
+            {
+              "title": "Keep one source of truth",
+              "explanation": "Choose where authoritative writes occur.",
+              "result": "Ownership is unambiguous."
+            },
+            {
+              "title": "Project intentionally",
+              "explanation": "Copy only the fields needed by the secondary access pattern.",
+              "result": "The projection has a clear contract."
+            },
+            {
+              "title": "Define freshness",
+              "explanation": "State whether updates are synchronous, asynchronous, or eventually consistent.",
+              "result": "Users know what delay is acceptable."
+            },
+            {
+              "title": "Reconcile failures",
+              "explanation": "Retry idempotently and detect missing or duplicate updates.",
+              "result": "The secondary store can recover."
+            },
+            {
+              "title": "Observe drift",
+              "explanation": "Measure lag, failed events, and mismatched records.",
+              "result": "Silent inconsistency becomes visible."
+            }
+          ]
+        },
+        {
+          "type": "checklist",
+          "items": [
+            "A second database solves a measured access-pattern or scale problem.",
+            "The team can operate, secure, back up, and restore it.",
+            "Data ownership and deletion propagate correctly.",
+            "The application defines degraded behavior when it is unavailable."
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "tip",
+          "title": "The simplest durable design wins",
+          "body": "One well-modeled database with appropriate indexes is easier to reason about than a distributed collection of stores. Add specialization after evidence, not anticipation."
+        }
+      ]
+    },
+    {
+      "id": "decision",
+      "title": "8. A practical selection matrix",
+      "summary": "Use this as a starting hypothesis, then validate with representative data and workload.",
+      "blocks": [
+        {
+          "type": "table",
+          "columns": [
+            "Dominant need",
+            "Start with",
+            "Validate"
+          ],
+          "rows": [
+            [
+              "Transactions, relationships, flexible queries",
+              "Relational",
+              "Constraints, isolation, index plan, recovery."
+            ],
+            [
+              "Nested aggregate retrieved together",
+              "Document",
+              "Document growth, validation, cross-document operations."
+            ],
+            [
+              "Known-key lookup, expiry, counters",
+              "Key–value",
+              "Memory, eviction, persistence, failure behavior."
+            ],
+            [
+              "Variable-depth relationship traversal",
+              "Graph",
+              "Traversal latency and update model."
+            ],
+            [
+              "High-volume measurements over time",
+              "Time-series",
+              "Retention, downsampling, cardinality."
+            ],
+            [
+              "Relevance-ranked text and filters",
+              "Search engine",
+              "Analyzer, ranking, refresh lag."
+            ],
+            [
+              "Similarity retrieval",
+              "Vector",
+              "Embedding quality, recall, filtering, evaluation set."
+            ]
+          ],
+          "caption": "First database to evaluate by dominant access pattern"
+        },
+        {
+          "type": "checklist",
+          "items": [
+            "Prototype the hardest read and write paths.",
+            "Use realistic cardinality and skew.",
+            "Test backup and restore, not only happy-path queries.",
+            "Measure p95/p99 latency and resource cost.",
+            "Document the rejected alternatives and the evidence."
+          ]
+        }
+      ]
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Access pattern",
+      "definition": "A recurring way data is written, selected, filtered, joined, traversed, or aggregated."
+    },
+    {
+      "term": "Constraint",
+      "definition": "A rule the database enforces to reject invalid data states."
+    },
+    {
+      "term": "Index",
+      "definition": "An additional data structure that speeds selected lookups at the cost of storage and write work."
+    },
+    {
+      "term": "Transaction",
+      "definition": "A unit of work whose changes are committed or rolled back according to defined guarantees."
+    },
+    {
+      "term": "Projection",
+      "definition": "A derived representation optimized for a particular read model, search, or analysis need."
+    }
+  ],
+  "related": [
+    "apis-and-data-exchange",
+    "git-and-github",
+    "how-the-web-works"
+  ],
+  "sources": [
+    {
+      "label": "PostgreSQL Documentation",
+      "url": "https://www.postgresql.org/docs/current/",
+      "accessed": "2026-08-05"
+    },
+    {
+      "label": "MongoDB Manual",
+      "url": "https://www.mongodb.com/docs/manual/",
+      "accessed": "2026-08-05"
+    },
+    {
+      "label": "Redis Documentation",
+      "url": "https://redis.io/docs/latest/",
+      "accessed": "2026-08-05"
+    },
+    {
+      "label": "Neo4j Documentation",
+      "url": "https://neo4j.com/docs/",
+      "accessed": "2026-08-05"
+    },
+    {
+      "label": "InfluxDB Documentation",
+      "url": "https://docs.influxdata.com/",
+      "accessed": "2026-08-05"
+    },
+    {
+      "label": "Elasticsearch Reference",
+      "url": "https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html",
+      "accessed": "2026-08-05"
+    },
+    {
+      "label": "pgvector Documentation",
+      "url": "https://github.com/pgvector/pgvector",
+      "accessed": "2026-08-05"
+    }
+  ]
+}

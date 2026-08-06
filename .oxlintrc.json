@@ -1,0 +1,26 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": [
+    "react",
+    "unicorn",
+    "typescript",
+    "oxc"
+  ],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "warn",
+    "perf": "warn"
+  },
+  "rules": {
+    "react/jsx-key": "error",
+    "react/no-array-index-key": "warn",
+    "unicorn/no-null": "off",
+    "typescript/no-explicit-any": "error",
+    "oxc/no-barrel-file": "off"
+  },
+  "ignorePatterns": [
+    "dist/**",
+    "src/generated/**",
+    "public/search/**"
+  ]
+}

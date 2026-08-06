@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "appendOnly": true,
+  "entries": [
+    {
+      "turncount": 1,
+      "date": "2026-08-05",
+      "summary": "Initial production architecture and launch curriculum",
+      "areas": [
+        {
+          "path": "src/app.tsx",
+          "responsibility": "Hash-routed application entry and page composition"
+        },
+        {
+          "path": "src/components/ui",
+          "responsibility": "shadcn-style accessible source primitives"
+        },
+        {
+          "path": "src/components/layout",
+          "responsibility": "Persistent shell, global navigation, and footer"
+        },
+        {
+          "path": "src/components/search",
+          "responsibility": "Global search trigger, keyboard contract, dialog, and result navigation"
+        },
+        {
+          "path": "src/components/topics",
+          "responsibility": "Topic cards, visual diagrams, sections, tables, examples, callouts, and local outline"
+        },
+        {
+          "path": "src/lib/query-normalization.ts",
+          "responsibility": "Natural-language tokenization, domain synonym expansion, and query-intent inference"
+        },
+        {
+          "path": "src/lib/search.ts",
+          "responsibility": "Lazy MiniSearch initialization and weighted fuzzy topic retrieval"
+        },
+        {
+          "path": "public/content/topics",
+          "responsibility": "Authoritative independent topic documents"
+        },
+        {
+          "path": "scripts",
+          "responsibility": "Deterministic generation and validation of content and dependency contracts"
+        },
+        {
+          "path": "src/generated/topic-catalog.ts",
+          "responsibility": "Generated lightweight topic metadata for discovery pages"
+        },
+        {
+          "path": "public/search/topic-search-index.json",
+          "responsibility": "Generated lazy-loading search corpus"
+        },
+        {
+          "path": "docs/topic-registry.json",
+          "responsibility": "Generated topic inventory, source locations, counts, and SHA-256 content hashes"
+        },
+        {
+          "path": "src/index.css",
+          "responsibility": "Tailwind theme tokens, adaptive shell rules, container-query visuals, and accessibility preferences"
+        },
+        {
+          "path": ".github/workflows/pages.yml",
+          "responsibility": "Pull-request verification and automatic main-branch Pages deployment"
+        }
+      ]
+    }
+  ]
+}
