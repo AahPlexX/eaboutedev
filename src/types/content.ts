@@ -127,6 +127,9 @@ export interface TopicCatalogEntry {
   accent: string;
   aliases: string[];
   keywords: string[];
+}
+
+export interface TopicSearchDocument extends TopicCatalogEntry {
   sectionTitles: string[];
   searchText: string;
 }
