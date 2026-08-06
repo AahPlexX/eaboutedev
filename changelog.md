@@ -64,3 +64,15 @@ Append-only project history. The highest recorded `turncount` is authoritative.
 - Confirmed the connected integration cannot perform the repository-admin action required to create the initial Pages site.
 - Upgraded the retained production workflow to `actions/configure-pages@v6`, preserved automatic deployment on every `main` update, and removed all temporary enablement workflows and trigger files from the final release branch.
 - The sole remaining release dependency is external repository configuration: enable GitHub Pages with **GitHub Actions** as the publishing source in repository Settings. The next update to `main` will then run the existing automatic deployment workflow.
+
+## Turn 3 — 2026-08-06
+
+**turncount: 3**
+
+### Release workflow maintenance
+
+- Reconciled every remaining named development or release branch to the authoritative `main` tree so no alternate implementation remains ahead of production.
+- Pinned `actions/checkout` to `v6.0.2`, `pnpm/action-setup` to `v6.0.8`, and `actions/setup-node` to `v6.4.0`.
+- Pinned `actions/configure-pages` to `v6.0.0`, `actions/upload-pages-artifact` to `v5.0.0`, and `actions/deploy-pages` to `v5.0.0`.
+- Preserved read-only repository permissions, exact pnpm installation through the committed lockfile, generated-artifact drift detection, the complete project check, and the main-only deployment gate.
+- The repository-admin Pages publishing-source selection remains the only external release dependency; no application or workflow logic can safely substitute for that setting.
