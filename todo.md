@@ -18,3 +18,22 @@ This file is append-only. Add a new dated turn section; do not rewrite or remove
 ### Pending external verification gate
 
 - [ ] GitHub-hosted pnpm install, typecheck, Oxlint, production build, and Pages deployment must pass against the committed head before release closure.
+
+## Turn 2 — 2026-08-05
+
+**turncount: 2**
+
+### Completed
+
+- [x] Recover and integrity-check the complete reviewed source tree.
+- [x] Pin registry-current stable package releases and pnpm with exact versions.
+- [x] Generate and commit a deterministic pnpm lockfile.
+- [x] Correct TypeScript 7, Vite 8, React automatic JSX runtime, and Oxlint compatibility issues exposed by GitHub-hosted checks.
+- [x] Pass content validation, generated-artifact drift checks, exact-version enforcement, four search tests, TypeScript, Oxlint, and the production Vite build in GitHub-hosted CI.
+- [x] Change verification and deployment installs to frozen-lockfile mode.
+
+### Release gate
+
+- [ ] Pass the final frozen-lockfile pull-request verification.
+- [ ] Consolidate the reviewed branch onto `origin/main`.
+- [ ] Confirm the `main` push verification and GitHub Pages deployment.
