@@ -69,6 +69,8 @@ This file is append-only. Add a new dated turn section; do not rewrite or remove
 - [x] Pin every external action in the production Pages workflow to its current official stable semantic release.
 - [x] Upgrade Pages artifact upload and deployment from v4 to v5.
 - [x] Preserve least-privilege permissions, frozen-lockfile installation, full validation, and main-only deployment behavior.
+- [x] Resolve every action release tag to its official full-length commit SHA.
+- [x] Replace movable action tags with immutable commit references while retaining readable release comments.
 
 ### Remaining external gate
 
