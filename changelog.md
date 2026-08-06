@@ -24,3 +24,23 @@ Append-only project history. The highest recorded `turncount` is authoritative.
 - Replaced an ES-module-incompatible Vite `__dirname` alias.
 - Removed horizontally scrolling catalog filters.
 - Corrected troubleshooting intent recognition for “failing,” proven by a red/green test run.
+
+## Turn 2 — 2026-08-05
+
+**turncount: 2**
+
+### Verified and hardened
+
+- Recovered the complete reviewed source tree from a retained GitHub Actions artifact and validated its SHA-256 digest before expansion.
+- Repaired one proven transport-level bit flip, then confirmed the archive CRC, uncompressed length, and complete 61-file source tree without rewriting application content.
+- Updated every package and the package manager to the registry-current stable exact release available during verification; no dependency ranges were introduced.
+- Added and committed `pnpm-lock.yaml`, then changed pull-request verification and production deployment to `pnpm install --frozen-lockfile`.
+- Removed TypeScript 7's retired `baseUrl` option while preserving the explicit `@/*` path contract.
+- Replaced the retired Vite 8 object-form `manualChunks` configuration with native Rolldown chunking.
+- Added explicit Node ambient types for the Node test runner and strict TypeScript project build.
+- Aligned Oxlint with React's automatic JSX runtime and corrected all genuine denied-warning findings in search, generation, sorting, validation, and static content rendering.
+- Confirmed five topic documents, generated catalog/search/registry freshness, exact dependency versions, four natural-language search tests, TypeScript, Oxlint, and the Vite production build in GitHub-hosted CI.
+
+### Release gate
+
+- The review branch is mergeable and the final frozen-lockfile verification is required before consolidation onto `origin/main`.
