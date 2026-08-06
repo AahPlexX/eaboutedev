@@ -11,6 +11,8 @@ import { loadTopic } from "@/lib/topic-loader";
 import type { TopicDocument } from "@/types/content";
 import { NotFoundPage } from "@/pages/not-found-page";
 
+const SITE_TITLE = "Everything About Development";
+
 export function TopicPage() {
   const { slug = "" } = useParams();
   const [topic, setTopic] = useState<TopicDocument>();
@@ -19,21 +21,25 @@ export function TopicPage() {
   useEffect(() => {
     let active = true;
     setStatus("loading");
+    globalThis.document.title = SITE_TITLE;
+
     loadTopic(slug)
-      .then((document) => {
+      .then((loadedTopic) => {
         if (!active) return;
-        if (!document) setStatus("missing");
-        else {
-          setTopic(document);
-          setStatus("ready");
-          document.title = `${document.title} · Everything About Development`;
+        if (!loadedTopic) {
+          setStatus("missing");
+          return;
         }
+
+        setTopic(loadedTopic);
+        setStatus("ready");
+        globalThis.document.title = `${loadedTopic.title} · ${SITE_TITLE}`;
       })
       .catch(() => active && setStatus("error"));
 
     return () => {
       active = false;
-      document.title = "Everything About Development";
+      globalThis.document.title = SITE_TITLE;
     };
   }, [slug]);
 
