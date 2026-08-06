@@ -1,4 +1,4 @@
-import { buildSearchQuery } from "./query-normalization.ts";
+import { tokenizeNaturalLanguage } from "./query-normalization.ts";
 import type { TopicCatalogEntry } from "../types/content.ts";
 
 export const CATALOG_WINDOW_SIZE = 24;
@@ -9,7 +9,7 @@ export function filterCatalogTopics(
   query: string,
   category: string,
 ): TopicCatalogEntry[] {
-  const terms = buildSearchQuery(query).split(" ").filter(Boolean);
+  const terms = tokenizeNaturalLanguage(query);
 
   return topics.filter((topic) => {
     if (category !== "All" && topic.category !== category) return false;
