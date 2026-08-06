@@ -199,6 +199,29 @@
           "responsibility": "Append-only architecture and release-state map for this project"
         }
       ]
+    },
+    {
+      "turncount": 3,
+      "date": "2026-08-06",
+      "summary": "Exact GitHub Actions release pinning and branch authority reconciliation",
+      "areas": [
+        {
+          "path": ".github/workflows/pages.yml",
+          "responsibility": "Exact stable action tags for checkout, pnpm, Node, Pages configuration, Pages artifact upload, and Pages deployment while preserving least-privilege verification and main-only release behavior"
+        },
+        {
+          "path": "changelog.md",
+          "responsibility": "Append-only Turn 3 record of workflow release maintenance and the remaining external Pages setting"
+        },
+        {
+          "path": "todo.md",
+          "responsibility": "Append-only Turn 3 checklist separating completed repository maintenance from external Pages enablement"
+        },
+        {
+          "path": "codemap.json",
+          "responsibility": "Append-only mapping of the current authoritative workflow and release state"
+        }
+      ]
     }
   ]
 }
