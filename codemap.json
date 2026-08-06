@@ -222,6 +222,30 @@
           "responsibility": "Append-only mapping of the current authoritative workflow and release state"
         }
       ]
+    },
+    {
+      "turncount": 3,
+      "sequence": 2,
+      "date": "2026-08-06",
+      "summary": "Immutable GitHub Actions supply-chain pinning",
+      "areas": [
+        {
+          "path": ".github/workflows/pages.yml",
+          "responsibility": "Full-length official release commit SHAs for every external action, accompanied by readable semantic version comments"
+        },
+        {
+          "path": "changelog.md",
+          "responsibility": "Append-only evidence for immutable workflow dependency selection"
+        },
+        {
+          "path": "todo.md",
+          "responsibility": "Append-only completion state for immutable action pinning and the external Pages gate"
+        },
+        {
+          "path": "codemap.json",
+          "responsibility": "Append-only map of the workflow supply-chain trust boundary"
+        }
+      ]
     }
   ]
 }
