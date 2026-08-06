@@ -23,6 +23,7 @@ jobs:
           name: source-chunks
           path: .bootstrap/chunk-*
           if-no-files-found: error
+          include-hidden-files: true
           retention-days: 1
       - name: Expand source tree
         shell: bash
