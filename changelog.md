@@ -83,3 +83,13 @@ Append-only project history. The highest recorded `turncount` is authoritative.
 - Replaced all movable action tags in the production workflow with immutable 40-character commit references.
 - Retained the verified semantic release beside each SHA as a YAML comment so security and maintainability remain aligned.
 - Preserved the same workflow behavior, job permissions, Node 24 runtime, frozen dependency graph, and Pages deployment contract.
+
+## Turn 4 — 2026-08-06
+
+**turncount: 4**
+
+### GitHub Pages enablement
+
+- Recorded the repository administrator’s confirmation that **Settings → Pages → Build and deployment → Source** is now set to **GitHub Actions**.
+- Initiated a fresh `main` update so the existing verified workflow can perform the first deployment under the newly enabled repository setting.
+- Preserved application source, generated content, dependencies, and workflow behavior unchanged while advancing only the append-only release records.
