@@ -55,3 +55,12 @@ Append-only project history. The highest recorded `turncount` is authoritative.
 - Kept rich synonym and fuzzy expansion in global search while making the lightweight catalog filter precise and predictable.
 - Made the skip-link safe-area inset resilient in both left-to-right and right-to-left layouts.
 - Restored the final GitHub Actions workflow to read-only repository access with frozen dependency installs and no self-modifying steps.
+
+### Release outcome — Turn 2, sequence 3 — 2026-08-06
+
+- Squash-merged the reviewed application through PR #4 onto `origin/main` at commit `307e4fb147da88ab55e1d520ade15d3b76a76a7e`.
+- Re-ran the complete frozen-lockfile verification and production build through GitHub-hosted Actions; all source, content, test, type, lint, and Vite build gates passed.
+- Proved the remaining deployment failure occurs after the successful production build, at initial GitHub Pages site configuration: GitHub returned `Not Found` when reading the Pages site and `Resource not accessible by integration` when the workflow attempted first-time enablement.
+- Confirmed the connected integration cannot perform the repository-admin action required to create the initial Pages site.
+- Upgraded the retained production workflow to `actions/configure-pages@v6`, preserved automatic deployment on every `main` update, and removed all temporary enablement workflows and trigger files from the final release branch.
+- The sole remaining release dependency is external repository configuration: enable GitHub Pages with **GitHub Actions** as the publishing source in repository Settings. The next update to `main` will then run the existing automatic deployment workflow.

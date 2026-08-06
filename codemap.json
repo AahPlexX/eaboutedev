@@ -175,6 +175,30 @@
           "responsibility": "Read-only frozen-lockfile verification followed by gated main-branch Pages deployment"
         }
       ]
+    },
+    {
+      "turncount": 2,
+      "sequence": 3,
+      "date": "2026-08-06",
+      "summary": "Main-branch release consolidation and externally blocked initial GitHub Pages enablement",
+      "areas": [
+        {
+          "path": ".github/workflows/pages.yml",
+          "responsibility": "Read-only pull-request verification and automatic main-only Pages build/deployment using configure-pages v6 after the repository Pages site is enabled"
+        },
+        {
+          "path": "changelog.md",
+          "responsibility": "Append-only release evidence including merged commit, successful verification/build gates, exact Pages API failures, and the remaining external setting"
+        },
+        {
+          "path": "todo.md",
+          "responsibility": "Append-only release checklist distinguishing completed repository work from the one repository-admin Pages enablement action"
+        },
+        {
+          "path": "codemap.json",
+          "responsibility": "Append-only architecture and release-state map for this project"
+        }
+      ]
     }
   ]
 }
