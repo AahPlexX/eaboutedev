@@ -1,5 +1,5 @@
-import { buildSearchQuery } from "@/lib/query-normalization";
-import type { TopicCatalogEntry } from "@/types/content";
+import { buildSearchQuery } from "./query-normalization.ts";
+import type { TopicCatalogEntry } from "../types/content.ts";
 
 export const CATALOG_WINDOW_SIZE = 24;
 export const HOME_TOPIC_PREVIEW_SIZE = 6;
