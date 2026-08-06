@@ -76,3 +76,17 @@ This file is append-only. Add a new dated turn section; do not rewrite or remove
 
 - [ ] In repository **Settings → Pages**, choose **GitHub Actions** under **Build and deployment → Source**.
 - [ ] Confirm the first successful deployment at the generated GitHub Pages endpoint after that setting is saved.
+
+## Turn 4 — 2026-08-06
+
+**turncount: 4**
+
+### Completed
+
+- [x] Confirm repository-level GitHub Pages publishing is enabled with **GitHub Actions** as the source.
+- [x] Trigger a fresh `main` push without changing application behavior.
+
+### Release verification in progress
+
+- [ ] Confirm the fresh workflow completes source/content verification, production build, artifact upload, and Pages deployment.
+- [ ] Confirm the generated Pages endpoint serves the application successfully.
