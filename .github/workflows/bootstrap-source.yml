@@ -1,0 +1,37 @@
+name: Expand initial source bundle
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - .bootstrap/**
+      - .github/workflows/bootstrap-source.yml
+
+permissions:
+  contents: write
+
+jobs:
+  expand:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.head_ref }}
+      - name: Expand source tree
+        shell: bash
+        run: |
+          shopt -s nullglob
+          chunks=(.bootstrap/chunk-*)
+          if (( ${#chunks[@]} != 7 )); then
+            echo "Expected 7 source bundle chunks; found ${#chunks[@]}."
+            exit 1
+          fi
+          cat "${chunks[@]}" | base64 --decode > /tmp/project.tar.gz
+          tar -tzf /tmp/project.tar.gz >/dev/null
+          tar -xzf /tmp/project.tar.gz -C .
+          rm -rf .bootstrap .github/workflows/bootstrap-source.yml
+          git config user.name "AahPlexX"
+          git config user.email "130876266+AahPlexX@users.noreply.github.com"
+          git add --all
+          git commit -m "feat: build initial development reference"
+          git push origin "HEAD:${GITHUB_HEAD_REF}"
