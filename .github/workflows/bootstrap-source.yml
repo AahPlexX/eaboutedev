@@ -20,8 +20,8 @@ jobs:
         run: |
           shopt -s nullglob
           chunks=(.bootstrap/chunk-*)
-          if (( ${#chunks[@]} != 4 )); then
-            echo "Waiting for all source bundle chunks (${#chunks[@]}/4)."
+          if (( ${#chunks[@]} != 7 )); then
+            echo "Waiting for all source bundle chunks (${#chunks[@]}/7)."
             exit 0
           fi
           cat "${chunks[@]}" | base64 --decode > /tmp/project.tar.gz
