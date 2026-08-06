@@ -1,6 +1,6 @@
 import MiniSearch, { type SearchResult } from "minisearch";
 import { buildSearchQuery, inferQueryIntent } from "@/lib/query-normalization";
-import type { TopicCatalogEntry } from "@/types/content";
+import type { TopicSearchDocument } from "@/types/content";
 
 export interface TopicSearchResult extends SearchResult {
   slug: string;
@@ -12,14 +12,14 @@ export interface TopicSearchResult extends SearchResult {
   intent: ReturnType<typeof inferQueryIntent>;
 }
 
-let searchPromise: Promise<MiniSearch<TopicCatalogEntry>> | undefined;
+let searchPromise: Promise<MiniSearch<TopicSearchDocument>> | undefined;
 
-async function createSearch(): Promise<MiniSearch<TopicCatalogEntry>> {
+async function createSearch(): Promise<MiniSearch<TopicSearchDocument>> {
   const response = await fetch(`${import.meta.env.BASE_URL}search/topic-search-index.json`);
   if (!response.ok) throw new Error(`Search index failed to load (${response.status})`);
 
-  const documents = await response.json() as TopicCatalogEntry[];
-  const search = new MiniSearch<TopicCatalogEntry>({
+  const documents = await response.json() as TopicSearchDocument[];
+  const search = new MiniSearch<TopicSearchDocument>({
     fields: ["title", "summary", "category", "aliases", "keywords", "sectionTitles", "searchText"],
     storeFields: ["slug", "title", "summary", "category", "level", "estimatedMinutes"],
     idField: "slug",
@@ -39,7 +39,7 @@ async function createSearch(): Promise<MiniSearch<TopicCatalogEntry>> {
   return search;
 }
 
-export function getTopicSearch(): Promise<MiniSearch<TopicCatalogEntry>> {
+export function getTopicSearch(): Promise<MiniSearch<TopicSearchDocument>> {
   searchPromise ??= createSearch();
   return searchPromise;
 }
