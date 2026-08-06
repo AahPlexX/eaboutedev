@@ -4,7 +4,7 @@ on:
   push:
     branches: [build/initial-development-ssot]
     paths:
-      - .bootstrap/project.tar.gz.base64
+      - .bootstrap/**
   workflow_dispatch:
 
 permissions:
@@ -18,11 +18,13 @@ jobs:
       - name: Expand source tree
         shell: bash
         run: |
-          if [[ ! -f .bootstrap/project.tar.gz.base64 ]]; then
-            echo "Source bundle already expanded."
+          shopt -s nullglob
+          chunks=(.bootstrap/chunk-*)
+          if (( ${#chunks[@]} != 7 )); then
+            echo "Waiting for all source bundle chunks (${#chunks[@]}/7)."
             exit 0
           fi
-          base64 --decode .bootstrap/project.tar.gz.base64 > /tmp/project.tar.gz
+          cat "${chunks[@]}" | base64 --decode > /tmp/project.tar.gz
           tar -xzf /tmp/project.tar.gz -C .
           rm -rf .bootstrap
           git config user.name "AahPlexX"
