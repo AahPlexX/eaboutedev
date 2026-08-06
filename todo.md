@@ -48,3 +48,13 @@ This file is append-only. Add a new dated turn section; do not rewrite or remove
 - [x] Preserve rich NLP and fuzzy behavior in global search while keeping catalog filtering precise.
 - [x] Cover both physical safe-area edges for direction-agnostic skip-link placement.
 - [x] Restore read-only, frozen-lockfile CI and deployment permissions.
+
+### Release outcome — Turn 2, sequence 3 — 2026-08-06
+
+- [x] Pass the final frozen-lockfile pull-request verification.
+- [x] Consolidate the reviewed application onto `origin/main` through squash-merged PR #4.
+- [x] Verify the production dependency install and Vite build inside the GitHub Pages deployment job.
+- [x] Isolate the remaining failure to first-time repository-level Pages site creation rather than application source, content, tests, types, lint, or build output.
+- [x] Upgrade the production workflow to `actions/configure-pages@v6` and remove temporary enablement gates and triggers.
+- [ ] In repository **Settings → Pages**, set the publishing source to **GitHub Actions**. This requires repository-admin authorization outside the connected workflow token.
+- [ ] Confirm the first live Pages deployment after the publishing source is enabled; subsequent `main` updates are already automated.
