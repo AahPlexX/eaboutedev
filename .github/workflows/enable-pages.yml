@@ -11,7 +11,9 @@ permissions:
 
 jobs:
   enable:
-    if: github.event.pull_request.head.ref == 'release/verify-pages'
+    if: >-
+      github.event.pull_request.head.ref == 'release/verify-pages' ||
+      github.event.pull_request.head.ref == 'release/enable-pages'
     runs-on: ubuntu-latest
     steps:
       - name: Enable Pages with GitHub Actions publishing
