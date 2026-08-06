@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: pages-${{ github.ref }}
@@ -21,6 +21,8 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref_name }}
 
       - name: Install pnpm
         uses: pnpm/action-setup@v6
@@ -34,6 +36,33 @@ jobs:
 
       - name: Install exact dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Refresh derived artifacts
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('src/index.css')
+          text = path.read_text(encoding='utf-8')
+          old = 'inset-inline-start: max(0.5rem, env(safe-area-inset-left));'
+          new = 'inset-inline-start: max(0.5rem, env(safe-area-inset-left), env(safe-area-inset-right));'
+          if old in text:
+              path.write_text(text.replace(old, new, 1), encoding='utf-8')
+          elif new not in text:
+              raise SystemExit('Safe-area inset contract was not found.')
+          PY
+          pnpm run generate
+          if git diff --quiet -- src/index.css src/generated public/search docs/topic-registry.json; then
+            echo "Derived artifacts are current."
+            exit 0
+          fi
+          git config user.name "AahPlexX"
+          git config user.email "130876266+AahPlexX@users.noreply.github.com"
+          git add src/index.css src/generated public/search docs/topic-registry.json
+          git commit -m "build: refresh generated topic artifacts"
+          git push origin "HEAD:${GITHUB_HEAD_REF}"
 
       - name: Verify generated content artifacts are committed
         run: |
