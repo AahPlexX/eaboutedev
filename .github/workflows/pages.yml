@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: pages-${{ github.ref }}
@@ -21,6 +21,8 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref_name }}
 
       - name: Install pnpm
         uses: pnpm/action-setup@v6
@@ -35,6 +37,20 @@ jobs:
       - name: Install exact dependencies
         run: pnpm install --no-frozen-lockfile
 
+      - name: Commit initial lockfile
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          if git ls-files --error-unmatch pnpm-lock.yaml >/dev/null 2>&1; then
+            echo "Lockfile is already committed."
+            exit 0
+          fi
+          git config user.name "AahPlexX"
+          git config user.email "130876266+AahPlexX@users.noreply.github.com"
+          git add pnpm-lock.yaml
+          git commit -m "chore: lock exact dependencies"
+          git push origin "HEAD:${GITHUB_HEAD_REF}"
+
       - name: Verify generated content artifacts are committed
         run: |
           pnpm run generate
@@ -42,14 +58,6 @@ jobs:
 
       - name: Run full project checks
         run: pnpm run check
-
-      - name: Preserve generated lockfile
-        uses: actions/upload-artifact@v4
-        with:
-          name: pnpm-lock-${{ github.sha }}
-          path: pnpm-lock.yaml
-          if-no-files-found: error
-          retention-days: 7
 
   deploy:
     name: Build and deploy GitHub Pages
