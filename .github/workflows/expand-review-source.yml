@@ -41,6 +41,7 @@ jobs:
           echo "bac97e7f8a5d2f8792e5fc965f00dd06b81d654670f59739a7801c857f138125  /tmp/project.tar.gz" | sha256sum --check --strict
           gzip --test /tmp/project.tar.gz
           tar -xzf /tmp/project.tar.gz -C .
+          rm -f .github/workflows/pages.yml
           rm -rf .bootstrap .source-expand-trigger .github/workflows/expand-review-source.yml
           git config user.name "AahPlexX"
           git config user.email "130876266+AahPlexX@users.noreply.github.com"
