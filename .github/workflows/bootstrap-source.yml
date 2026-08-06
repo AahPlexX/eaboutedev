@@ -1,17 +1,11 @@
 name: Expand initial source bundle
 
 on:
-  push:
-    branches: [build/initial-development-ssot]
-    paths:
-      - .bootstrap/**
-      - .github/workflows/bootstrap-source.yml
   pull_request:
     branches: [main]
     paths:
       - .bootstrap/**
       - .github/workflows/bootstrap-source.yml
-  workflow_dispatch:
 
 permissions:
   contents: write
@@ -22,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
-          ref: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref_name }}
+          ref: ${{ github.head_ref }}
       - name: Expand source tree
         shell: bash
         run: |
@@ -40,5 +34,4 @@ jobs:
           git config user.email "130876266+AahPlexX@users.noreply.github.com"
           git add --all
           git commit -m "feat: build initial development reference"
-          target_branch="${GITHUB_HEAD_REF:-${GITHUB_REF_NAME}}"
-          git push origin "HEAD:${target_branch}"
+          git push origin "HEAD:${GITHUB_HEAD_REF}"
