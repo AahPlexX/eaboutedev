@@ -64,6 +64,61 @@
           "responsibility": "Pull-request verification and automatic main-branch Pages deployment"
         }
       ]
+    },
+    {
+      "turncount": 2,
+      "date": "2026-08-05",
+      "summary": "Exact dependency locking and current-toolchain verification hardening",
+      "areas": [
+        {
+          "path": "package.json",
+          "responsibility": "Registry-current exact runtime, build, type, lint, component, routing, icon, and search dependency contract"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "responsibility": "Deterministic transitive dependency graph enforced by frozen CI and deployment installs"
+        },
+        {
+          "path": "tsconfig.app.json",
+          "responsibility": "Strict TypeScript 7 browser and Node-test compilation contract with explicit path aliases and Node ambient types"
+        },
+        {
+          "path": "vite.config.ts",
+          "responsibility": "Vite 8 GitHub Pages base path, React and Tailwind plugins, alias resolution, source maps, and native Rolldown chunking"
+        },
+        {
+          "path": ".oxlintrc.json",
+          "responsibility": "Oxlint correctness, suspicious, performance, React automatic JSX runtime, and narrowly scoped immutable-content exceptions"
+        },
+        {
+          "path": "src/lib/search.ts",
+          "responsibility": "Lazy weighted fuzzy retrieval with intent attachment that avoids result-object copying"
+        },
+        {
+          "path": "scripts/content-utils.mjs",
+          "responsibility": "Immutable deterministic topic discovery, parsing, catalog projection, and SHA-256 hashing"
+        },
+        {
+          "path": "scripts/generate-content-artifacts.mjs",
+          "responsibility": "Concurrent deterministic generation and stale-artifact verification"
+        },
+        {
+          "path": "scripts/validate-content.mjs",
+          "responsibility": "Topic schema, relationship, HTTPS source, date, and 5,000-topic ceiling validation"
+        },
+        {
+          "path": ".github/workflows/pages.yml",
+          "responsibility": "Frozen-lockfile pull-request proof and gated GitHub Pages deployment after every main update"
+        },
+        {
+          "path": "changelog.md",
+          "responsibility": "Append-only turncount-indexed project history"
+        },
+        {
+          "path": "todo.md",
+          "responsibility": "Append-only delivery and external release-gate ledger"
+        }
+      ]
     }
   ]
 }
