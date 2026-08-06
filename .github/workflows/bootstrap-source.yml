@@ -2,9 +2,10 @@ name: Expand initial source bundle
 
 on:
   push:
-    branches: [main]
+    branches: [build/initial-development-ssot]
     paths:
       - .bootstrap/**
+      - .github/workflows/bootstrap-source.yml
   workflow_dispatch:
 
 permissions:
@@ -21,10 +22,11 @@ jobs:
           shopt -s nullglob
           chunks=(.bootstrap/chunk-*)
           if (( ${#chunks[@]} != 7 )); then
-            echo "Waiting for all source bundle chunks (${#chunks[@]}/7)."
+            echo "Expected 7 source bundle chunks; found ${#chunks[@]}."
             exit 1
           fi
           cat "${chunks[@]}" | base64 --decode > /tmp/project.tar.gz
+          tar -tzf /tmp/project.tar.gz >/dev/null
           tar -xzf /tmp/project.tar.gz -C .
           rm -rf .bootstrap .github/workflows/bootstrap-source.yml
           git config user.name "AahPlexX"
