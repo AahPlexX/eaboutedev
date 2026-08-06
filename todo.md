@@ -58,3 +58,19 @@ This file is append-only. Add a new dated turn section; do not rewrite or remove
 - [x] Upgrade the production workflow to `actions/configure-pages@v6` and remove temporary enablement gates and triggers.
 - [ ] In repository **Settings → Pages**, set the publishing source to **GitHub Actions**. This requires repository-admin authorization outside the connected workflow token.
 - [ ] Confirm the first live Pages deployment after the publishing source is enabled; subsequent `main` updates are already automated.
+
+## Turn 3 — 2026-08-06
+
+**turncount: 3**
+
+### Completed
+
+- [x] Reconcile all remaining named development and release branches to the authoritative `main` tree.
+- [x] Pin every external action in the production Pages workflow to its current official stable semantic release.
+- [x] Upgrade Pages artifact upload and deployment from v4 to v5.
+- [x] Preserve least-privilege permissions, frozen-lockfile installation, full validation, and main-only deployment behavior.
+
+### Remaining external gate
+
+- [ ] In repository **Settings → Pages**, choose **GitHub Actions** under **Build and deployment → Source**.
+- [ ] Confirm the first successful deployment at the generated GitHub Pages endpoint after that setting is saved.
