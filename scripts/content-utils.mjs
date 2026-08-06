@@ -18,6 +18,23 @@ export async function readTopics() {
 }
 
 export function createCatalogEntry(topic) {
+  return {
+    slug: topic.slug,
+    title: topic.title,
+    eyebrow: topic.eyebrow,
+    summary: topic.summary,
+    category: topic.category,
+    level: topic.level,
+    estimatedMinutes: topic.estimatedMinutes,
+    icon: topic.icon,
+    accent: topic.accent,
+    aliases: topic.aliases,
+    keywords: topic.keywords,
+  };
+}
+
+export function createSearchDocument(topic) {
+  const catalogEntry = createCatalogEntry(topic);
   const sectionTitles = topic.sections.map((section) => section.title);
   const searchable = [
     topic.title,
@@ -32,17 +49,7 @@ export function createCatalogEntry(topic) {
   ];
 
   return {
-    slug: topic.slug,
-    title: topic.title,
-    eyebrow: topic.eyebrow,
-    summary: topic.summary,
-    category: topic.category,
-    level: topic.level,
-    estimatedMinutes: topic.estimatedMinutes,
-    icon: topic.icon,
-    accent: topic.accent,
-    aliases: topic.aliases,
-    keywords: topic.keywords,
+    ...catalogEntry,
     sectionTitles,
     searchText: searchable.join(" "),
   };
