@@ -16,14 +16,5 @@ export default defineConfig({
     sourcemap: true,
     cssCodeSplit: true,
     chunkSizeWarningLimit: 650,
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          react: ["react", "react-dom", "react-router-dom"],
-          search: ["minisearch"],
-          icons: ["lucide-react"],
-        },
-      },
-    },
   },
 });
