@@ -50,12 +50,14 @@ export async function searchTopics(query: string, limit = 8): Promise<TopicSearc
 
   const search = await getTopicSearch();
   const intent = inferQueryIntent(trimmed);
-  return search
+  const results = search
     .search(buildSearchQuery(trimmed), {
       combineWith: "OR",
       prefix: true,
       fuzzy: (term) => (term.length >= 6 ? 0.25 : term.length >= 4 ? 0.15 : false),
     })
-    .slice(0, limit)
-    .map((result) => ({ ...result, intent })) as TopicSearchResult[];
+    .slice(0, limit) as TopicSearchResult[];
+
+  for (const result of results) result.intent = intent;
+  return results;
 }
