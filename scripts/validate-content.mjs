@@ -36,7 +36,7 @@ for (const { filename, document: topic } of topics) {
     }
   }
   for (const source of topic.sources ?? []) {
-    if (!/^https:\/\//.test(source.url)) fail(`source must use HTTPS: ${source.url}`);
+    if (!source.url.startsWith("https://")) fail(`source must use HTTPS: ${source.url}`);
     if (!/^\d{4}-\d{2}-\d{2}$/.test(source.accessed)) fail(`source accessed date is invalid: ${source.accessed}`);
   }
 }
