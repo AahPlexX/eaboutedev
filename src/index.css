@@ -125,7 +125,7 @@ canvas {
 .skip-link {
   position: fixed;
   inset-block-start: max(0.5rem, env(safe-area-inset-top));
-  inset-inline-start: max(0.5rem, env(safe-area-inset-left));
+  inset-inline-start: max(0.5rem, env(safe-area-inset-left), env(safe-area-inset-right));
   z-index: 100;
   translate: 0 -200%;
   border-radius: 0.75rem;
