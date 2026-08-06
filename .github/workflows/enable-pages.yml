@@ -1,0 +1,20 @@
+name: Enable GitHub Pages
+
+on:
+  pull_request_target:
+    branches: [main]
+    types: [opened, reopened, synchronize, ready_for_review, edited]
+
+permissions:
+  contents: read
+  pages: write
+
+jobs:
+  enable:
+    if: github.event.pull_request.head.ref == 'release/verify-pages'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Enable Pages with GitHub Actions publishing
+        uses: actions/configure-pages@v6
+        with:
+          enablement: true
