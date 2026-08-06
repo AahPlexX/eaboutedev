@@ -14,6 +14,7 @@
   "rules": {
     "react/jsx-key": "error",
     "react/no-array-index-key": "warn",
+    "react/react-in-jsx-scope": "off",
     "unicorn/no-null": "off",
     "typescript/no-explicit-any": "error",
     "oxc/no-barrel-file": "off"
