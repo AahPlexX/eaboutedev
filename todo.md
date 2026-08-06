@@ -37,3 +37,14 @@ This file is append-only. Add a new dated turn section; do not rewrite or remove
 - [ ] Pass the final frozen-lockfile pull-request verification.
 - [ ] Consolidate the reviewed branch onto `origin/main`.
 - [ ] Confirm the `main` push verification and GitHub Pages deployment.
+
+### Review hardening — Turn 2
+
+- [x] Preserve topic content titles while updating browser document metadata.
+- [x] Match global search semantics to its implemented keyboard interaction model.
+- [x] Separate lean catalog metadata from the lazy deep-search corpus.
+- [x] Bound home discovery to six topics and catalog rendering to progressive 24-topic windows.
+- [x] Add four focused tests for catalog scale behavior and document-title separation, bringing the suite to eight tests.
+- [x] Preserve rich NLP and fuzzy behavior in global search while keeping catalog filtering precise.
+- [x] Cover both physical safe-area edges for direction-agnostic skip-link placement.
+- [x] Restore read-only, frozen-lockfile CI and deployment permissions.
