@@ -44,3 +44,14 @@ Append-only project history. The highest recorded `turncount` is authoritative.
 ### Release gate
 
 - The review branch is mergeable and the final frozen-lockfile verification is required before consolidation onto `origin/main`.
+
+### Review hardening — Turn 2
+
+- Separated topic content titles from the browser document title and added focused regression tests.
+- Replaced incomplete listbox roles in global search with native list and button semantics that match the implemented keyboard behavior.
+- Split lean catalog metadata from the lazy deep-search corpus so discovery pages do not duplicate full search text in the main JavaScript bundle.
+- Bounded the home page to six featured topics and the catalog to progressive 24-topic windows so the interface remains usable as the registry approaches 5,000 topics.
+- Added catalog filtering and display-window tests, bringing the focused Node test suite to eight tests.
+- Kept rich synonym and fuzzy expansion in global search while making the lightweight catalog filter precise and predictable.
+- Made the skip-link safe-area inset resilient in both left-to-right and right-to-left layouts.
+- Restored the final GitHub Actions workflow to read-only repository access with frozen dependency installs and no self-modifying steps.
