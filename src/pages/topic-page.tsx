@@ -7,11 +7,10 @@ import { TopicVisualPanel } from "@/components/topics/topic-visual";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { topicCatalog } from "@/generated/topic-catalog";
+import { getTopicDocumentTitle, SITE_TITLE } from "@/lib/document-title";
 import { loadTopic } from "@/lib/topic-loader";
 import type { TopicDocument } from "@/types/content";
 import { NotFoundPage } from "@/pages/not-found-page";
-
-const SITE_TITLE = "Everything About Development";
 
 export function TopicPage() {
   const { slug = "" } = useParams();
@@ -33,7 +32,7 @@ export function TopicPage() {
 
         setTopic(loadedTopic);
         setStatus("ready");
-        globalThis.document.title = `${loadedTopic.title} · ${SITE_TITLE}`;
+        globalThis.document.title = getTopicDocumentTitle(loadedTopic.title);
       })
       .catch(() => active && setStatus("error"));
 
