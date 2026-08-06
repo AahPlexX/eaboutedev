@@ -246,6 +246,29 @@
           "responsibility": "Append-only map of the workflow supply-chain trust boundary"
         }
       ]
+    },
+    {
+      "turncount": 4,
+      "date": "2026-08-06",
+      "summary": "Repository-level GitHub Pages enablement and first deployment trigger",
+      "areas": [
+        {
+          "path": ".github/workflows/pages.yml",
+          "responsibility": "Existing immutable, least-privilege workflow triggered by the fresh main update after GitHub Actions became the Pages publishing source"
+        },
+        {
+          "path": "changelog.md",
+          "responsibility": "Append-only record of administrator-confirmed Pages enablement and the deployment trigger"
+        },
+        {
+          "path": "todo.md",
+          "responsibility": "Append-only release checklist with repository enablement completed and live verification remaining"
+        },
+        {
+          "path": "codemap.json",
+          "responsibility": "Append-only map of the transition from an external repository gate to active deployment verification"
+        }
+      ]
     }
   ]
 }
