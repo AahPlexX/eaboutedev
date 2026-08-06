@@ -4,9 +4,10 @@ import { TopicCard } from "@/components/topics/topic-card";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { topicCatalog } from "@/generated/topic-catalog";
+import { HOME_TOPIC_PREVIEW_SIZE } from "@/lib/catalog";
 
 export function HomePage() {
-  const featured = topicCatalog;
+  const featured = topicCatalog.slice(0, HOME_TOPIC_PREVIEW_SIZE);
 
   return (
     <>
@@ -42,6 +43,11 @@ export function HomePage() {
         <div className="topic-grid">
           {featured.map((topic) => <TopicCard topic={topic} key={topic.slug} />)}
         </div>
+        {topicCatalog.length > featured.length && (
+          <div className="mt-8 flex justify-center">
+            <Button asChild variant="outline"><Link to="/topics">Browse all {topicCatalog.length} topics</Link></Button>
+          </div>
+        )}
       </section>
 
       <section className="border-y border-border bg-card">
