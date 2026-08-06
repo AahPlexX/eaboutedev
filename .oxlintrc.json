@@ -19,6 +19,17 @@
     "typescript/no-explicit-any": "error",
     "oxc/no-barrel-file": "off"
   },
+  "overrides": [
+    {
+      "files": [
+        "src/components/topics/content-block.tsx",
+        "src/components/topics/topic-section.tsx"
+      ],
+      "rules": {
+        "react/no-array-index-key": "off"
+      }
+    }
+  ],
   "ignorePatterns": [
     "dist/**",
     "src/generated/**",
