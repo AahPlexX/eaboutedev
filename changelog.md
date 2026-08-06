@@ -76,3 +76,10 @@ Append-only project history. The highest recorded `turncount` is authoritative.
 - Pinned `actions/configure-pages` to `v6.0.0`, `actions/upload-pages-artifact` to `v5.0.0`, and `actions/deploy-pages` to `v5.0.0`.
 - Preserved read-only repository permissions, exact pnpm installation through the committed lockfile, generated-artifact drift detection, the complete project check, and the main-only deployment gate.
 - The repository-admin Pages publishing-source selection remains the only external release dependency; no application or workflow logic can safely substitute for that setting.
+
+### Immutable action pinning — Turn 3, sequence 2
+
+- Resolved every verified semantic action release to the full commit SHA in its official repository.
+- Replaced all movable action tags in the production workflow with immutable 40-character commit references.
+- Retained the verified semantic release beside each SHA as a YAML comment so security and maintainability remain aligned.
+- Preserved the same workflow behavior, job permissions, Node 24 runtime, frozen dependency graph, and Pages deployment contract.
