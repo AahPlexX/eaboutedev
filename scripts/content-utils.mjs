@@ -9,7 +9,7 @@ export const topicDirectory = path.join(rootDirectory, "public/content/topics");
 export async function readTopics() {
   const filenames = (await readdir(topicDirectory))
     .filter((filename) => filename.endsWith(".json"))
-    .sort((left, right) => left.localeCompare(right, "en"));
+    .toSorted((left, right) => left.localeCompare(right, "en"));
 
   return Promise.all(filenames.map(async (filename) => {
     const raw = await readFile(path.join(topicDirectory, filename), "utf8");
