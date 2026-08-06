@@ -7,7 +7,7 @@ const topics = await readTopics();
 const catalog = topics.map(({ document }) => createCatalogEntry(document));
 const latestVerification = topics
   .flatMap(({ document }) => document.sources.map((source) => source.accessed))
-  .sort()
+  .toSorted()
   .at(-1);
 
 const files = new Map([
@@ -31,17 +31,17 @@ const files = new Map([
   }, null, 2)}\n`],
 ]);
 
-for (const [filename, expected] of files) {
+await Promise.all(Array.from(files, async ([filename, expected]) => {
   if (checkOnly) {
     const actual = await readFile(filename, "utf8").catch(() => "");
     if (actual !== expected) {
       console.error(`Generated artifact is stale: ${path.relative(rootDirectory, filename)}`);
       process.exitCode = 1;
     }
-    continue;
+    return;
   }
 
   await mkdir(path.dirname(filename), { recursive: true });
   await writeFile(filename, expected, "utf8");
   console.log(`generated ${path.relative(rootDirectory, filename)}`);
-}
+}));
