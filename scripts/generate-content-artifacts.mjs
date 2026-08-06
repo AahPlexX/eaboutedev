@@ -1,10 +1,11 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { createCatalogEntry, digest, readTopics, rootDirectory } from "./content-utils.mjs";
+import { createCatalogEntry, createSearchDocument, digest, readTopics, rootDirectory } from "./content-utils.mjs";
 
 const checkOnly = process.argv.includes("--check");
 const topics = await readTopics();
 const catalog = topics.map(({ document }) => createCatalogEntry(document));
+const searchIndex = topics.map(({ document }) => createSearchDocument(document));
 const latestVerification = topics
   .flatMap(({ document }) => document.sources.map((source) => source.accessed))
   .toSorted()
@@ -13,7 +14,7 @@ const latestVerification = topics
 const files = new Map([
   [path.join(rootDirectory, "src/generated/topic-catalog.ts"),
 `import type { TopicCatalogEntry } from "@/types/content";\n\nexport const topicCatalog: TopicCatalogEntry[] = ${JSON.stringify(catalog, null, 2)};\n`],
-  [path.join(rootDirectory, "public/search/topic-search-index.json"), `${JSON.stringify(catalog, null, 2)}\n`],
+  [path.join(rootDirectory, "public/search/topic-search-index.json"), `${JSON.stringify(searchIndex, null, 2)}\n`],
   [path.join(rootDirectory, "docs/topic-registry.json"), `${JSON.stringify({
     schemaVersion: 1,
     lastVerified: latestVerification,
