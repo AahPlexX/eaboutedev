@@ -1,0 +1,32 @@
+name: Expand initial source bundle
+
+on:
+  push:
+    branches: [build/initial-development-ssot]
+    paths:
+      - .bootstrap/project.tar.gz.base64
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  expand:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Expand source tree
+        shell: bash
+        run: |
+          if [[ ! -f .bootstrap/project.tar.gz.base64 ]]; then
+            echo "Source bundle already expanded."
+            exit 0
+          fi
+          base64 --decode .bootstrap/project.tar.gz.base64 > /tmp/project.tar.gz
+          tar -xzf /tmp/project.tar.gz -C .
+          rm -rf .bootstrap
+          git config user.name "AahPlexX"
+          git config user.email "130876266+AahPlexX@users.noreply.github.com"
+          git add --all
+          git commit -m "feat: build initial development reference"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
