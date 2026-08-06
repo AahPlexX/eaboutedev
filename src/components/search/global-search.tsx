@@ -66,7 +66,7 @@ export function GlobalSearch() {
               aria-controls="search-results"
             />
           </div>
-          <div id="search-results" className="min-h-44 overflow-y-auto px-4 pb-4" role="listbox" aria-live="polite">
+          <div id="search-results" className="min-h-44 overflow-y-auto px-4 pb-4" aria-live="polite">
             {!query && <SearchHint />}
             {isLoading && <p className="py-8 text-center text-sm text-muted-foreground">Searching the guide…</p>}
             {error && <p className="py-8 text-center text-sm text-destructive">{error}</p>}
@@ -76,30 +76,31 @@ export function GlobalSearch() {
                 <p className="mt-1 text-sm text-muted-foreground">Try a broader phrase such as “database,” “API,” or “Git.”</p>
               </div>
             )}
-            <div className="grid gap-2">
-              {results.map((result) => (
-                <button
-                  key={result.slug}
-                  type="button"
-                  role="option"
-                  aria-selected="false"
-                  onClick={() => openTopic(result.slug)}
-                  className="group grid min-h-16 w-full grid-cols-[1fr_auto] items-center gap-4 rounded-xl border border-transparent p-3 text-start hover:border-border hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                >
-                  <span className="min-w-0">
-                    <span className="flex flex-wrap items-center gap-2">
-                      <strong className="truncate">{result.title}</strong>
-                      <Badge variant="outline">{result.category}</Badge>
-                    </span>
-                    <span className="mt-1 line-clamp-2 block text-sm text-muted-foreground">{result.summary}</span>
-                    <span className="mt-2 flex items-center gap-1 text-xs text-muted-foreground">
-                      <Clock3 className="size-3" aria-hidden="true" /> {result.estimatedMinutes} min · {result.level}
-                    </span>
-                  </span>
-                  <ArrowRight className="size-5 text-muted-foreground transition-transform group-hover:translate-x-1 motion-reduce:transition-none" aria-hidden="true" />
-                </button>
-              ))}
-            </div>
+            {results.length > 0 && (
+              <ul className="grid gap-2" aria-label="Search results">
+                {results.map((result) => (
+                  <li key={result.slug}>
+                    <button
+                      type="button"
+                      onClick={() => openTopic(result.slug)}
+                      className="group grid min-h-16 w-full grid-cols-[1fr_auto] items-center gap-4 rounded-xl border border-transparent p-3 text-start hover:border-border hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    >
+                      <span className="min-w-0">
+                        <span className="flex flex-wrap items-center gap-2">
+                          <strong className="truncate">{result.title}</strong>
+                          <Badge variant="outline">{result.category}</Badge>
+                        </span>
+                        <span className="mt-1 line-clamp-2 block text-sm text-muted-foreground">{result.summary}</span>
+                        <span className="mt-2 flex items-center gap-1 text-xs text-muted-foreground">
+                          <Clock3 className="size-3" aria-hidden="true" /> {result.estimatedMinutes} min · {result.level}
+                        </span>
+                      </span>
+                      <ArrowRight className="size-5 text-muted-foreground transition-transform group-hover:translate-x-1 motion-reduce:transition-none" aria-hidden="true" />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         </DialogContent>
       </Dialog>
