@@ -1,0 +1,180 @@
+{
+  "schemaVersion": 1,
+  "appendOnly": true,
+  "entries": [
+    {
+      "turncount": 1,
+      "date": "2026-08-05",
+      "summary": "Initial production architecture and launch curriculum",
+      "areas": [
+        {
+          "path": "src/app.tsx",
+          "responsibility": "Hash-routed application entry and page composition"
+        },
+        {
+          "path": "src/components/ui",
+          "responsibility": "shadcn-style accessible source primitives"
+        },
+        {
+          "path": "src/components/layout",
+          "responsibility": "Persistent shell, global navigation, and footer"
+        },
+        {
+          "path": "src/components/search",
+          "responsibility": "Global search trigger, keyboard contract, dialog, and result navigation"
+        },
+        {
+          "path": "src/components/topics",
+          "responsibility": "Topic cards, visual diagrams, sections, tables, examples, callouts, and local outline"
+        },
+        {
+          "path": "src/lib/query-normalization.ts",
+          "responsibility": "Natural-language tokenization, domain synonym expansion, and query-intent inference"
+        },
+        {
+          "path": "src/lib/search.ts",
+          "responsibility": "Lazy MiniSearch initialization and weighted fuzzy topic retrieval"
+        },
+        {
+          "path": "public/content/topics",
+          "responsibility": "Authoritative independent topic documents"
+        },
+        {
+          "path": "scripts",
+          "responsibility": "Deterministic generation and validation of content and dependency contracts"
+        },
+        {
+          "path": "src/generated/topic-catalog.ts",
+          "responsibility": "Generated lightweight topic metadata for discovery pages"
+        },
+        {
+          "path": "public/search/topic-search-index.json",
+          "responsibility": "Generated lazy-loading search corpus"
+        },
+        {
+          "path": "docs/topic-registry.json",
+          "responsibility": "Generated topic inventory, source locations, counts, and SHA-256 content hashes"
+        },
+        {
+          "path": "src/index.css",
+          "responsibility": "Tailwind theme tokens, adaptive shell rules, container-query visuals, and accessibility preferences"
+        },
+        {
+          "path": ".github/workflows/pages.yml",
+          "responsibility": "Pull-request verification and automatic main-branch Pages deployment"
+        }
+      ]
+    },
+    {
+      "turncount": 2,
+      "date": "2026-08-05",
+      "summary": "Exact dependency locking and current-toolchain verification hardening",
+      "areas": [
+        {
+          "path": "package.json",
+          "responsibility": "Registry-current exact runtime, build, type, lint, component, routing, icon, and search dependency contract"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "responsibility": "Deterministic transitive dependency graph enforced by frozen CI and deployment installs"
+        },
+        {
+          "path": "tsconfig.app.json",
+          "responsibility": "Strict TypeScript 7 browser and Node-test compilation contract with explicit path aliases and Node ambient types"
+        },
+        {
+          "path": "vite.config.ts",
+          "responsibility": "Vite 8 GitHub Pages base path, React and Tailwind plugins, alias resolution, source maps, and native Rolldown chunking"
+        },
+        {
+          "path": ".oxlintrc.json",
+          "responsibility": "Oxlint correctness, suspicious, performance, React automatic JSX runtime, and narrowly scoped immutable-content exceptions"
+        },
+        {
+          "path": "src/lib/search.ts",
+          "responsibility": "Lazy weighted fuzzy retrieval with intent attachment that avoids result-object copying"
+        },
+        {
+          "path": "scripts/content-utils.mjs",
+          "responsibility": "Immutable deterministic topic discovery, parsing, catalog projection, and SHA-256 hashing"
+        },
+        {
+          "path": "scripts/generate-content-artifacts.mjs",
+          "responsibility": "Concurrent deterministic generation and stale-artifact verification"
+        },
+        {
+          "path": "scripts/validate-content.mjs",
+          "responsibility": "Topic schema, relationship, HTTPS source, date, and 5,000-topic ceiling validation"
+        },
+        {
+          "path": ".github/workflows/pages.yml",
+          "responsibility": "Frozen-lockfile pull-request proof and gated GitHub Pages deployment after every main update"
+        },
+        {
+          "path": "changelog.md",
+          "responsibility": "Append-only turncount-indexed project history"
+        },
+        {
+          "path": "todo.md",
+          "responsibility": "Append-only delivery and external release-gate ledger"
+        }
+      ]
+    },
+    {
+      "turncount": 2,
+      "sequence": 2,
+      "date": "2026-08-05",
+      "summary": "Independent review hardening for accessibility, metadata integrity, and 5,000-topic discovery scale",
+      "areas": [
+        {
+          "path": "src/lib/document-title.ts",
+          "responsibility": "Pure browser-title contract that keeps loaded topic content immutable"
+        },
+        {
+          "path": "src/pages/topic-page.tsx",
+          "responsibility": "Lazy topic loading, browser metadata updates, guide rendering, glossary, sources, and related navigation"
+        },
+        {
+          "path": "src/components/search/global-search.tsx",
+          "responsibility": "Native list and button search-result semantics with Tab-accessible navigation"
+        },
+        {
+          "path": "src/lib/catalog.ts",
+          "responsibility": "Precise lightweight filtering and bounded 24-topic discovery windows"
+        },
+        {
+          "path": "src/pages/home-page.tsx",
+          "responsibility": "Six-topic launch preview with generated total count and full-catalog handoff"
+        },
+        {
+          "path": "src/pages/topics-page.tsx",
+          "responsibility": "Category filtering, precise metadata search, result counts, and progressive catalog disclosure"
+        },
+        {
+          "path": "src/types/content.ts",
+          "responsibility": "Separate lean catalog and deep lazy-search document interfaces"
+        },
+        {
+          "path": "scripts/content-utils.mjs",
+          "responsibility": "Independent catalog and deep-search projections from authoritative topic documents"
+        },
+        {
+          "path": "tests/catalog.test.ts",
+          "responsibility": "Regression proof for precise filtering and bounded 5,000-topic display behavior"
+        },
+        {
+          "path": "tests/document-title.test.ts",
+          "responsibility": "Regression proof that browser titles do not alter displayed guide content"
+        },
+        {
+          "path": "src/index.css",
+          "responsibility": "Direction-agnostic skip-link safe-area placement across both physical inset edges"
+        },
+        {
+          "path": ".github/workflows/pages.yml",
+          "responsibility": "Read-only frozen-lockfile verification followed by gated main-branch Pages deployment"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "lastVerified": "2026-08-05",
+  "topicCount": 5,
+  "topics": [
+    {
+      "slug": "apis-and-data-exchange",
+      "title": "APIs and Data Exchange",
+      "category": "Architecture",
+      "level": "Intermediate",
+      "sourceFile": "public/content/topics/apis-and-data-exchange.json",
+      "sha256": "9cedfffb230e70b8d2d7c2584ad04251ab59f6b023a8b23522876a1e72908397",
+      "sectionCount": 7,
+      "sourceCount": 5
+    },
+    {
+      "slug": "git-and-github",
+      "title": "Git and GitHub",
+      "category": "Tooling",
+      "level": "Foundational",
+      "sourceFile": "public/content/topics/git-and-github.json",
+      "sha256": "210ede5669eaf672fd6859d2e9571a4ac8a7bf7244e890dd9b441a570163cf08",
+      "sectionCount": 7,
+      "sourceCount": 5
+    },
+    {
+      "slug": "how-the-web-works",
+      "title": "How the Web Works",
+      "category": "Web foundations",
+      "level": "Foundational",
+      "sourceFile": "public/content/topics/how-the-web-works.json",
+      "sha256": "30d04e011bdb297495b9918e88b4b512d1e2478c4aa1cdc809021eb3c58beaa3",
+      "sectionCount": 6,
+      "sourceCount": 4
+    },
+    {
+      "slug": "html-css-and-javascript",
+      "title": "HTML, CSS, and JavaScript",
+      "category": "Frontend",
+      "level": "Foundational",
+      "sourceFile": "public/content/topics/html-css-and-javascript.json",
+      "sha256": "589ceec658e786630869a68edf5524d5405d2f7bdd5a8855c3627681e119ad85",
+      "sectionCount": 6,
+      "sourceCount": 4
+    },
+    {
+      "slug": "the-seven-types-of-databases",
+      "title": "The 7 Types of Databases",
+      "category": "Data",
+      "level": "Foundational",
+      "sourceFile": "public/content/topics/the-seven-types-of-databases.json",
+      "sha256": "bbf12426b8595edf9e8ab21b5f93ccdf193c69edb52c5894a5323242a03ecb29",
+      "sectionCount": 8,
+      "sourceCount": 7
+    }
+  ]
+}

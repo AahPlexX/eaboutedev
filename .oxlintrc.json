@@ -1,0 +1,38 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": [
+    "react",
+    "unicorn",
+    "typescript",
+    "oxc"
+  ],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "warn",
+    "perf": "warn"
+  },
+  "rules": {
+    "react/jsx-key": "error",
+    "react/no-array-index-key": "warn",
+    "react/react-in-jsx-scope": "off",
+    "unicorn/no-null": "off",
+    "typescript/no-explicit-any": "error",
+    "oxc/no-barrel-file": "off"
+  },
+  "overrides": [
+    {
+      "files": [
+        "src/components/topics/content-block.tsx",
+        "src/components/topics/topic-section.tsx"
+      ],
+      "rules": {
+        "react/no-array-index-key": "off"
+      }
+    }
+  ],
+  "ignorePatterns": [
+    "dist/**",
+    "src/generated/**",
+    "public/search/**"
+  ]
+}

@@ -1,0 +1,203 @@
+[
+  {
+    "slug": "apis-and-data-exchange",
+    "title": "APIs and Data Exchange",
+    "eyebrow": "System boundaries · Contracts and communication",
+    "summary": "See how software exposes capabilities, validates messages, reports outcomes, and evolves contracts without surprising its consumers.",
+    "category": "Architecture",
+    "level": "Intermediate",
+    "estimatedMinutes": 30,
+    "icon": "⇄",
+    "accent": "oklch(0.67 0.19 310)",
+    "aliases": [
+      "api basics",
+      "rest api",
+      "graphql",
+      "webhooks",
+      "json api",
+      "service communication"
+    ],
+    "keywords": [
+      "api",
+      "contract",
+      "http",
+      "rest",
+      "graphql",
+      "json",
+      "schema",
+      "authentication",
+      "pagination",
+      "idempotency",
+      "webhook",
+      "versioning"
+    ],
+    "sectionTitles": [
+      "1. An API is a contract between software boundaries",
+      "2. HTTP APIs model resources and operations",
+      "3. Messages need explicit schemas and errors",
+      "4. Authentication and authorization answer different questions",
+      "5. Pagination, caching, retries, and idempotency make APIs operable",
+      "6. Choose the interaction style that matches the job",
+      "7. Evolve contracts without silent breakage"
+    ],
+    "searchText": "APIs and Data Exchange System boundaries · Contracts and communication See how software exposes capabilities, validates messages, reports outcomes, and evolves contracts without surprising its consumers. Architecture Intermediate api basics rest api graphql webhooks json api service communication api contract http rest graphql json schema authentication pagination idempotency webhook versioning 1. An API is a contract between software boundaries 2. HTTP APIs model resources and operations 3. Messages need explicit schemas and errors 4. Authentication and authorization answer different questions 5. Pagination, caching, retries, and idempotency make APIs operable 6. Choose the interaction style that matches the job 7. Evolve contracts without silent breakage API A defined interface through which software requests capabilities or data from another boundary. Schema A machine-readable or documented definition of a data shape and its constraints. Idempotency A defined property where repeating an equivalent operation does not create additional unintended effects. Cursor pagination Pagination that continues from an opaque position in an ordered result set. Webhook An HTTP request sent by a provider to a registered consumer when an event occurs."
+  },
+  {
+    "slug": "git-and-github",
+    "title": "Git and GitHub",
+    "eyebrow": "Delivery workflow · History and collaboration",
+    "summary": "Build a precise mental model of snapshots, branches, merges, remotes, pull requests, and automated checks without treating Git as a list of magic commands.",
+    "category": "Tooling",
+    "level": "Foundational",
+    "estimatedMinutes": 28,
+    "icon": "⑂",
+    "accent": "oklch(0.68 0.18 25)",
+    "aliases": [
+      "version control",
+      "git basics",
+      "github workflow",
+      "branches commits pull requests",
+      "source control"
+    ],
+    "keywords": [
+      "repository",
+      "working tree",
+      "staging area",
+      "commit",
+      "branch",
+      "merge",
+      "rebase",
+      "remote",
+      "push",
+      "pull request",
+      "github actions",
+      "conflict"
+    ],
+    "sectionTitles": [
+      "1. Git stores snapshots connected as a graph",
+      "2. A change moves through explicit local states",
+      "3. Branches isolate lines of work; integration combines them",
+      "4. Remotes synchronize repositories, not folders",
+      "5. GitHub adds collaboration and policy around Git",
+      "6. GitHub Actions turns repository events into repeatable evidence",
+      "7. Recover with evidence instead of panic"
+    ],
+    "searchText": "Git and GitHub Delivery workflow · History and collaboration Build a precise mental model of snapshots, branches, merges, remotes, pull requests, and automated checks without treating Git as a list of magic commands. Tooling Foundational version control git basics github workflow branches commits pull requests source control repository working tree staging area commit branch merge rebase remote push pull request github actions conflict 1. Git stores snapshots connected as a graph 2. A change moves through explicit local states 3. Branches isolate lines of work; integration combines them 4. Remotes synchronize repositories, not folders 5. GitHub adds collaboration and policy around Git 6. GitHub Actions turns repository events into repeatable evidence 7. Recover with evidence instead of panic Repository A Git object database and references representing project history, usually with a working tree. Index The staging area containing the exact snapshot proposed for the next commit. Commit An immutable snapshot with metadata and parent link or links. Branch A movable reference that commonly points to the newest commit in a line of work. Remote A named connection to another Git repository and its tracked references. Pull request A GitHub collaboration proposal to review and integrate one branch into another."
+  },
+  {
+    "slug": "how-the-web-works",
+    "title": "How the Web Works",
+    "eyebrow": "Foundation · Request to response",
+    "summary": "Follow one web address from your browser through DNS, the network, a server, and back into a rendered page.",
+    "category": "Web foundations",
+    "level": "Foundational",
+    "estimatedMinutes": 22,
+    "icon": "◎",
+    "accent": "oklch(0.67 0.18 250)",
+    "aliases": [
+      "internet request lifecycle",
+      "browser to server",
+      "website loading",
+      "http lifecycle",
+      "dns and http"
+    ],
+    "keywords": [
+      "browser",
+      "url",
+      "dns",
+      "ip address",
+      "tcp",
+      "tls",
+      "http",
+      "server",
+      "response",
+      "rendering"
+    ],
+    "sectionTitles": [
+      "1. The URL tells the browser where to begin",
+      "2. DNS finds a routable address",
+      "3. The browser creates a protected connection",
+      "4. HTTP carries a meaningful request and response",
+      "5. The browser turns resources into pixels",
+      "6. Diagnose failures by stage"
+    ],
+    "searchText": "How the Web Works Foundation · Request to response Follow one web address from your browser through DNS, the network, a server, and back into a rendered page. Web foundations Foundational internet request lifecycle browser to server website loading http lifecycle dns and http browser url dns ip address tcp tls http server response rendering 1. The URL tells the browser where to begin 2. DNS finds a routable address 3. The browser creates a protected connection 4. HTTP carries a meaningful request and response 5. The browser turns resources into pixels 6. Diagnose failures by stage Browser A client application that requests, interprets, and presents web resources. DNS The distributed naming system that maps domain names to records such as IP addresses. HTTP An application protocol that defines request and response semantics. TLS A protocol that authenticates peers and protects data in transit. Rendering The browser work that converts document, style, script, and media inputs into a visual result."
+  },
+  {
+    "slug": "html-css-and-javascript",
+    "title": "HTML, CSS, and JavaScript",
+    "eyebrow": "Foundation · Structure, presentation, behavior",
+    "summary": "Understand the three core browser languages, the boundary each owns, and how they cooperate without becoming tangled.",
+    "category": "Frontend",
+    "level": "Foundational",
+    "estimatedMinutes": 24,
+    "icon": "◇",
+    "accent": "oklch(0.71 0.17 155)",
+    "aliases": [
+      "html css js",
+      "frontend basics",
+      "web page languages",
+      "markup styling scripting"
+    ],
+    "keywords": [
+      "semantic html",
+      "css cascade",
+      "javascript",
+      "dom",
+      "accessibility",
+      "progressive enhancement",
+      "responsive design"
+    ],
+    "sectionTitles": [
+      "1. HTML creates the meaningful document",
+      "2. CSS computes presentation from rules",
+      "3. JavaScript coordinates behavior and state",
+      "4. The layers cooperate through stable boundaries",
+      "5. Responsive means content survives changing context",
+      "6. Build a small accessible disclosure"
+    ],
+    "searchText": "HTML, CSS, and JavaScript Foundation · Structure, presentation, behavior Understand the three core browser languages, the boundary each owns, and how they cooperate without becoming tangled. Frontend Foundational html css js frontend basics web page languages markup styling scripting semantic html css cascade javascript dom accessibility progressive enhancement responsive design 1. HTML creates the meaningful document 2. CSS computes presentation from rules 3. JavaScript coordinates behavior and state 4. The layers cooperate through stable boundaries 5. Responsive means content survives changing context 6. Build a small accessible disclosure Semantic HTML HTML that communicates content meaning and relationships through appropriate elements. Cascade The CSS conflict-resolution process that determines which declarations apply. DOM The browser object model representing the document as nodes that APIs can inspect and change. Event A signal that something happened, such as input, navigation, or a network result. Progressive enhancement Delivering a functional baseline first and adding supported capabilities without making the baseline unusable."
+  },
+  {
+    "slug": "the-seven-types-of-databases",
+    "title": "The 7 Types of Databases",
+    "eyebrow": "Data systems · Practical selection model",
+    "summary": "Compare seven useful database families by the shape of their data, the questions they answer well, and the trade-offs they introduce.",
+    "category": "Data",
+    "level": "Foundational",
+    "estimatedMinutes": 36,
+    "icon": "▦",
+    "accent": "oklch(0.72 0.17 70)",
+    "aliases": [
+      "database types",
+      "db types",
+      "sql vs nosql",
+      "which database",
+      "data storage models"
+    ],
+    "keywords": [
+      "relational",
+      "document",
+      "key value",
+      "graph",
+      "time series",
+      "search engine",
+      "vector database",
+      "sql",
+      "nosql",
+      "transactions",
+      "indexes"
+    ],
+    "sectionTitles": [
+      "1. Start with questions, not product names",
+      "2. Relational databases: connected facts with strong rules",
+      "3. Document databases: records shaped like application aggregates",
+      "4. Key–value databases: the shortest path to a known item",
+      "5. Graph databases: relationships are first-class data",
+      "6. Time-series, search, and vector databases",
+      "7. Use more than one database only for proven pressure",
+      "8. A practical selection matrix"
+    ],
+    "searchText": "The 7 Types of Databases Data systems · Practical selection model Compare seven useful database families by the shape of their data, the questions they answer well, and the trade-offs they introduce. Data Foundational database types db types sql vs nosql which database data storage models relational document key value graph time series search engine vector database sql nosql transactions indexes 1. Start with questions, not product names 2. Relational databases: connected facts with strong rules 3. Document databases: records shaped like application aggregates 4. Key–value databases: the shortest path to a known item 5. Graph databases: relationships are first-class data 6. Time-series, search, and vector databases 7. Use more than one database only for proven pressure 8. A practical selection matrix Access pattern A recurring way data is written, selected, filtered, joined, traversed, or aggregated. Constraint A rule the database enforces to reject invalid data states. Index An additional data structure that speeds selected lookups at the cost of storage and write work. Transaction A unit of work whose changes are committed or rolled back according to defined guarantees. Projection A derived representation optimized for a particular read model, search, or analysis need."
+  }
+]

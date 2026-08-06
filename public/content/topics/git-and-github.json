@@ -1,0 +1,505 @@
+{
+  "version": 1,
+  "slug": "git-and-github",
+  "title": "Git and GitHub",
+  "eyebrow": "Delivery workflow · History and collaboration",
+  "summary": "Build a precise mental model of snapshots, branches, merges, remotes, pull requests, and automated checks without treating Git as a list of magic commands.",
+  "category": "Tooling",
+  "level": "Foundational",
+  "estimatedMinutes": 28,
+  "icon": "⑂",
+  "accent": "oklch(0.68 0.18 25)",
+  "aliases": [
+    "version control",
+    "git basics",
+    "github workflow",
+    "branches commits pull requests",
+    "source control"
+  ],
+  "keywords": [
+    "repository",
+    "working tree",
+    "staging area",
+    "commit",
+    "branch",
+    "merge",
+    "rebase",
+    "remote",
+    "push",
+    "pull request",
+    "github actions",
+    "conflict"
+  ],
+  "prerequisites": [
+    "None; command-line familiarity helps."
+  ],
+  "learningOutcomes": [
+    "Explain Git as a graph of snapshots and names.",
+    "Move work safely from working tree to commit to remote.",
+    "Use pull requests and CI as evidence gates."
+  ],
+  "heroVisual": {
+    "kind": "flow",
+    "title": "From local change to deployed main",
+    "caption": "Every transition has evidence and ownership.",
+    "nodes": [
+      {
+        "label": "Working tree",
+        "detail": "Files currently present on the computer."
+      },
+      {
+        "label": "Index",
+        "detail": "The exact next snapshot selected for commit."
+      },
+      {
+        "label": "Commit",
+        "detail": "An immutable snapshot plus parent link and metadata."
+      },
+      {
+        "label": "Branch",
+        "detail": "A movable name pointing to a commit."
+      },
+      {
+        "label": "Remote",
+        "detail": "Another repository with its own references."
+      },
+      {
+        "label": "Pull request",
+        "detail": "A hosted review and integration proposal."
+      },
+      {
+        "label": "Workflow",
+        "detail": "Automated checks and deployment triggered by repository events."
+      }
+    ]
+  },
+  "sections": [
+    {
+      "id": "model",
+      "title": "1. Git stores snapshots connected as a graph",
+      "summary": "Commits are durable nodes; branches are movable labels.",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "A Git commit records a project snapshot, metadata, and one or more parent commits. The parent links form a directed history graph. A branch such as main is not a container of files; it is a reference that moves to the newest commit in that line of work."
+        },
+        {
+          "type": "cards",
+          "items": [
+            {
+              "title": "Commit",
+              "summary": "Immutable project snapshot and history node.",
+              "whenToUse": "Create one coherent, reviewable change.",
+              "example": "git commit"
+            },
+            {
+              "title": "Branch",
+              "summary": "Movable reference to a commit.",
+              "whenToUse": "Develop an isolated line of work or mark an authoritative line.",
+              "example": "main → D"
+            },
+            {
+              "title": "Tag",
+              "summary": "Usually an immovable human-readable name for a specific commit.",
+              "whenToUse": "Mark a release or milestone.",
+              "example": "v1.0.0 → M"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "definition",
+          "title": "HEAD",
+          "body": "The reference that identifies the currently checked-out commit or branch, which determines where the next commit advances."
+        }
+      ],
+      "visual": {
+        "kind": "map",
+        "title": "A small commit graph",
+        "caption": "Names move; committed snapshots do not.",
+        "nodes": [
+          {
+            "label": "A",
+            "detail": "Initial snapshot."
+          },
+          {
+            "label": "B",
+            "detail": "Main advances."
+          },
+          {
+            "label": "C",
+            "detail": "Feature branches from B."
+          },
+          {
+            "label": "D",
+            "detail": "Main receives another change."
+          },
+          {
+            "label": "M",
+            "detail": "A merge joins both parent histories."
+          }
+        ]
+      }
+    },
+    {
+      "id": "states",
+      "title": "2. A change moves through explicit local states",
+      "summary": "The staging area lets one working directory produce a precise commit.",
+      "blocks": [
+        {
+          "type": "steps",
+          "items": [
+            {
+              "title": "Edit the working tree",
+              "explanation": "Create, modify, rename, or remove files.",
+              "result": "Git can show the difference from the selected commit."
+            },
+            {
+              "title": "Inspect",
+              "explanation": "Use status and diff before selecting changes.",
+              "result": "Unexpected files or secrets are caught early."
+            },
+            {
+              "title": "Stage intentionally",
+              "explanation": "Add the exact changes that belong in the next snapshot.",
+              "result": "The index represents the proposed commit."
+            },
+            {
+              "title": "Review the staged diff",
+              "explanation": "Read what will be committed, not only what exists in the editor.",
+              "result": "The commit boundary is verified."
+            },
+            {
+              "title": "Commit",
+              "explanation": "Record the staged snapshot with a message explaining the change.",
+              "result": "The branch reference advances to the new commit."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "Shell",
+          "code": "git status\ngit diff\ngit add src/search.ts tests/search.test.ts\ngit diff --staged\ngit commit -m \"feat: add typo-tolerant topic search\"",
+          "explanation": "This sequence inspects before and after staging, then records one coherent behavior change."
+        },
+        {
+          "type": "callout",
+          "tone": "warning",
+          "title": "Staging is not backup",
+          "body": "Uncommitted files can still be lost. Commits provide durable local history; pushing creates another repository copy, but neither replaces an appropriate backup strategy for all data."
+        }
+      ]
+    },
+    {
+      "id": "branches",
+      "title": "3. Branches isolate lines of work; integration combines them",
+      "summary": "Choose merge or rebase based on the history contract, then verify the result.",
+      "blocks": [
+        {
+          "type": "table",
+          "columns": [
+            "Operation",
+            "What it does",
+            "Important consequence"
+          ],
+          "rows": [
+            [
+              "Merge",
+              "Creates or fast-forwards to a history containing both lines.",
+              "A true merge commit preserves both parent lines."
+            ],
+            [
+              "Rebase",
+              "Replays commits onto a new parent.",
+              "Commit identities change; do not casually rewrite shared history."
+            ],
+            [
+              "Cherry-pick",
+              "Applies the change represented by selected commits.",
+              "Creates new commits and can duplicate logical changes."
+            ],
+            [
+              "Revert",
+              "Creates a new commit that inverses an earlier change.",
+              "Preserves published history while undoing effect."
+            ]
+          ],
+          "caption": "History operations"
+        },
+        {
+          "type": "callout",
+          "tone": "tip",
+          "title": "Conflicts are competing edits, not Git failure",
+          "body": "Resolve by understanding the intended final behavior, editing the combined result, running checks, and reviewing the complete diff."
+        },
+        {
+          "type": "checklist",
+          "items": [
+            "Update from the target branch before final review.",
+            "Resolve behavior, not just conflict markers.",
+            "Run focused and regression checks after integration.",
+            "Never force-push shared authoritative history without an explicit recovery plan."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "remote",
+      "title": "4. Remotes synchronize repositories, not folders",
+      "summary": "Fetch updates knowledge; push requests a reference update.",
+      "blocks": [
+        {
+          "type": "code",
+          "language": "Shell",
+          "code": "git fetch origin\ngit log --oneline --graph --decorate --all\ngit push origin feature/search",
+          "explanation": "Fetch downloads remote objects and references without changing the current branch. Push asks the remote to advance a named reference."
+        },
+        {
+          "type": "table",
+          "columns": [
+            "Term",
+            "Meaning"
+          ],
+          "rows": [
+            [
+              "origin",
+              "A conventional remote name; it is not inherently special."
+            ],
+            [
+              "origin/main",
+              "A local remote-tracking reference representing the last fetched main state."
+            ],
+            [
+              "main",
+              "A local branch reference."
+            ],
+            [
+              "upstream",
+              "The branch a local branch is configured to compare with and commonly push/pull against."
+            ]
+          ],
+          "caption": "Local and remote names are separate references"
+        },
+        {
+          "type": "callout",
+          "tone": "warning",
+          "title": "Pull is a combined operation",
+          "body": "Depending on configuration, git pull fetches and then merges or rebases. Use fetch plus an explicit integration command when you need to review before changing the current branch."
+        }
+      ]
+    },
+    {
+      "id": "github",
+      "title": "5. GitHub adds collaboration and policy around Git",
+      "summary": "Pull requests, reviews, protections, issues, and releases are hosted workflow features.",
+      "blocks": [
+        {
+          "type": "steps",
+          "items": [
+            {
+              "title": "Push a branch",
+              "explanation": "Publish the proposed commits to the remote.",
+              "result": "Others and automation can inspect the exact head commit."
+            },
+            {
+              "title": "Open a pull request",
+              "explanation": "Describe purpose, scope, verification, and risk.",
+              "result": "The proposed integration is visible."
+            },
+            {
+              "title": "Run checks",
+              "explanation": "Build, lint, test, security, and policy workflows evaluate the head commit.",
+              "result": "Evidence is attached to the proposal."
+            },
+            {
+              "title": "Review the diff",
+              "explanation": "Humans evaluate correctness, maintainability, UX, and omissions.",
+              "result": "Feedback becomes traceable."
+            },
+            {
+              "title": "Integrate",
+              "explanation": "Merge, squash, or rebase according to repository policy.",
+              "result": "The target reference advances."
+            },
+            {
+              "title": "Deploy or release",
+              "explanation": "A workflow packages or publishes the verified target state.",
+              "result": "Delivery is reproducible."
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "note",
+          "title": "A pull request is not part of core Git",
+          "body": "It is a GitHub collaboration object that compares branches and coordinates discussion, checks, approvals, and integration."
+        },
+        {
+          "type": "checklist",
+          "items": [
+            "Title describes the outcome.",
+            "Body states why, what changed, how verified, and remaining risk.",
+            "No secrets, generated noise, or unrelated refactors appear in the diff.",
+            "Required checks refer to the exact head commit."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "actions",
+      "title": "6. GitHub Actions turns repository events into repeatable evidence",
+      "summary": "A workflow is code that runs under declared permissions and triggers.",
+      "blocks": [
+        {
+          "type": "code",
+          "language": "YAML",
+          "code": "name: Verify\n\non:\n  pull_request:\n  push:\n    branches: [main]\n\npermissions:\n  contents: read\n\njobs:\n  check:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v6\n      - uses: pnpm/action-setup@v6\n      - uses: actions/setup-node@v6\n        with:\n          node-version: 24\n      - run: pnpm install --frozen-lockfile\n      - run: pnpm check",
+          "explanation": "The workflow uses explicit triggers, least-needed permissions, pinned major action lines, and a deterministic lockfile install."
+        },
+        {
+          "type": "cards",
+          "items": [
+            {
+              "title": "Continuous integration",
+              "summary": "Checks every proposed change against the same commands.",
+              "whenToUse": "Build, test, lint, schema, and policy validation.",
+              "example": "pull_request"
+            },
+            {
+              "title": "Continuous delivery",
+              "summary": "Produces a deployable artifact after verification.",
+              "whenToUse": "Package without necessarily publishing automatically.",
+              "example": "dist artifact"
+            },
+            {
+              "title": "Continuous deployment",
+              "summary": "Publishes verified target changes automatically.",
+              "whenToUse": "Use when rollback and operational controls are mature.",
+              "example": "push to main → Pages"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "warning",
+          "title": "Workflow code is privileged automation",
+          "body": "Review third-party actions, pin supported versions or immutable commits according to policy, minimize permissions, protect secrets, and treat untrusted pull-request input carefully."
+        }
+      ]
+    },
+    {
+      "id": "recovery",
+      "title": "7. Recover with evidence instead of panic",
+      "summary": "Most mistakes are easier to fix when published history is preserved.",
+      "blocks": [
+        {
+          "type": "table",
+          "columns": [
+            "Situation",
+            "Safer first move"
+          ],
+          "rows": [
+            [
+              "Uncommitted file changed incorrectly",
+              "Inspect diff; restore only the intended path after confirming no needed work is lost."
+            ],
+            [
+              "Wrong changes staged",
+              "Unstage the path while keeping the working-tree edit."
+            ],
+            [
+              "Local commit message or content wrong and unpublished",
+              "Amend if no one else depends on that commit."
+            ],
+            [
+              "Published change must be undone",
+              "Create a revert commit and verify the resulting behavior."
+            ],
+            [
+              "Secret committed",
+              "Revoke or rotate immediately, then follow history-removal policy; deleting one commit is not enough."
+            ],
+            [
+              "Branch deleted",
+              "Use reflog or known commit identifiers before objects are pruned."
+            ]
+          ],
+          "caption": "Recovery starts by identifying the state and publication boundary"
+        },
+        {
+          "type": "callout",
+          "tone": "warning",
+          "title": "Do not run destructive commands from memory",
+          "body": "Before reset, clean, restore, force push, or history rewriting, inspect status, diff, log, remotes, and the exact command semantics."
+        },
+        {
+          "type": "checklist",
+          "items": [
+            "State the desired final commit graph.",
+            "Create a safety branch or tag when recovery risk is high.",
+            "Preserve unrelated working-tree changes.",
+            "Verify the original behavior and repository status afterward."
+          ]
+        }
+      ]
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Repository",
+      "definition": "A Git object database and references representing project history, usually with a working tree."
+    },
+    {
+      "term": "Index",
+      "definition": "The staging area containing the exact snapshot proposed for the next commit."
+    },
+    {
+      "term": "Commit",
+      "definition": "An immutable snapshot with metadata and parent link or links."
+    },
+    {
+      "term": "Branch",
+      "definition": "A movable reference that commonly points to the newest commit in a line of work."
+    },
+    {
+      "term": "Remote",
+      "definition": "A named connection to another Git repository and its tracked references."
+    },
+    {
+      "term": "Pull request",
+      "definition": "A GitHub collaboration proposal to review and integrate one branch into another."
+    }
+  ],
+  "related": [
+    "how-the-web-works",
+    "apis-and-data-exchange",
+    "html-css-and-javascript"
+  ],
+  "sources": [
+    {
+      "label": "Git Reference Manual",
+      "url": "https://git-scm.com/docs",
+      "accessed": "2026-08-05"
+    },
+    {
+      "label": "Pro Git Book",
+      "url": "https://git-scm.com/book/en/v2",
+      "accessed": "2026-08-05"
+    },
+    {
+      "label": "GitHub Docs — About Git",
+      "url": "https://docs.github.com/en/get-started/using-git/about-git",
+      "accessed": "2026-08-05"
+    },
+    {
+      "label": "GitHub Docs — Pull requests",
+      "url": "https://docs.github.com/en/pull-requests",
+      "accessed": "2026-08-05"
+    },
+    {
+      "label": "GitHub Actions Documentation",
+      "url": "https://docs.github.com/en/actions",
+      "accessed": "2026-08-05"
+    }
+  ]
+}
