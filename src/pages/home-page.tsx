@@ -14,20 +14,20 @@ export function HomePage() {
       <section className="hero-section">
         <div className="shell hero-grid">
           <div className="hero-copy">
-            <p className="eyebrow">A human-readable web development field guide</p>
-            <h1>Understand the web from first principles to production decisions.</h1>
+            <p className="eyebrow">Learn the system, not isolated definitions</p>
+            <h1>Understand web development without needing the jargon first.</h1>
             <p className="hero-lede">
-              Search a concept, follow the visual sequence, compare the trade-offs, and leave knowing what happens next.
-              Every guide is written for clarity without removing the details experienced developers need.
+              Start with something concrete, see how the pieces connect, then learn the real technical terms, code,
+              trade-offs, debugging methods, and production decisions. Nothing important is skipped just to make a guide feel easy.
             </p>
             <div className="flex flex-wrap gap-3">
-              <Button asChild size="lg"><Link to="/topics">Explore every topic <ArrowRight aria-hidden="true" /></Link></Button>
-              <Button asChild size="lg" variant="outline"><Link to="/topics/the-seven-types-of-databases">Learn database types</Link></Button>
+              <Button asChild size="lg"><Link to="/topics/how-the-web-works">Start with how the web works <ArrowRight aria-hidden="true" /></Link></Button>
+              <Button asChild size="lg" variant="outline"><Link to="/topics">Browse all topics</Link></Button>
             </div>
             <dl className="hero-stats">
-              <div><dt>{topicCatalog.length}</dt><dd>complete launch guides</dd></div>
-              <div><dt>5,000</dt><dd>topic-ready architecture</dd></div>
-              <div><dt>320px</dt><dd>minimum layout floor</dd></div>
+              <div><dt>Start clear</dt><dd>No topic vocabulary is assumed at the beginning.</dd></div>
+              <div><dt>Stay connected</dt><dd>Each new idea builds on something already explained.</dd></div>
+              <div><dt>Go deep</dt><dd>Keep reading into real code, failures, trade-offs, and production use.</dd></div>
             </dl>
           </div>
           <HeroMap />
@@ -36,9 +36,9 @@ export function HomePage() {
 
       <section className="shell section-block" aria-labelledby="start-heading">
         <header className="section-heading">
-          <p className="eyebrow">Start with the system</p>
-          <h2 id="start-heading">Foundational guides that connect instead of competing for attention</h2>
-          <p>Each launch topic answers a foundational question and points to the next useful concept.</p>
+          <p className="eyebrow">Choose a useful question</p>
+          <h2 id="start-heading">Learn one part, while seeing where it belongs in the whole system</h2>
+          <p>If you are unsure where to begin, start with How the Web Works. Otherwise, open the topic that matches what you are trying to understand right now.</p>
         </header>
         <div className="topic-grid">
           {featured.map((topic) => <TopicCard topic={topic} key={topic.slug} />)}
@@ -53,14 +53,14 @@ export function HomePage() {
       <section className="border-y border-border bg-card">
         <div className="shell section-block">
           <header className="section-heading">
-            <p className="eyebrow">How the library works</p>
-            <h2>Read in the order your brain actually needs</h2>
+            <p className="eyebrow">How each guide teaches</p>
+            <h2>Get to the full concept without fighting the explanation</h2>
           </header>
           <div className="feature-grid">
-            <Feature icon={Search} title="Ask naturally" body="Search expands common abbreviations and related terms, then applies prefix and typo-tolerant matching." />
-            <Feature icon={Layers3} title="See the layers" body="Every difficult idea is decomposed into visible steps, relationships, comparisons, and decision points." />
-            <Feature icon={BookOpenCheck} title="Verify the source" body="Guides close with a glossary and authoritative documentation links instead of unsupported claims." />
-            <Feature icon={Sparkles} title="Keep context" body="Related topics and prerequisites show what comes before and what should come next." />
+            <Feature icon={Search} title="Ask naturally" body="Search for the word, problem, or question you have. You do not need to know the official term first." />
+            <Feature icon={Layers3} title="See what happens" body="Concrete examples and visuals establish the mental model before the explanation becomes more technical." />
+            <Feature icon={BookOpenCheck} title="Learn the real terms" body="Technical vocabulary is introduced where it becomes useful, with its meaning explained in context and reinforced in the glossary." />
+            <Feature icon={Sparkles} title="Keep going" body="The same guide continues into code, trade-offs, failure modes, debugging, and real production decisions instead of stopping at basics." />
           </div>
         </div>
       </section>
@@ -79,19 +79,32 @@ function Feature({ icon: Icon, title, body }: { icon: typeof Search; title: stri
 }
 
 function HeroMap() {
-  const nodes = ["Browser", "Internet", "Server", "API", "Database"];
+  const nodes = [
+    { label: "Browser", detail: "You enter an address and ask for a page." },
+    { label: "Network", detail: "The request travels to the right destination." },
+    { label: "Server", detail: "Software receives the request and decides what to do." },
+    { label: "API", detail: "The server may ask other software for data or an action." },
+    { label: "Database", detail: "Stored information can be read or changed." },
+  ];
+
   return (
-    <figure className="hero-map" aria-label="A simplified web system map from browser to database">
-      <figcaption>One request. Five connected systems.</figcaption>
+    <figure className="hero-map" aria-label="A simplified web request moving from a browser toward stored data">
+      <figcaption>Follow one request through the system.</figcaption>
       <div className="hero-map-track">
         {nodes.map((node, index) => (
-          <div className="hero-map-node-wrap" key={node}>
-            <div className="hero-map-node"><span>{String(index + 1).padStart(2, "0")}</span><strong>{node}</strong></div>
+          <div className="hero-map-node-wrap" key={node.label}>
+            <div className="hero-map-node">
+              <span>{String(index + 1).padStart(2, "0")}</span>
+              <div className="grid max-w-[18rem] gap-0.5 text-end">
+                <strong>{node.label}</strong>
+                <small className="text-xs leading-snug text-muted-foreground">{node.detail}</small>
+              </div>
+            </div>
             {index < nodes.length - 1 && <i aria-hidden="true" />}
           </div>
         ))}
       </div>
-      <p>Follow the same path in reverse to understand the response.</p>
+      <p>The answer travels back toward the browser, which turns the returned files and data into what you see and use.</p>
     </figure>
   );
 }
