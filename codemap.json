@@ -120,6 +120,39 @@
         {"path": "todo.md", "responsibility": "Append-only Turn 5 deployment verification checklist"},
         {"path": "codemap.json", "responsibility": "Append-only workflow responsibility and release-state map"}
       ]
+    },
+    {
+      "turncount": 6,
+      "date": "2026-08-07",
+      "summary": "Concrete-first, no-gap learning redesign across the complete five-topic launch library",
+      "areas": [
+        {"path": "docs/superpowers/specs/2026-08-07-intuitive-learning-content-design.md", "responsibility": "Approved learning-design contract covering concrete-first sequencing, vocabulary timing, completeness, visuals, checkpoints, and non-goals"},
+        {"path": "docs/superpowers/plans/2026-08-07-intuitive-learning-content.md", "responsibility": "Task-by-task implementation and validation plan for the learning redesign"},
+        {"path": "docs/content-authoring.md", "responsibility": "Authoritative future-topic teaching contract: concrete before abstract, meaning before vocabulary, cause before rule, explicit dependencies, interpreted examples, checkpoints, and retained production depth"},
+        {"path": "src/types/content.ts", "responsibility": "Topic content schema including the native-disclosure comprehension checkpoint block"},
+        {"path": "src/components/topics/content-block.tsx", "responsibility": "Rendering of paragraphs, steps, cards, code, tables, callouts, checklists, and accessible comprehension checkpoints"},
+        {"path": "src/components/topics/topic-visual.tsx", "responsibility": "Relationship-aware visual rendering so flows are sequential, layers communicate dependency, comparisons stay peer-based, cycles repeat, and maps avoid false sequence"},
+        {"path": "src/learning.css", "responsibility": "Responsive/accessibility presentation for checkpoints, visual-kind distinctions, and helpful-prerequisite orientation"},
+        {"path": "src/pages/home-page.tsx", "responsibility": "Learner-facing starting orientation, recommended first guide, learning promises, and concrete system-map explanation"},
+        {"path": "src/pages/topics-page.tsx", "responsibility": "Question-first catalog orientation and natural-language topic discovery"},
+        {"path": "src/pages/topic-page.tsx", "responsibility": "Concrete outcomes, visible helpful prerequisites, topic sequence, reinforcing glossary, primary sources, and related learning"},
+        {"path": "public/content/topics/how-the-web-works.json", "responsibility": "Complete request-lifecycle guide from address-bar action through DNS, transport/TLS, HTTP, rendering, and diagnosis"},
+        {"path": "public/content/topics/html-css-and-javascript.json", "responsibility": "Complete browser-language guide from one visible page through semantics, CSS resolution/layout, DOM/events/state, enhancement, responsiveness, and accessibility"},
+        {"path": "public/content/topics/git-and-github.json", "responsibility": "Complete Git/GitHub guide from observable file/staging/commit state through graph/references, integration, remotes, collaboration, Actions, and recovery"},
+        {"path": "public/content/topics/apis-and-data-exchange.json", "responsibility": "Complete API guide from one software conversation through HTTP contracts, schemas/errors, security, reliability, interaction styles, and evolution"},
+        {"path": "public/content/topics/the-seven-types-of-databases.json", "responsibility": "Complete database-family guide from recognizable question shapes through transactions/indexes, specialized stores, projections, synchronization, and production selection"},
+        {"path": "scripts/validate-content.mjs", "responsibility": "Topic schema/relationship/source validation plus mandatory non-empty checkpoints and minimum two checkpoints per guide"},
+        {"path": "tests/content-blocks.test.ts", "responsibility": "Regression proof for checkpoint typing, rendering, and validation"},
+        {"path": "tests/content-quality.test.ts", "responsibility": "Regression proof for per-guide checkpoint floor and concrete-first authoring contract"},
+        {"path": "tests/learning-copy.test.ts", "responsibility": "Regression proof that discovery UI stays learner-facing rather than exposing implementation trivia"},
+        {"path": "tests/topic-visual.test.ts", "responsibility": "Regression proof that visual kinds retain distinct relationship semantics"},
+        {"path": "src/generated/topic-catalog.ts", "responsibility": "Regenerated lightweight catalog metadata for rewritten topics"},
+        {"path": "public/search/topic-search-index.json", "responsibility": "Regenerated search corpus containing rewritten titles, summaries, keywords, section titles, and glossary language"},
+        {"path": "docs/topic-registry.json", "responsibility": "Regenerated 2026-08-07 inventory with refreshed SHA-256 source hashes, section counts, and source counts"},
+        {"path": "changelog.md", "responsibility": "Append-only Turn 6 implementation and GitHub-hosted verification evidence"},
+        {"path": "todo.md", "responsibility": "Append-only Turn 6 completion checklist with only external live Pages verification remaining"},
+        {"path": "codemap.json", "responsibility": "Append-only map of the redesigned learning architecture and its verification surfaces"}
+      ]
     }
   ]
 }
