@@ -93,3 +93,16 @@ Append-only project history. The highest recorded `turncount` is authoritative.
 - Recorded the repository administrator’s confirmation that **Settings → Pages → Build and deployment → Source** is now set to **GitHub Actions**.
 - Initiated a fresh `main` update so the existing verified workflow can perform the first deployment under the newly enabled repository setting.
 - Preserved application source, generated content, dependencies, and workflow behavior unchanged while advancing only the append-only release records.
+
+## Turn 5 — 2026-08-07
+
+**turncount: 5**
+
+### GitHub Pages deployment correction
+
+- Traced the failed release to commit `126d692d0611ff298d21173d63b12e6aca50caba`, which reintroduced `configure-pages` with `enablement: true` after repository-level Pages had already been enabled.
+- Removed `enablement: true`; the official `configure-pages` contract requires a token other than `GITHUB_TOKEN` for self-enablement, so retaining it would keep the deploy path authorization-invalid.
+- Removed the push-only deploy condition so both `push` to `main` and `workflow_dispatch` now execute the actual Pages deployment.
+- Split pull-request verification into `.github/workflows/actions.yml` so the Pages workflow has one responsibility: verify, build, upload, and deploy production.
+- Updated immutable action pins to current verified releases for `actions/checkout@v7.0.1`, `pnpm/action-setup@v6.0.9`, and `actions/setup-node@v7.0.0`; retained current Pages actions at configure v6.0.0, upload v5.0.0, and deploy v5.0.0.
+- Re-verified the Vite production base remains `/eaboutedev/`, matching the project Pages URL path.
