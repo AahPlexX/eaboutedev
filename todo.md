@@ -108,3 +108,30 @@ This file is append-only. Add a new dated turn section; do not rewrite or remove
 
 - [ ] Confirm the corrected `main` workflow completes verification, production build, artifact upload, and `actions/deploy-pages` successfully.
 - [ ] Confirm `https://aahplexx.github.io/eaboutedev/` serves the deployed application.
+
+## Turn 6 — 2026-08-07
+
+**turncount: 6**
+
+### Completed
+
+- [x] Define and commit the concrete-first, no-gap learning redesign specification and implementation plan.
+- [x] Add a native accessible `checkpoint` content block with TypeScript rendering and JSON validation.
+- [x] Require at least two comprehension checkpoints in every guide through both content validation and regression tests.
+- [x] Give `flow`, `layers`, `comparison`, `cycle`, and `map` visuals distinct relationship semantics and responsive presentation.
+- [x] Replace homepage/catalog implementation trivia with learner-facing orientation, natural-language discovery, and an explicit recommended first guide.
+- [x] Surface helpful prior knowledge and concrete learning outcomes at the beginning of each topic without making prerequisites a hard gate.
+- [x] Rewrite **How the Web Works** from one concrete request into complete network/HTTP/rendering/debugging depth.
+- [x] Rewrite **HTML, CSS, and JavaScript** from one visible page into semantics, cascade/layout, DOM/events/state, progressive enhancement, responsiveness, and accessibility depth.
+- [x] Rewrite **Git and GitHub** from saved project states into graph/references, integration, remotes, GitHub collaboration, Actions, and recovery depth.
+- [x] Rewrite **APIs and Data Exchange** from one software conversation into contracts, schemas/errors, security, reliability, interaction styles, and compatibility depth.
+- [x] Rewrite **The 7 Types of Databases** from familiar question shapes into data models, transactions/indexes, specialized retrieval, multi-store synchronization, and production selection depth.
+- [x] Strengthen the topic-authoring contract so future guides must preserve the same teaching order and completeness standard.
+- [x] Regenerate catalog, search-index, and topic-registry artifacts from the rewritten authoritative topic documents.
+- [x] Pass GitHub-hosted `pnpm check`: five-topic validation, exact-version validation, generated-artifact verification, 13/13 tests, TypeScript, Oxlint with denied warnings, and production build.
+- [x] Remove the temporary verification/regeneration workflow and diagnostic artifact after successful verification.
+
+### Remaining release verification
+
+- [ ] Independently confirm the latest GitHub Pages deployment completes successfully after these `main` updates.
+- [ ] Inspect the deployed learning experience at `https://aahplexx.github.io/eaboutedev/` once the endpoint is serving the latest commit.
