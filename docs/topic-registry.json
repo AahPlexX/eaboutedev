@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "lastVerified": "2026-08-05",
+  "lastVerified": "2026-08-07",
   "topicCount": 5,
   "topics": [
     {
@@ -9,9 +9,9 @@
       "category": "Architecture",
       "level": "Intermediate",
       "sourceFile": "public/content/topics/apis-and-data-exchange.json",
-      "sha256": "9cedfffb230e70b8d2d7c2584ad04251ab59f6b023a8b23522876a1e72908397",
-      "sectionCount": 7,
-      "sourceCount": 5
+      "sha256": "0bdf5a8552dda2b037bab3f675a617ad6a92ed31b698d468f7ddb2bf682d9496",
+      "sectionCount": 8,
+      "sourceCount": 6
     },
     {
       "slug": "git-and-github",
@@ -19,9 +19,9 @@
       "category": "Tooling",
       "level": "Foundational",
       "sourceFile": "public/content/topics/git-and-github.json",
-      "sha256": "210ede5669eaf672fd6859d2e9571a4ac8a7bf7244e890dd9b441a570163cf08",
-      "sectionCount": 7,
-      "sourceCount": 5
+      "sha256": "8d0867f45ba079206be440afc4c561d2c36ca4b9fcb05e5e0ec64c46f215c72e",
+      "sectionCount": 8,
+      "sourceCount": 6
     },
     {
       "slug": "how-the-web-works",
@@ -29,9 +29,9 @@
       "category": "Web foundations",
       "level": "Foundational",
       "sourceFile": "public/content/topics/how-the-web-works.json",
-      "sha256": "30d04e011bdb297495b9918e88b4b512d1e2478c4aa1cdc809021eb3c58beaa3",
-      "sectionCount": 6,
-      "sourceCount": 4
+      "sha256": "31c37ec9f4ef42bcf77cc5b1ed1ca74fba25cdd39434016a634e3cb3cac15754",
+      "sectionCount": 7,
+      "sourceCount": 5
     },
     {
       "slug": "html-css-and-javascript",
@@ -39,9 +39,9 @@
       "category": "Frontend",
       "level": "Foundational",
       "sourceFile": "public/content/topics/html-css-and-javascript.json",
-      "sha256": "589ceec658e786630869a68edf5524d5405d2f7bdd5a8855c3627681e119ad85",
-      "sectionCount": 6,
-      "sourceCount": 4
+      "sha256": "462a921dbb11e78c0a4504e2a9de206e47e6d4459450b480a96cd2b533181c93",
+      "sectionCount": 7,
+      "sourceCount": 5
     },
     {
       "slug": "the-seven-types-of-databases",
@@ -49,7 +49,7 @@
       "category": "Data",
       "level": "Foundational",
       "sourceFile": "public/content/topics/the-seven-types-of-databases.json",
-      "sha256": "bbf12426b8595edf9e8ab21b5f93ccdf193c69edb52c5894a5323242a03ecb29",
+      "sha256": "a137c78c313797b1c5e8067c37e588ba3b1d65f7cb750f6fe103a53d06531e40",
       "sectionCount": 8,
       "sourceCount": 7
     }

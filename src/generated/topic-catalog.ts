@@ -4,11 +4,11 @@ export const topicCatalog: TopicCatalogEntry[] = [
   {
     "slug": "apis-and-data-exchange",
     "title": "APIs and Data Exchange",
-    "eyebrow": "System boundaries · Contracts and communication",
-    "summary": "See how software exposes capabilities, validates messages, reports outcomes, and evolves contracts without surprising its consumers.",
+    "eyebrow": "System boundaries · How software asks other software for work or data",
+    "summary": "Follow one application asking an invoice service for work, then expand that simple conversation into the real rules an API needs: operations, inputs, responses, errors, security, retries, pagination, webhooks, GraphQL, events, and safe change over time.",
     "category": "Architecture",
     "level": "Intermediate",
-    "estimatedMinutes": 30,
+    "estimatedMinutes": 36,
     "icon": "⇄",
     "accent": "oklch(0.67 0.19 310)",
     "aliases": [
@@ -17,7 +17,8 @@ export const topicCatalog: TopicCatalogEntry[] = [
       "graphql",
       "webhooks",
       "json api",
-      "service communication"
+      "service communication",
+      "how APIs work"
     ],
     "keywords": [
       "api",
@@ -28,20 +29,29 @@ export const topicCatalog: TopicCatalogEntry[] = [
       "json",
       "schema",
       "authentication",
+      "authorization",
       "pagination",
+      "cursor",
+      "timeout",
+      "retry",
+      "backoff",
+      "jitter",
       "idempotency",
       "webhook",
-      "versioning"
+      "event stream",
+      "versioning",
+      "deprecation",
+      "problem details"
     ]
   },
   {
     "slug": "git-and-github",
     "title": "Git and GitHub",
-    "eyebrow": "Delivery workflow · History and collaboration",
-    "summary": "Build a precise mental model of snapshots, branches, merges, remotes, pull requests, and automated checks without treating Git as a list of magic commands.",
+    "eyebrow": "Delivery workflow · Remember, compare, share, review, and recover",
+    "summary": "Learn Git by following a project through real state changes: edit files, choose what belongs in the next saved snapshot, commit it, branch safely, share it with another repository, review it on GitHub, automate checks, and recover from mistakes.",
     "category": "Tooling",
     "level": "Foundational",
-    "estimatedMinutes": 28,
+    "estimatedMinutes": 34,
     "icon": "⑂",
     "accent": "oklch(0.68 0.18 25)",
     "aliases": [
@@ -49,31 +59,41 @@ export const topicCatalog: TopicCatalogEntry[] = [
       "git basics",
       "github workflow",
       "branches commits pull requests",
-      "source control"
+      "source control",
+      "how git works"
     ],
     "keywords": [
       "repository",
       "working tree",
       "staging area",
+      "index",
       "commit",
+      "parent",
       "branch",
+      "head",
+      "tag",
       "merge",
       "rebase",
+      "cherry pick",
+      "revert",
       "remote",
+      "fetch",
       "push",
+      "pull",
       "pull request",
       "github actions",
-      "conflict"
+      "conflict",
+      "reflog"
     ]
   },
   {
     "slug": "how-the-web-works",
     "title": "How the Web Works",
-    "eyebrow": "Foundation · Request to response",
-    "summary": "Follow one web address from your browser through DNS, the network, a server, and back into a rendered page.",
+    "eyebrow": "Foundation · One address-bar request from start to finish",
+    "summary": "Follow what actually happens after you enter a web address: the browser finds the destination, creates a protected connection, asks for resources, receives a response, and turns the result into a page.",
     "category": "Web foundations",
     "level": "Foundational",
-    "estimatedMinutes": 22,
+    "estimatedMinutes": 24,
     "icon": "◎",
     "accent": "oklch(0.67 0.18 250)",
     "aliases": [
@@ -81,42 +101,55 @@ export const topicCatalog: TopicCatalogEntry[] = [
       "browser to server",
       "website loading",
       "http lifecycle",
-      "dns and http"
+      "dns and http",
+      "what happens when I open a website"
     ],
     "keywords": [
       "browser",
       "url",
+      "domain",
       "dns",
       "ip address",
       "tcp",
+      "quic",
       "tls",
       "http",
       "server",
       "response",
-      "rendering"
+      "rendering",
+      "dom"
     ]
   },
   {
     "slug": "html-css-and-javascript",
     "title": "HTML, CSS, and JavaScript",
-    "eyebrow": "Foundation · Structure, presentation, behavior",
-    "summary": "Understand the three core browser languages, the boundary each owns, and how they cooperate without becoming tangled.",
+    "eyebrow": "Frontend foundation · Meaning, appearance, and behavior",
+    "summary": "Learn the three core browser languages by building one small page: HTML gives content meaning and structure, CSS controls presentation and layout, and JavaScript adds behavior when the page needs to react or change.",
     "category": "Frontend",
     "level": "Foundational",
-    "estimatedMinutes": 24,
+    "estimatedMinutes": 28,
     "icon": "◇",
     "accent": "oklch(0.71 0.17 155)",
     "aliases": [
       "html css js",
       "frontend basics",
       "web page languages",
-      "markup styling scripting"
+      "markup styling scripting",
+      "how websites are built"
     ],
     "keywords": [
+      "html",
       "semantic html",
-      "css cascade",
+      "css",
+      "cascade",
+      "flexbox",
+      "grid",
+      "container queries",
       "javascript",
       "dom",
+      "events",
+      "state",
+      "browser api",
       "accessibility",
       "progressive enhancement",
       "responsive design"
@@ -125,11 +158,11 @@ export const topicCatalog: TopicCatalogEntry[] = [
   {
     "slug": "the-seven-types-of-databases",
     "title": "The 7 Types of Databases",
-    "eyebrow": "Data systems · Practical selection model",
-    "summary": "Compare seven useful database families by the shape of their data, the questions they answer well, and the trade-offs they introduce.",
+    "eyebrow": "Data systems · Match the database to the questions your software must answer",
+    "summary": "Learn seven practical database families by starting with familiar data questions—orders, nested content, sessions, relationships, measurements, text search, and similarity—then continue into schemas, transactions, indexes, consistency, specialized stores, and production trade-offs.",
     "category": "Data",
     "level": "Foundational",
-    "estimatedMinutes": 36,
+    "estimatedMinutes": 44,
     "icon": "▦",
     "accent": "oklch(0.72 0.17 70)",
     "aliases": [
@@ -137,7 +170,8 @@ export const topicCatalog: TopicCatalogEntry[] = [
       "db types",
       "sql vs nosql",
       "which database",
-      "data storage models"
+      "data storage models",
+      "how to choose a database"
     ],
     "keywords": [
       "relational",
@@ -149,8 +183,16 @@ export const topicCatalog: TopicCatalogEntry[] = [
       "vector database",
       "sql",
       "nosql",
+      "schema",
+      "constraints",
       "transactions",
-      "indexes"
+      "joins",
+      "indexes",
+      "aggregate",
+      "inverted index",
+      "embedding",
+      "polyglot persistence",
+      "projection"
     ]
   }
 ];
