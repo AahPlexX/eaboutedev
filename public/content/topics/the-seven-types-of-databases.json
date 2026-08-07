@@ -2,11 +2,11 @@
   "version": 1,
   "slug": "the-seven-types-of-databases",
   "title": "The 7 Types of Databases",
-  "eyebrow": "Data systems · Practical selection model",
-  "summary": "Compare seven useful database families by the shape of their data, the questions they answer well, and the trade-offs they introduce.",
+  "eyebrow": "Data systems · Match the database to the questions your software must answer",
+  "summary": "Learn seven practical database families by starting with familiar data questions—orders, nested content, sessions, relationships, measurements, text search, and similarity—then continue into schemas, transactions, indexes, consistency, specialized stores, and production trade-offs.",
   "category": "Data",
   "level": "Foundational",
-  "estimatedMinutes": 36,
+  "estimatedMinutes": 44,
   "icon": "▦",
   "accent": "oklch(0.72 0.17 70)",
   "aliases": [
@@ -14,7 +14,8 @@
     "db types",
     "sql vs nosql",
     "which database",
-    "data storage models"
+    "data storage models",
+    "how to choose a database"
   ],
   "keywords": [
     "relational",
@@ -26,267 +27,359 @@
     "vector database",
     "sql",
     "nosql",
+    "schema",
+    "constraints",
     "transactions",
-    "indexes"
+    "joins",
+    "indexes",
+    "aggregate",
+    "inverted index",
+    "embedding",
+    "polyglot persistence",
+    "projection"
   ],
   "prerequisites": [
-    "How the Web Works helps explain where a database sits in a system."
+    "How the Web Works helps show where a database sits behind a server, but this guide explains the data concepts it needs.",
+    "APIs and Data Exchange is helpful for understanding how other software asks a data-backed service for information, but it is not required to understand the database families."
   ],
   "learningOutcomes": [
-    "Recognize seven practical database families.",
-    "Choose a starting database from access patterns and guarantees.",
-    "Explain when multiple specialized stores are justified."
+    "Recognize relational, document, key-value, graph, time-series, search, and vector database families from the questions they are designed to answer well.",
+    "Choose a strong starting database by identifying what must be stored, which reads and writes matter most, what must stay consistent, and what operating constraints exist.",
+    "Explain when a specialized secondary store is justified and what synchronization, recovery, security, and operational costs appear when a system uses more than one database."
   ],
   "heroVisual": {
     "kind": "map",
-    "title": "Seven families, seven optimized question shapes",
-    "caption": "The taxonomy is a practical decision model, not a universal law.",
+    "title": "Seven families answer seven different question shapes",
+    "caption": "This is a practical selection model, not a law that every product fits only one box. Many database products support features from more than one family.",
     "nodes": [
       {
         "label": "Relational",
-        "detail": "Rows, columns, constraints, joins, and transactions."
+        "detail": "Which records are related, and can several connected changes remain correct together?"
       },
       {
         "label": "Document",
-        "detail": "Nested records retrieved around an aggregate."
+        "detail": "Can this nested record usually be stored and loaded as one meaningful unit?"
       },
       {
         "label": "Key–value",
-        "detail": "Direct lookup from a unique key to a value."
+        "detail": "I already know the exact key—what value belongs to it?"
       },
       {
         "label": "Graph",
-        "detail": "Nodes and relationships traversed together."
+        "detail": "How are these entities connected, and what paths link them?"
       },
       {
         "label": "Time-series",
-        "detail": "Measurements ordered and aggregated over time."
+        "detail": "How did this measurement change across time?"
       },
       {
-        "label": "Search engine",
-        "detail": "Text and fields ranked by relevance."
+        "label": "Search",
+        "detail": "Which records best match these words and filters?"
       },
       {
         "label": "Vector",
-        "detail": "Items retrieved by mathematical similarity."
+        "detail": "Which stored items are mathematically most similar to this query or item?"
       }
     ]
   },
   "sections": [
     {
-      "id": "selection",
-      "title": "1. Start with questions, not product names",
-      "summary": "A database is chosen to serve access patterns and guarantees, not fashion.",
+      "id": "questions-first",
+      "title": "1. Start with the questions your software must answer",
+      "summary": "A database is not chosen because its product name is popular. Start with the information you must preserve and the operations that must be fast and correct.",
       "blocks": [
+        {
+          "type": "paragraph",
+          "text": "Imagine an online learning service. It stores users, subscriptions, courses, lessons, login sessions, search text, page-view measurements, and recommendation data. Those facts do not all create the same kind of question. 'Which invoices belong to this customer?' is different from 'give me session abc123,' 'find courses containing these words,' or 'which lessons are semantically similar to this question?' Database families exist because different data structures and workloads reward different storage and indexing strategies."
+        },
+        {
+          "type": "table",
+          "columns": [
+            "Question the software needs to answer",
+            "Family worth evaluating first",
+            "Why the shape matches"
+          ],
+          "rows": [
+            [
+              "Which customer owns this order, and can payment + inventory updates obey shared rules?",
+              "Relational",
+              "Relationships, constraints, joins, and transactions are central."
+            ],
+            [
+              "Load this course with its nested lesson configuration as one unit.",
+              "Document",
+              "The data naturally groups into a nested aggregate often read together."
+            ],
+            [
+              "I know session:8f21; return its value immediately.",
+              "Key–value",
+              "The application already has the exact lookup key."
+            ],
+            [
+              "Which people are connected through this account, device, or transaction chain?",
+              "Graph",
+              "Variable-depth relationships and paths are the question."
+            ],
+            [
+              "How did CPU usage change minute by minute for the last 30 days?",
+              "Time-series",
+              "Measurements are organized and aggregated around time."
+            ],
+            [
+              "Which articles match these words, filters, spelling variations, and relevance rules?",
+              "Search",
+              "Text analysis and relevance ranking are the dominant retrieval needs."
+            ],
+            [
+              "Which documents are closest in meaning to this user question?",
+              "Vector",
+              "Retrieval depends on similarity between numeric vector representations."
+            ]
+          ],
+          "caption": "The question shape gives you a starting hypothesis, not a final purchase decision"
+        },
+        {
+          "type": "paragraph",
+          "text": "Developers often call a recurring way the application reads or writes data an access pattern. Before choosing a database, write down the important access patterns in ordinary language: what must be saved, what must be looked up, what gets changed together, how much data exists, and how quickly the result is needed. Then add the correctness rules: which states must never occur, which operations must succeed or fail as one unit, and how much temporary inconsistency the product can tolerate."
+        },
         {
           "type": "steps",
           "items": [
             {
-              "title": "Name the records",
-              "explanation": "List the facts the system must preserve.",
-              "result": "You can describe the durable data without implementation terms."
+              "title": "List the facts that must survive",
+              "explanation": "Name the durable information without choosing a database shape yet: users, orders, balances, content, events, measurements, relationships, and so on.",
+              "result": "The data model begins from business reality rather than storage syntax."
             },
             {
-              "title": "Name the reads",
-              "explanation": "Write the most important questions and their required speed.",
-              "result": "Access patterns become explicit."
+              "title": "Write the important reads as questions",
+              "explanation": "Examples: 'load one order by id,' 'show invoices by customer and month,' or 'rank matching articles.' Include the latency the user or system actually needs.",
+              "result": "The dominant access patterns become visible."
             },
             {
-              "title": "Name the writes",
-              "explanation": "Estimate frequency, concurrency, and conflict behavior.",
-              "result": "The consistency pressure becomes visible."
+              "title": "Write the important changes",
+              "explanation": "Record how often data changes, which records change together, whether concurrent writers can conflict, and what must happen if part of a write fails.",
+              "result": "Correctness and concurrency pressure become concrete."
             },
             {
-              "title": "Name the guarantees",
-              "explanation": "Decide which operations must be atomic, durable, ordered, or auditable.",
-              "result": "Correctness requirements constrain the options."
+              "title": "State the rules that must never be violated",
+              "explanation": "A rule such as 'an invoice number must be unique' or 'inventory cannot become negative after a completed sale' is an invariant: a condition the system must preserve as data changes.",
+              "result": "Storage choices can be evaluated against actual guarantees instead of vague claims about consistency."
             },
             {
-              "title": "Name the operating limits",
-              "explanation": "Set scale, recovery, latency, cost, team skill, and compliance boundaries.",
-              "result": "The choice reflects the whole system."
+              "title": "Add operating constraints",
+              "explanation": "Include data volume, growth, backup/restore targets, availability, geographic needs, security/compliance, team skill, hosting limits, latency, and total cost.",
+              "result": "The choice reflects the whole system rather than query syntax alone."
             }
           ]
         },
         {
           "type": "callout",
           "tone": "warning",
-          "title": "“NoSQL” is not one database type",
-          "body": "It groups several different data models and trade-offs. Document, key–value, graph, time-series, search, and vector stores should be evaluated separately."
+          "title": "NoSQL is not one database type",
+          "body": "The label NoSQL groups products with very different models and trade-offs. A document store, key–value store, graph database, search engine, and vector store should not be treated as interchangeable merely because they are not traditional relational systems."
         },
         {
-          "type": "callout",
-          "tone": "tip",
-          "title": "Default responsibly",
-          "body": "A relational database is often a strong default for business systems because constraints, transactions, and flexible querying protect evolving data. Move away from the default only for a demonstrated pressure."
+          "type": "checkpoint",
+          "prompt": "You know a product supports millions of writes per second. Is that enough information to know it fits your billing system?",
+          "answer": "No.",
+          "explanation": "Throughput is only one constraint. You still need to know the billing data relationships, transaction and correctness rules, query patterns, failure behavior, recovery requirements, operational cost, and whether the team can run it safely."
         }
       ]
     },
     {
       "id": "relational",
-      "title": "2. Relational databases: connected facts with strong rules",
-      "summary": "Tables and constraints make relationships explicit and enforceable.",
+      "title": "2. Relational databases are strong when facts relate and rules span records",
+      "summary": "Rows live in tables, keys identify and connect records, constraints reject invalid states, SQL combines and transforms data, and transactions coordinate related changes.",
       "visual": {
         "kind": "layers",
-        "title": "A relational model",
-        "caption": "The schema protects meaning before a query runs.",
+        "title": "A relational model gives the database explicit rules",
+        "caption": "The database can enforce structure and relationships rather than relying on every application path to remember them independently.",
         "nodes": [
           {
-            "label": "Table",
-            "detail": "Groups records of one relation."
+            "label": "Tables and rows",
+            "detail": "Tables represent relations; rows contain individual records."
           },
           {
-            "label": "Row",
-            "detail": "Represents one tuple or record."
+            "label": "Columns and types",
+            "detail": "Columns define named attributes and their permitted data types."
           },
           {
-            "label": "Column",
-            "detail": "Defines an attribute and data type."
+            "label": "Keys",
+            "detail": "Primary or unique keys identify records; foreign keys can enforce references between tables."
           },
           {
-            "label": "Key",
-            "detail": "Uniquely identifies or links records."
+            "label": "Constraints",
+            "detail": "Rules such as NOT NULL, UNIQUE, CHECK, and referential constraints reject invalid states."
           },
           {
-            "label": "Constraint",
-            "detail": "Rejects invalid states."
-          },
-          {
-            "label": "Transaction",
-            "detail": "Commits related changes as one unit."
+            "label": "Transactions",
+            "detail": "A group of operations follows defined atomicity/isolation/durability behavior so related changes can be coordinated safely."
           }
         ]
       },
       "blocks": [
         {
           "type": "paragraph",
-          "text": "Relational databases store data in tables and use keys to connect records. SQL expresses selection, joins, aggregation, and change. The database can enforce uniqueness, references, types, and transactional invariants centrally."
+          "text": "A relational database stores data in tables and relates records through values and keys. SQL, Structured Query Language, can select, filter, join, aggregate, insert, update, and delete data. A join combines related rows based on a relationship condition. The important advantage is not simply that SQL exists: the database can centrally enforce constraints and transaction rules that protect shared data across many application code paths."
         },
         {
           "type": "code",
           "language": "SQL",
           "code": "SELECT customer.name, SUM(invoice.total) AS lifetime_value\nFROM customer\nJOIN invoice ON invoice.customer_id = customer.id\nGROUP BY customer.id, customer.name\nORDER BY lifetime_value DESC;",
-          "explanation": "A join combines related records while aggregation answers a cross-record business question."
+          "explanation": "FROM starts with customer rows. JOIN connects each invoice whose customer_id matches the customer's id. SUM adds invoice totals per customer. GROUP BY tells the database which rows belong in each aggregate result, and ORDER BY sorts customers by the calculated lifetime_value."
         },
         {
           "type": "cards",
           "items": [
             {
-              "title": "Use when",
-              "summary": "Correctness spans multiple records, relationships matter, and queries will evolve.",
-              "whenToUse": "Orders, billing, inventory, permissions, clinical or financial records.",
+              "title": "Strong starting fit",
+              "summary": "Business data has important relationships, correctness rules span records, and future query combinations are not fully known in advance.",
+              "whenToUse": "Orders, billing, inventory, permissions, scheduling, clinical/financial records, and many general application systems.",
               "example": "PostgreSQL"
             },
             {
-              "title": "Avoid forcing it",
-              "summary": "A single operation must traverse a massive relationship graph or ingest a specialized signal stream.",
-              "whenToUse": "Keep the relational system as source of truth and add a specialized projection only when measured.",
-              "example": "Relational plus search index"
+              "title": "Index",
+              "summary": "An additional data structure that helps the database find selected rows without scanning everything, at the cost of extra storage and write/update work.",
+              "whenToUse": "Create indexes from measured query needs and execution plans rather than indexing every column by habit.",
+              "example": "Index invoices by customer_id + created_at"
+            },
+            {
+              "title": "Transaction",
+              "summary": "A unit of work whose changes follow the database's transaction guarantees, including whether all changes commit or roll back together and how concurrent work is isolated.",
+              "whenToUse": "When several related reads/writes form one correctness boundary.",
+              "example": "Record payment and update invoice state"
             }
           ]
+        },
+        {
+          "type": "callout",
+          "tone": "tip",
+          "title": "A relational database is often a responsible default",
+          "body": "For many business applications, relational constraints, transactions, mature tooling, flexible queries, and operational knowledge provide a strong baseline. Move to or add a specialized store when a measured workload or capability need justifies the additional model and operating cost."
         }
       ]
     },
     {
       "id": "document",
-      "title": "3. Document databases: records shaped like application aggregates",
-      "summary": "A document keeps related nested data together.",
+      "title": "3. Document databases keep data that belongs together in one nested record",
+      "summary": "A document model works naturally when an application usually creates, retrieves, and changes a nested unit together and its fields can vary between records.",
       "blocks": [
         {
           "type": "paragraph",
-          "text": "A document database stores self-contained records, commonly represented with JSON-like fields and nested arrays. It fits data that is usually created, retrieved, and changed as one aggregate and whose optional fields vary."
+          "text": "A document database stores records as documents with named fields and nested structures, commonly in a JSON-like representation. The useful mental model is not 'schema-free.' It is 'the record boundary is often a nested aggregate instead of normalized rows spread across many tables.' An aggregate here means a group of related data the application treats as one consistency or loading boundary, such as a course plus its small ordered lesson configuration."
         },
         {
           "type": "code",
-          "language": "JSON",
-          "code": "{\n  \"id\": \"course-42\",\n  \"title\": \"Web foundations\",\n  \"lessons\": [\n    { \"title\": \"HTTP\", \"durationMinutes\": 18 },\n    { \"title\": \"Rendering\", \"durationMinutes\": 22 }\n  ]\n}",
-          "explanation": "The course and its ordered lessons can be loaded together when that is the dominant access pattern."
-        },
-        {
-          "type": "callout",
-          "tone": "warning",
-          "title": "Flexible schema does not mean no schema",
-          "body": "Applications still depend on field meanings, types, required values, migrations, indexes, and validation. The rules may be enforced in different places, but they still exist."
+          "language": "JSON-like document",
+          "code": "{\n  \"id\": \"course-42\",\n  \"title\": \"Web foundations\",\n  \"lessons\": [\n    { \"id\": \"http\", \"title\": \"HTTP\", \"minutes\": 18 },\n    { \"id\": \"rendering\", \"title\": \"Rendering\", \"minutes\": 22 }\n  ]\n}",
+          "explanation": "The course and its ordered lesson summaries are nested in one document, so an application that normally needs them together can retrieve one aggregate. Whether lesson content itself belongs here depends on growth, update patterns, sharing, and document-size/atomicity constraints."
         },
         {
           "type": "cards",
           "items": [
             {
-              "title": "Use when",
-              "summary": "The aggregate is naturally nested and most reads retrieve it as a whole.",
-              "whenToUse": "Content, product catalogs, profiles, event payloads.",
-              "example": "MongoDB document"
+              "title": "Good fit",
+              "summary": "Most reads and writes center on one naturally nested aggregate, optional fields vary, and cross-record relational rules are not the dominant challenge.",
+              "whenToUse": "Content, catalogs, profiles, configuration aggregates, event-like payloads.",
+              "example": "MongoDB"
             },
             {
-              "title": "Avoid when",
-              "summary": "Many independent records must be joined and changed together under strict invariants.",
-              "whenToUse": "Complex financial ledgers or highly connected normalized business data.",
-              "example": "Prefer relational constraints"
+              "title": "Watch the boundary",
+              "summary": "Embedding everything can make documents grow without bound, duplicate shared information, or make independent updates contend on one large record.",
+              "avoidWhen": "Many independently changing entities need rich joins or strict cross-record rules.",
+              "example": "Do not copy a mutable customer profile into every order merely to avoid a relationship."
             }
           ]
+        },
+        {
+          "type": "callout",
+          "tone": "warning",
+          "title": "Flexible documents still have a schema",
+          "body": "Applications depend on field names, types, required/optional values, indexes, validation, and migration behavior even when every document is not forced into identical columns. The schema may be more flexible or enforced in different layers, but it still exists as a contract."
+        },
+        {
+          "type": "checkpoint",
+          "prompt": "A product record has a small list of display options that is always loaded and edited with the product. Does nesting those options automatically make the design wrong because it is not normalized into another table?",
+          "answer": "No.",
+          "explanation": "The right boundary follows ownership, read/write patterns, size, duplication, and consistency needs. A document model intentionally favors useful aggregate boundaries. Normalization is a powerful relational design technique, not a rule that every piece of nested data must be separated in every database family."
         }
       ]
     },
     {
       "id": "key-value",
-      "title": "4. Key–value databases: the shortest path to a known item",
-      "summary": "A unique key directly addresses a value.",
+      "title": "4. Key–value databases optimize the shortest path to a known item",
+      "summary": "When the application already knows the exact key, a key–value store can provide extremely direct reads and simple atomic operations without needing a general query language for every lookup.",
+      "visual": {
+        "kind": "comparison",
+        "title": "Known key versus open-ended question",
+        "caption": "This distinction explains both the strength and the limit of a key–value model.",
+        "nodes": [
+          {
+            "label": "Known key",
+            "detail": "session:8f21 → retrieve the associated value. This is the natural key–value question."
+          },
+          {
+            "label": "Open-ended query",
+            "detail": "Find every session for users in Louisiana created last month. That needs indexes/query structures beyond a plain direct-key model."
+          }
+        ]
+      },
       "blocks": [
         {
           "type": "paragraph",
-          "text": "A key–value database optimizes operations such as get, set, increment, and expire. The database may treat the value as opaque or expose limited data structures. It is excellent when the application already knows the exact key."
+          "text": "A key–value database maps a unique key to a value. Basic operations often look conceptually like get(key), set(key, value), delete(key), increment(key), or set an expiration. Some products such as Redis expose richer data structures and commands, but direct addressing by key remains a core mental model."
         },
         {
           "type": "table",
           "columns": [
-            "Good fit",
+            "Use",
             "Example key",
-            "Value"
+            "Stored value or state"
           ],
           "rows": [
             [
-              "Session",
+              "Login session",
               "session:8f21",
-              "User identity and expiry."
+              "User identity, session metadata, expiration."
             ],
             [
               "Cache",
               "article:42:v7",
-              "Precomputed response."
+              "A reusable computed representation."
             ],
             [
-              "Rate limit",
+              "Rate-limit counter",
               "login:ip:203.0.113.8",
-              "Attempt count with expiry."
+              "Attempt count plus expiration window."
             ],
             [
               "Feature state",
               "flag:new-editor:user:19",
-              "Boolean or small configuration."
+              "A small boolean or configuration value."
             ]
           ],
-          "caption": "Key design is part of the data model"
+          "caption": "The key design is part of the data model because the application must know how to address the value"
         },
         {
           "type": "callout",
           "tone": "warning",
-          "title": "Caching changes correctness",
-          "body": "Define expiration, invalidation, stampede protection, stale behavior, and what happens when the cache is unavailable."
+          "title": "A cache participates in correctness",
+          "body": "Once behavior depends on cached data, define expiration, invalidation, stale-data policy, stampede protection, eviction, persistence where relevant, and what the application does when the cache is unavailable. 'It is only a cache' does not remove these failure modes."
         },
         {
           "type": "cards",
           "items": [
             {
-              "title": "Use when",
-              "summary": "The primary operation is direct lookup or simple atomic mutation by key.",
-              "whenToUse": "Caching, sessions, counters, queues, ephemeral coordination.",
+              "title": "Good fit",
+              "summary": "The dominant operation is direct lookup or a small atomic mutation by a known key.",
+              "whenToUse": "Sessions, caching, counters, rate limits, ephemeral coordination, queue-like patterns supported by the chosen product.",
               "example": "Redis"
             },
             {
-              "title": "Avoid when",
-              "summary": "Users need open-ended filtering, joins, or rich ad hoc queries.",
-              "whenToUse": "Reporting and exploratory analysis.",
-              "example": "Use a query-oriented primary store"
+              "title": "Poor primary fit",
+              "summary": "Users need rich ad hoc filtering, many joins, broad reporting, or questions whose lookup keys were not known in advance.",
+              "whenToUse": "Keep a query-oriented authoritative store and use key–value as a focused companion where measured.",
+              "example": "PostgreSQL source + Redis cache"
             }
           ]
         }
@@ -294,241 +387,287 @@
     },
     {
       "id": "graph",
-      "title": "5. Graph databases: relationships are first-class data",
-      "summary": "Graph stores optimize connected paths and neighborhoods.",
-      "blocks": [
-        {
-          "type": "paragraph",
-          "text": "A graph database models nodes, relationships, and properties. Its strength appears when the number or depth of connections is central to the question, such as shortest paths, recommendations, dependency chains, or fraud rings."
-        },
-        {
-          "type": "cards",
-          "items": [
-            {
-              "title": "Use when",
-              "summary": "Queries repeatedly traverse variable-depth relationships.",
-              "whenToUse": "Social connections, identity graphs, network topology, recommendations.",
-              "example": "Neo4j"
-            },
-            {
-              "title": "Avoid when",
-              "summary": "Data is mostly independent rows with straightforward filters and aggregates.",
-              "whenToUse": "Standard transactional records.",
-              "example": "A relational database may be simpler"
-            }
-          ]
-        },
-        {
-          "type": "callout",
-          "tone": "note",
-          "title": "Relational databases can represent graphs",
-          "body": "The choice changes when graph traversal is a dominant workload and graph-specific query and storage behavior materially simplify it."
-        }
-      ],
+      "title": "5. Graph databases make relationships part of the primary model",
+      "summary": "When the question repeatedly follows connections of changing depth, modeling nodes and relationships directly can make the data and queries match the problem more naturally.",
       "visual": {
         "kind": "map",
-        "title": "Graph question shape",
-        "caption": "The work follows edges rather than joining many tables repeatedly.",
+        "title": "A recommendation question is a path question",
+        "caption": "Graph stores treat entities and the relationships between them as first-class parts of the model.",
         "nodes": [
           {
             "label": "Person",
-            "detail": "A node with properties."
+            "detail": "A node representing an entity with properties."
           },
           {
             "label": "BOUGHT",
-            "detail": "A typed relationship."
+            "detail": "A typed relationship connecting the person to a product."
           },
           {
             "label": "Product",
-            "detail": "A neighboring node."
+            "detail": "Another node in the graph."
           },
           {
             "label": "SIMILAR_TO",
-            "detail": "Another relationship."
+            "detail": "A relationship connecting products according to the domain model."
           },
           {
-            "label": "Recommendation",
-            "detail": "A result derived from a path."
+            "label": "Candidate recommendation",
+            "detail": "A result discovered by following a relationship pattern."
           }
         ]
-      }
+      },
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "A graph database represents entities as nodes and connections as relationships or edges, usually with properties on one or both. A traversal follows those relationships. Graph databases become especially useful when relationship patterns and variable-depth paths are the recurring question—for example fraud rings, identity resolution, network topology, dependency chains, authorization relationships, and recommendation paths."
+        },
+        {
+          "type": "cards",
+          "items": [
+            {
+              "title": "Good fit",
+              "summary": "Queries repeatedly ask who/what is connected, through which relationships, and across an unpredictable number of hops.",
+              "whenToUse": "Fraud/identity graphs, social relationships, network topology, dependency graphs, recommendation relationships.",
+              "example": "Neo4j"
+            },
+            {
+              "title": "Do not confuse capability with dominant workload",
+              "summary": "Relational databases can store graph-shaped data and perform recursive/path queries too. The decision changes when graph traversal is frequent and important enough that graph-native modeling/query behavior materially reduces complexity or improves the needed workload.",
+              "avoidWhen": "The data is mostly independent transactional rows with straightforward filters and aggregates.",
+              "example": "A standard order ledger rarely needs a graph database solely because customers and orders are related."
+            }
+          ]
+        }
+      ]
     },
     {
-      "id": "time-search-vector",
-      "title": "6. Time-series, search, and vector databases",
-      "summary": "These stores optimize specialized retrieval rather than general business transactions.",
+      "id": "specialized",
+      "title": "6. Time-series, search, and vector stores optimize three specialized retrieval problems",
+      "summary": "These families often complement an authoritative business database because their indexing and storage structures are designed around measurements, relevance-ranked text, or similarity rather than general transactions.",
       "blocks": [
         {
           "type": "cards",
           "items": [
             {
-              "title": "Time-series",
-              "summary": "Measurements are indexed by time and commonly grouped, downsampled, retained, and queried over windows.",
-              "whenToUse": "Metrics, sensors, observability, market ticks.",
-              "avoidWhen": "Avoid treating mutable business entities as measurements.",
-              "example": "CPU usage per host per minute"
+              "title": "Time-series database",
+              "summary": "Stores measurements associated with time and optimizes time-window filtering, aggregation, retention, and downsampling. Downsampling replaces very detailed older samples with coarser summaries when that matches retention needs.",
+              "whenToUse": "Infrastructure metrics, sensors, observability signals, market ticks, industrial measurements.",
+              "avoidWhen": "Do not model every mutable business entity as a time measurement merely because records have timestamps.",
+              "example": "InfluxDB"
             },
             {
               "title": "Search engine",
-              "summary": "Documents and fields are analyzed into an inverted index so terms can be filtered and ranked.",
-              "whenToUse": "Site search, logs, product discovery.",
-              "avoidWhen": "Avoid using a search index as the sole authoritative transaction store.",
+              "summary": "Analyzes text and fields into structures such as an inverted index, which maps terms toward the documents containing them, then applies filtering and relevance scoring to return useful matches.",
+              "whenToUse": "Site search, logs, product discovery, text-heavy filtering and ranking.",
+              "avoidWhen": "Do not make a search index the only authoritative transaction store simply because search queries are fast.",
               "example": "Elasticsearch"
             },
             {
-              "title": "Vector",
-              "summary": "Items are encoded as numeric vectors and retrieved by approximate similarity.",
-              "whenToUse": "Semantic retrieval, recommendations, image or text similarity.",
-              "avoidWhen": "Avoid expecting similarity to enforce exact rules or truth.",
-              "example": "pgvector nearest-neighbor query"
+              "title": "Vector database or vector index",
+              "summary": "Stores numeric vectors and retrieves nearby vectors using a distance or similarity measure, often with approximate-nearest-neighbor indexes for scale.",
+              "whenToUse": "Semantic retrieval, recommendation candidates, image/audio/text similarity, retrieval for AI systems.",
+              "avoidWhen": "Similarity cannot enforce exact business rules, permissions, factual truth, or identity equality on its own.",
+              "example": "pgvector nearest-neighbor search"
             }
           ]
+        },
+        {
+          "type": "paragraph",
+          "text": "An embedding is a numeric vector produced by a model to represent features of an item such as text or an image. A similarity search compares those vectors and returns nearby items according to a mathematical distance/similarity rule. This can be useful for semantic retrieval, but the database is not 'understanding meaning' like a person. The embedding model, source data, distance metric, index configuration, metadata filters, and evaluation set all affect whether retrieved items are actually useful."
         },
         {
           "type": "table",
           "columns": [
             "Family",
-            "Optimized question",
-            "Typical companion"
+            "Question it makes natural",
+            "Common companion data"
           ],
           "rows": [
             [
               "Time-series",
-              "How did a measurement change over a time window?",
-              "Relational asset metadata."
+              "How did this measurement change over a time window?",
+              "Asset/user/service metadata in a relational or document store."
             ],
             [
               "Search",
-              "Which records match these words and filters, ranked usefully?",
-              "Authoritative transactional store."
+              "Which records match this text + filters, ranked usefully?",
+              "Authoritative product/article/account records elsewhere."
             ],
             [
               "Vector",
-              "Which items are mathematically similar to this item or query?",
-              "Source documents and metadata store."
+              "Which stored items are closest to this vector under the chosen similarity model?",
+              "Source documents, permissions, and metadata in an authoritative store."
             ]
           ],
-          "caption": "Specialized stores are often projections of authoritative data"
+          "caption": "Specialized indexes are often projections of data whose source of truth lives elsewhere"
         },
         {
-          "type": "callout",
-          "tone": "warning",
-          "title": "A vector database does not understand meaning like a person",
-          "body": "An embedding model produces coordinates. Similarity finds nearby coordinates; the result can still be irrelevant, outdated, unsafe, or false and must be evaluated."
+          "type": "checkpoint",
+          "prompt": "A vector search returns the nearest document to a question. Does 'nearest vector' prove the document is factually correct and safe to show?",
+          "answer": "No.",
+          "explanation": "Vector similarity is a retrieval signal, not a truth or authorization guarantee. Evaluate relevance, freshness, permissions, source quality, and downstream use separately."
         }
       ]
     },
     {
-      "id": "polyglot",
-      "title": "7. Use more than one database only for proven pressure",
-      "summary": "Polyglot persistence can improve a system or multiply its failure modes.",
+      "id": "multiple-stores",
+      "title": "7. Add another database only when its benefit pays for another source of failure",
+      "summary": "Using specialized stores together is often called polyglot persistence. It can solve real workload problems, but every extra copy introduces ownership, synchronization, security, recovery, and operating questions.",
+      "visual": {
+        "kind": "flow",
+        "title": "One authoritative write can feed specialized read models",
+        "caption": "A projection is a derived copy shaped for a particular read/search/analysis need. The synchronization path becomes part of the system's correctness contract.",
+        "nodes": [
+          {
+            "label": "Authoritative write",
+            "detail": "One system owns the accepted business change."
+          },
+          {
+            "label": "Change propagation",
+            "detail": "Synchronous code, events, change-data capture, or another mechanism carries selected changes."
+          },
+          {
+            "label": "Projection",
+            "detail": "A secondary model keeps only the fields/structure needed for a specialized read."
+          },
+          {
+            "label": "Specialized query",
+            "detail": "Search, vector, time-series, cache, or graph workload reads its optimized representation."
+          },
+          {
+            "label": "Reconciliation",
+            "detail": "Monitoring, retries, replay/rebuild, and audits detect or repair missing, duplicate, stale, or corrupt projections."
+          }
+        ]
+      },
       "blocks": [
+        {
+          "type": "paragraph",
+          "text": "Polyglot persistence means intentionally using more than one data-storage technology because different parts of the workload benefit from different models. A common pattern is an authoritative relational store plus a search index or cache. The second store is not free performance: the system now has to decide who owns writes, how updates propagate, how stale the projection may be, what happens when propagation fails, and how deleted or security-sensitive data is removed everywhere it was copied."
+        },
         {
           "type": "steps",
           "items": [
             {
-              "title": "Keep one source of truth",
-              "explanation": "Choose where authoritative writes occur.",
-              "result": "Ownership is unambiguous."
+              "title": "Name the measured pressure",
+              "explanation": "Show which query, latency, scale, text-relevance, graph, similarity, or time-series requirement the current design cannot meet acceptably.",
+              "result": "The second store has a specific job instead of being architecture fashion."
             },
             {
-              "title": "Project intentionally",
-              "explanation": "Copy only the fields needed by the secondary access pattern.",
-              "result": "The projection has a clear contract."
+              "title": "Keep write ownership explicit",
+              "explanation": "Choose where authoritative changes are accepted and which copies are derived projections.",
+              "result": "Conflicting sources of truth are less likely."
             },
             {
-              "title": "Define freshness",
-              "explanation": "State whether updates are synchronous, asynchronous, or eventually consistent.",
-              "result": "Users know what delay is acceptable."
+              "title": "Define propagation and freshness",
+              "explanation": "State whether the projection updates inside the original request or later, and how much lag the product can tolerate.",
+              "result": "Eventual consistency becomes a measurable product behavior rather than a vague disclaimer."
             },
             {
-              "title": "Reconcile failures",
-              "explanation": "Retry idempotently and detect missing or duplicate updates.",
-              "result": "The secondary store can recover."
+              "title": "Make retries and rebuilds safe",
+              "explanation": "The projection path should handle duplicate or missing deliveries, support replay/rebuild where appropriate, and avoid multiplying the authoritative effect.",
+              "result": "A secondary store can recover after partial failure."
             },
             {
-              "title": "Observe drift",
-              "explanation": "Measure lag, failed events, and mismatched records.",
-              "result": "Silent inconsistency becomes visible."
+              "title": "Observe drift and degraded behavior",
+              "explanation": "Measure lag, failed updates, mismatched records, stale results, and what the application does if the specialized store is unavailable.",
+              "result": "Silent inconsistency becomes visible and operable."
             }
           ]
         },
         {
-          "type": "checklist",
-          "items": [
-            "A second database solves a measured access-pattern or scale problem.",
-            "The team can operate, secure, back up, and restore it.",
-            "Data ownership and deletion propagate correctly.",
-            "The application defines degraded behavior when it is unavailable."
-          ]
+          "type": "checkpoint",
+          "prompt": "Search is slow, so you add a search engine populated from the primary database. Which store should normally decide whether an order payment actually exists?",
+          "answer": "The explicitly designated authoritative store, not the derived search index.",
+          "explanation": "The search engine can provide a fast searchable projection, but transactional truth and write ownership should remain unambiguous. If two stores can independently decide the same business fact, synchronization and conflict handling become much harder."
         },
         {
           "type": "callout",
           "tone": "tip",
-          "title": "The simplest durable design wins",
-          "body": "One well-modeled database with appropriate indexes is easier to reason about than a distributed collection of stores. Add specialization after evidence, not anticipation."
+          "title": "Simplicity has operational value",
+          "body": "One well-modeled primary database with the right indexes is easier to secure, back up, restore, observe, migrate, and reason about than several stores. Add specialization after evidence shows its value exceeds that permanent operating cost."
         }
       ]
     },
     {
       "id": "decision",
-      "title": "8. A practical selection matrix",
-      "summary": "Use this as a starting hypothesis, then validate with representative data and workload.",
+      "title": "8. Turn the seven families into a repeatable selection process",
+      "summary": "The family is a starting hypothesis. Validate it with representative data, the hardest reads and writes, failure tests, recovery tests, and realistic operating cost before committing to production architecture.",
       "blocks": [
         {
           "type": "table",
           "columns": [
             "Dominant need",
-            "Start with",
-            "Validate"
+            "Evaluate first",
+            "Validate before choosing"
           ],
           "rows": [
             [
-              "Transactions, relationships, flexible queries",
+              "Transactions, connected business records, constraints, evolving queries",
               "Relational",
-              "Constraints, isolation, index plan, recovery."
+              "Data model, transaction isolation, constraints, indexes/query plans, backup/restore, scale path."
             ],
             [
-              "Nested aggregate retrieved together",
+              "Nested aggregate commonly retrieved and changed together",
               "Document",
-              "Document growth, validation, cross-document operations."
+              "Aggregate boundary, document growth, duplication, validation, indexes, cross-document operations."
             ],
             [
-              "Known-key lookup, expiry, counters",
+              "Direct known-key lookup, expiry, counters, cache/session behavior",
               "Key–value",
-              "Memory, eviction, persistence, failure behavior."
+              "Eviction, persistence, memory/cost, atomic commands, key design, outage behavior."
             ],
             [
-              "Variable-depth relationship traversal",
+              "Repeated variable-depth relationship/path traversal",
               "Graph",
-              "Traversal latency and update model."
+              "Modeling clarity, traversal latency, write/update patterns, indexes/constraints, operations."
             ],
             [
-              "High-volume measurements over time",
+              "High-volume measurements organized around time",
               "Time-series",
-              "Retention, downsampling, cardinality."
+              "Write rate, retention, downsampling, tag/cardinality model, query windows, compression/recovery."
             ],
             [
-              "Relevance-ranked text and filters",
+              "Relevance-ranked text plus structured filtering",
               "Search engine",
-              "Analyzer, ranking, refresh lag."
+              "Analyzers/tokenization, ranking evaluation, refresh lag, index size, rebuild/recovery, source-of-truth relationship."
             ],
             [
-              "Similarity retrieval",
+              "Nearest-neighbor/similarity retrieval",
               "Vector",
-              "Embedding quality, recall, filtering, evaluation set."
+              "Embedding model, distance metric, approximate-index recall/latency, metadata filtering, evaluation set, refresh/rebuild strategy."
             ]
           ],
-          "caption": "First database to evaluate by dominant access pattern"
+          "caption": "Use the workload to choose what to test—not a technology category to skip testing"
         },
         {
-          "type": "checklist",
+          "type": "steps",
           "items": [
-            "Prototype the hardest read and write paths.",
-            "Use realistic cardinality and skew.",
-            "Test backup and restore, not only happy-path queries.",
-            "Measure p95/p99 latency and resource cost.",
-            "Document the rejected alternatives and the evidence."
+            {
+              "title": "Prototype the hardest questions",
+              "explanation": "Use realistic record counts, value distributions, relationship depth, text, vector dimensions, and concurrent writes rather than toy data that makes every database look fast.",
+              "result": "The prototype exercises the reason you are considering the technology."
+            },
+            {
+              "title": "Measure tail latency and resource cost",
+              "explanation": "Average latency can hide bad slow cases. Measure percentiles such as p95/p99 where relevant and observe CPU, memory, storage, I/O, network, and hosted-service cost.",
+              "result": "Performance is evaluated as a distribution with a price, not one benchmark number."
+            },
+            {
+              "title": "Test failure and recovery",
+              "explanation": "Practice backup and restore, node/service interruption, bad deployment/data migration, and degraded dependencies—not only happy-path queries.",
+              "result": "Recovery capability becomes evidence rather than documentation hope."
+            },
+            {
+              "title": "Evaluate security and operations",
+              "explanation": "Review authentication, authorization, encryption, auditing, secrets, data deletion, upgrade/migration process, monitoring, support, and team expertise.",
+              "result": "The database is judged as a production system the team must own."
+            },
+            {
+              "title": "Record the decision and rejected alternatives",
+              "explanation": "State the workload, constraints, evidence, selected option, and conditions that would cause the decision to be revisited.",
+              "result": "Future engineers can understand why the architecture exists instead of inheriting folklore."
+            }
           ]
         }
       ]
@@ -537,23 +676,47 @@
   "glossary": [
     {
       "term": "Access pattern",
-      "definition": "A recurring way data is written, selected, filtered, joined, traversed, or aggregated."
+      "definition": "A recurring way an application reads or writes data, such as lookup by id, join by relationship, time-window aggregation, text ranking, or vector similarity search."
+    },
+    {
+      "term": "Invariant",
+      "definition": "A condition the system must preserve as data changes, such as uniqueness or a business rule that forbids an invalid state."
     },
     {
       "term": "Constraint",
-      "definition": "A rule the database enforces to reject invalid data states."
+      "definition": "A rule enforced by the database to reject data states that violate the declared model."
     },
     {
       "term": "Index",
-      "definition": "An additional data structure that speeds selected lookups at the cost of storage and write work."
+      "definition": "An additional data structure designed to speed selected retrieval patterns at the cost of storage and work when data changes."
     },
     {
       "term": "Transaction",
-      "definition": "A unit of work whose changes are committed or rolled back according to defined guarantees."
+      "definition": "A unit of database work whose operations follow defined commit/rollback, isolation, and durability guarantees."
+    },
+    {
+      "term": "Aggregate",
+      "definition": "A group of related data treated as one meaningful loading or consistency boundary in a domain model."
+    },
+    {
+      "term": "Traversal",
+      "definition": "Following graph relationships from one node to connected nodes, potentially across several hops."
+    },
+    {
+      "term": "Inverted index",
+      "definition": "A search data structure that maps analyzed terms toward the documents or fields containing them so text matching can be efficient."
+    },
+    {
+      "term": "Embedding",
+      "definition": "A numeric vector produced by a model to represent features of an item such as text or an image for downstream comparison or retrieval."
     },
     {
       "term": "Projection",
-      "definition": "A derived representation optimized for a particular read model, search, or analysis need."
+      "definition": "A derived representation of authoritative data shaped for a particular read, search, similarity, analysis, or caching need."
+    },
+    {
+      "term": "Polyglot persistence",
+      "definition": "An architecture that intentionally uses multiple data-storage technologies because different workloads benefit from different models."
     }
   ],
   "related": [
@@ -565,37 +728,37 @@
     {
       "label": "PostgreSQL Documentation",
       "url": "https://www.postgresql.org/docs/current/",
-      "accessed": "2026-08-05"
+      "accessed": "2026-08-07"
     },
     {
       "label": "MongoDB Manual",
       "url": "https://www.mongodb.com/docs/manual/",
-      "accessed": "2026-08-05"
+      "accessed": "2026-08-07"
     },
     {
       "label": "Redis Documentation",
       "url": "https://redis.io/docs/latest/",
-      "accessed": "2026-08-05"
+      "accessed": "2026-08-07"
     },
     {
       "label": "Neo4j Documentation",
       "url": "https://neo4j.com/docs/",
-      "accessed": "2026-08-05"
+      "accessed": "2026-08-07"
     },
     {
       "label": "InfluxDB Documentation",
       "url": "https://docs.influxdata.com/",
-      "accessed": "2026-08-05"
+      "accessed": "2026-08-07"
     },
     {
       "label": "Elasticsearch Reference",
       "url": "https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html",
-      "accessed": "2026-08-05"
+      "accessed": "2026-08-07"
     },
     {
       "label": "pgvector Documentation",
       "url": "https://github.com/pgvector/pgvector",
-      "accessed": "2026-08-05"
+      "accessed": "2026-08-07"
     }
   ]
 }
