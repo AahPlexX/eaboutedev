@@ -13,8 +13,9 @@ async function readTopic(filename: string) {
 
 test("every guide includes at least two immediate comprehension checkpoints", async () => {
   const filenames = (await readdir(topicDirectory)).filter((filename) => filename.endsWith(".json"));
-  for (const filename of filenames) {
-    const topic = await readTopic(filename);
+  const topics = await Promise.all(filenames.map((filename) => readTopic(filename)));
+
+  for (const topic of topics) {
     const checkpointCount = topic.sections.flatMap((section) => section.blocks).filter((block) => block.type === "checkpoint").length;
     assert.ok(checkpointCount >= 2, `${topic.title} has ${checkpointCount} checkpoints`);
   }
