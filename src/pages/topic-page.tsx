@@ -66,8 +66,12 @@ export function TopicPage() {
               <h1>{topic.title}</h1>
               <p className="topic-summary">{topic.summary}</p>
               <div className="topic-outcomes">
-                <p>After this guide, you can:</p>
+                <p>By the end, you will be able to:</p>
                 <ul>{topic.learningOutcomes.map((outcome) => <li key={outcome}>{outcome}</li>)}</ul>
+              </div>
+              <div className="topic-prerequisites">
+                <p>Helpful before this guide</p>
+                <ul>{topic.prerequisites.map((prerequisite) => <li key={prerequisite}>{prerequisite}</li>)}</ul>
               </div>
             </div>
             <TopicVisualPanel visual={topic.heroVisual} accent={topic.accent} />
@@ -103,7 +107,7 @@ export function TopicPage() {
 function Glossary({ topic }: { topic: TopicDocument }) {
   return (
     <section className="topic-section" id="glossary">
-      <header><p className="eyebrow">Plain-language glossary</p><h2>Words used in this guide</h2></header>
+      <header><p className="eyebrow">Plain-language glossary</p><h2>Words you have already met in this guide</h2><p>Use this as a quick reminder. The guide introduces these terms in context before they appear here.</p></header>
       <dl className="glossary-grid">
         {topic.glossary.map((entry) => <div key={entry.term}><dt>{entry.term}</dt><dd>{entry.definition}</dd></div>)}
       </dl>
