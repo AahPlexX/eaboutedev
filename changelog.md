@@ -106,3 +106,27 @@ Append-only project history. The highest recorded `turncount` is authoritative.
 - Split pull-request verification into `.github/workflows/actions.yml` so the Pages workflow has one responsibility: verify, build, upload, and deploy production.
 - Updated immutable action pins to current verified releases for `actions/checkout@v7.0.1`, `pnpm/action-setup@v6.0.9`, and `actions/setup-node@v7.0.0`; retained current Pages actions at configure v6.0.0, upload v5.0.0, and deploy v5.0.0.
 - Re-verified the Vite production base remains `/eaboutedev/`, matching the project Pages URL path.
+
+## Turn 6 — 2026-08-07
+
+**turncount: 6**
+
+### Intuitive learning-content redesign
+
+- Replaced the launch library's expert-first teaching order with one shared content contract: concrete before abstract, meaning before vocabulary, cause before rule, explicit dependency order, interpreted examples, and no removal of difficult concepts merely to simplify the prose.
+- Rewrote all five launch guides so each can be entered without prior topic vocabulary and naturally continues into the real terminology, code/data, debugging, failure modes, trade-offs, security/performance concerns, and production decisions.
+- Rebuilt **How the Web Works** around one address-bar request moving through URL parsing, DNS, network/transport, TLS, HTTP, browser rendering, and stage-based diagnosis.
+- Rebuilt **HTML, CSS, and JavaScript** around one small page before introducing semantics, the CSS cascade, layout systems, container queries, DOM, events, state, effects, progressive enhancement, responsive behavior, and accessibility constraints.
+- Rebuilt **Git and GitHub** around observable repository state changes before introducing the commit graph, references, HEAD, branch integration, remotes, pull requests, Actions, and recovery.
+- Rebuilt **APIs and Data Exchange** around two programs communicating before introducing API contracts, schemas, RFC 9457 problem details, authentication/authorization, pagination, caching, backoff/jitter, idempotency, GraphQL, webhooks, event streams, and compatibility management.
+- Rebuilt **The 7 Types of Databases** around seven recognizable question shapes before introducing access patterns, invariants, transactions, joins, aggregate boundaries, graph traversal, inverted indexes, embeddings, projections, and polyglot persistence.
+- Added an accessible native `checkpoint` disclosure block and made at least two comprehension checkpoints mandatory for every guide through both tests and content validation.
+- Changed visual rendering so flow, layers, comparison, cycle, and map content no longer collapse into the same sequential boxes-and-arrows presentation.
+- Replaced learner-irrelevant homepage/catalog implementation messaging with clear starting guidance, learner promises, natural-language search examples, visible helpful prerequisites, and concrete learning outcomes.
+- Strengthened `docs/content-authoring.md` so future topics must follow the same no-gap, plain-language, technically complete learning order.
+
+### Verification
+
+- GitHub-hosted `pnpm check` generated the content artifacts, validated all five topics, verified exact dependency versions and generated-artifact freshness, passed all 13 tests, passed TypeScript, passed Oxlint with denied warnings, and completed the production build before the success-only generated-artifact commit `21a3bab06d7bd5af5d9a77ed25dd6831809a3857` was created.
+- Regenerated `src/generated/topic-catalog.ts`, `public/search/topic-search-index.json`, and `docs/topic-registry.json`; the registry verification date advanced to `2026-08-07` and all rewritten source hashes were refreshed.
+- Removed the temporary regeneration/diagnostic workflow and failure log after verification; the permanent workflow surface remains `.github/workflows/actions.yml` and `.github/workflows/pages.yml`.
