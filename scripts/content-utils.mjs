@@ -17,7 +17,7 @@ export async function readTopics() {
   }));
 }
 
-export function createCatalogEntry(topic) {
+export function createCatalogEntry(topic, order = 0) {
   return {
     slug: topic.slug,
     title: topic.title,
@@ -30,11 +30,12 @@ export function createCatalogEntry(topic) {
     accent: topic.accent,
     aliases: topic.aliases,
     keywords: topic.keywords,
+    order,
   };
 }
 
-export function createSearchDocument(topic) {
-  const catalogEntry = createCatalogEntry(topic);
+export function createSearchDocument(topic, order = 0) {
+  const catalogEntry = createCatalogEntry(topic, order);
   const sectionTitles = topic.sections.map((section) => section.title);
   const searchable = [
     topic.title,

@@ -11,38 +11,9 @@ export const topicCatalog: TopicCatalogEntry[] = [
     "estimatedMinutes": 36,
     "icon": "⇄",
     "accent": "oklch(0.67 0.19 310)",
-    "aliases": [
-      "api basics",
-      "rest api",
-      "graphql",
-      "webhooks",
-      "json api",
-      "service communication",
-      "how APIs work"
-    ],
-    "keywords": [
-      "api",
-      "contract",
-      "http",
-      "rest",
-      "graphql",
-      "json",
-      "schema",
-      "authentication",
-      "authorization",
-      "pagination",
-      "cursor",
-      "timeout",
-      "retry",
-      "backoff",
-      "jitter",
-      "idempotency",
-      "webhook",
-      "event stream",
-      "versioning",
-      "deprecation",
-      "problem details"
-    ]
+    "aliases": ["api basics", "rest api", "graphql", "webhooks", "json api", "service communication", "how APIs work"],
+    "keywords": ["api", "contract", "http", "rest", "graphql", "json", "schema", "authentication", "authorization", "pagination", "cursor", "timeout", "retry", "backoff", "jitter", "idempotency", "webhook", "event stream", "versioning", "deprecation", "problem details"],
+    "order": 0
   },
   {
     "slug": "git-and-github",
@@ -54,37 +25,9 @@ export const topicCatalog: TopicCatalogEntry[] = [
     "estimatedMinutes": 34,
     "icon": "⑂",
     "accent": "oklch(0.68 0.18 25)",
-    "aliases": [
-      "version control",
-      "git basics",
-      "github workflow",
-      "branches commits pull requests",
-      "source control",
-      "how git works"
-    ],
-    "keywords": [
-      "repository",
-      "working tree",
-      "staging area",
-      "index",
-      "commit",
-      "parent",
-      "branch",
-      "head",
-      "tag",
-      "merge",
-      "rebase",
-      "cherry pick",
-      "revert",
-      "remote",
-      "fetch",
-      "push",
-      "pull",
-      "pull request",
-      "github actions",
-      "conflict",
-      "reflog"
-    ]
+    "aliases": ["version control", "git basics", "github workflow", "branches commits pull requests", "source control", "how git works"],
+    "keywords": ["repository", "working tree", "staging area", "index", "commit", "parent", "branch", "head", "tag", "merge", "rebase", "cherry pick", "revert", "remote", "fetch", "push", "pull", "pull request", "github actions", "conflict", "reflog"],
+    "order": 1
   },
   {
     "slug": "how-the-web-works",
@@ -96,29 +39,9 @@ export const topicCatalog: TopicCatalogEntry[] = [
     "estimatedMinutes": 24,
     "icon": "◎",
     "accent": "oklch(0.67 0.18 250)",
-    "aliases": [
-      "internet request lifecycle",
-      "browser to server",
-      "website loading",
-      "http lifecycle",
-      "dns and http",
-      "what happens when I open a website"
-    ],
-    "keywords": [
-      "browser",
-      "url",
-      "domain",
-      "dns",
-      "ip address",
-      "tcp",
-      "quic",
-      "tls",
-      "http",
-      "server",
-      "response",
-      "rendering",
-      "dom"
-    ]
+    "aliases": ["internet request lifecycle", "browser to server", "website loading", "http lifecycle", "dns and http", "what happens when I open a website"],
+    "keywords": ["browser", "url", "domain", "dns", "ip address", "tcp", "quic", "tls", "http", "server", "response", "rendering", "dom"],
+    "order": 2
   },
   {
     "slug": "html-css-and-javascript",
@@ -130,30 +53,9 @@ export const topicCatalog: TopicCatalogEntry[] = [
     "estimatedMinutes": 28,
     "icon": "◇",
     "accent": "oklch(0.71 0.17 155)",
-    "aliases": [
-      "html css js",
-      "frontend basics",
-      "web page languages",
-      "markup styling scripting",
-      "how websites are built"
-    ],
-    "keywords": [
-      "html",
-      "semantic html",
-      "css",
-      "cascade",
-      "flexbox",
-      "grid",
-      "container queries",
-      "javascript",
-      "dom",
-      "events",
-      "state",
-      "browser api",
-      "accessibility",
-      "progressive enhancement",
-      "responsive design"
-    ]
+    "aliases": ["html css js", "frontend basics", "web page languages", "markup styling scripting", "how websites are built"],
+    "keywords": ["html", "semantic html", "css", "cascade", "flexbox", "grid", "container queries", "javascript", "dom", "events", "state", "browser api", "accessibility", "progressive enhancement", "responsive design"],
+    "order": 3
   },
   {
     "slug": "the-seven-types-of-databases",
@@ -165,34 +67,8 @@ export const topicCatalog: TopicCatalogEntry[] = [
     "estimatedMinutes": 44,
     "icon": "▦",
     "accent": "oklch(0.72 0.17 70)",
-    "aliases": [
-      "database types",
-      "db types",
-      "sql vs nosql",
-      "which database",
-      "data storage models",
-      "how to choose a database"
-    ],
-    "keywords": [
-      "relational",
-      "document",
-      "key value",
-      "graph",
-      "time series",
-      "search engine",
-      "vector database",
-      "sql",
-      "nosql",
-      "schema",
-      "constraints",
-      "transactions",
-      "joins",
-      "indexes",
-      "aggregate",
-      "inverted index",
-      "embedding",
-      "polyglot persistence",
-      "projection"
-    ]
+    "aliases": ["database types", "db types", "sql vs nosql", "which database", "data storage models", "how to choose a database"],
+    "keywords": ["relational", "document", "key value", "graph", "time series", "search engine", "vector database", "sql", "nosql", "schema", "constraints", "transactions", "joins", "indexes", "aggregate", "inverted index", "embedding", "polyglot persistence", "projection"],
+    "order": 4
   }
 ];

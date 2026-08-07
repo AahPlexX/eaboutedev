@@ -135,6 +135,7 @@ export interface TopicCatalogEntry {
   accent: string;
   aliases: string[];
   keywords: string[];
+  order: number;
 }
 
 export interface TopicSearchDocument extends TopicCatalogEntry {
