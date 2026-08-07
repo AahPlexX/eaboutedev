@@ -153,6 +153,26 @@
         {"path": "todo.md", "responsibility": "Append-only Turn 6 completion checklist with only external live Pages verification remaining"},
         {"path": "codemap.json", "responsibility": "Append-only map of the redesigned learning architecture and its verification surfaces"}
       ]
+    },
+    {
+      "turncount": 7,
+      "date": "2026-08-07",
+      "summary": "Approved catalog/search scalability hardening design before large topic expansion",
+      "areas": [
+        {"path": "docs/superpowers/specs/2026-08-07-catalog-scalability-design.md", "responsibility": "Approved YAGNI-bounded design for sorting, URL pagination, lazy catalog/routes/search, prebuilt MiniSearch serialization, request reuse, and measurable scale guardrails"},
+        {"path": "public/content/topics", "responsibility": "Preserved one-file-per-topic authoritative content model; individual guides remain independently fetched rather than bundled together"},
+        {"path": "src/lib/topic-loader.ts", "responsibility": "Preserved per-slug topic fetch boundary, with approved future in-session successful-load deduplication and retryable failure behavior"},
+        {"path": "src/lib/catalog.ts", "responsibility": "Planned pure filtering, five-mode stable sorting, fixed 24-item pagination, compact page model, and URL-state helpers"},
+        {"path": "public/catalog/topic-catalog.json", "responsibility": "Planned generated lazy full-catalog metadata asset replacing eager whole-catalog application data"},
+        {"path": "src/generated", "responsibility": "Planned bounded homepage bootstrap metadata containing only total count and six recommended topic cards"},
+        {"path": "src/app.tsx", "responsibility": "Planned route-level lazy loading for catalog and topic route implementations without adding routing dependencies"},
+        {"path": "src/lib/search.ts", "responsibility": "Planned on-demand search implementation that restores a build-time serialized MiniSearch index instead of browser-side addAll construction"},
+        {"path": "scripts/generate-content-artifacts.mjs", "responsibility": "Planned deterministic catalog/bootstrap/serialized-search generation and stale-artifact checking"},
+        {"path": "tests", "responsibility": "Planned sorting, pagination, URL-state, lazy-import, search-restoration, request-deduplication, 100/500/1000-topic scale-shape, and generated-size regression coverage"},
+        {"path": "changelog.md", "responsibility": "Append-only Turn 7 design decision and scope-boundary record"},
+        {"path": "todo.md", "responsibility": "Append-only Turn 7 design-complete/implementation-pending ledger"},
+        {"path": "codemap.json", "responsibility": "Append-only mapping of approved scalability architecture before implementation"}
+      ]
     }
   ]
 }
