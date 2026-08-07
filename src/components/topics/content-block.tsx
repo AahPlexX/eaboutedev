@@ -49,7 +49,7 @@ export function ContentBlockView({ block }: { block: ContentBlock }) {
         </div>
       );
     case "callout": {
-      const Icon = block.tone === "warning" ? AlertTriangle : block.tone === "tip" ? Lightbulb : block.tone === "definition" ? Info : Info;
+      const Icon = block.tone === "warning" ? AlertTriangle : block.tone === "tip" ? Lightbulb : Info;
       return (
         <aside className={`callout callout-${block.tone}`}>
           <Icon aria-hidden="true" />
@@ -59,5 +59,18 @@ export function ContentBlockView({ block }: { block: ContentBlock }) {
     }
     case "checklist":
       return <ul className="checklist">{block.items.map((item) => <li key={item}><Check aria-hidden="true" /><span>{item}</span></li>)}</ul>;
+    case "checkpoint":
+      return (
+        <details className="checkpoint">
+          <summary>
+            <span>Check your understanding</span>
+            <strong>{block.prompt}</strong>
+          </summary>
+          <div className="checkpoint-answer">
+            <p><strong>Answer:</strong> {block.answer}</p>
+            <p>{block.explanation}</p>
+          </div>
+        </details>
+      );
   }
 }
