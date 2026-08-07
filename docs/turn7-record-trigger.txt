@@ -1,1 +1,1 @@
-Temporary Turn 7 record trigger; delete after the one-shot record commit.
+Temporary Turn 7 record trigger; second path-triggered execution.
