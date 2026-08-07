@@ -1,0 +1,1 @@
+Turn 7 scalability verification trigger. Temporary; remove after GitHub-hosted pnpm check completes.
