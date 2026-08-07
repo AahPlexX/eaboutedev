@@ -7,62 +7,20 @@
       "date": "2026-08-05",
       "summary": "Initial production architecture and launch curriculum",
       "areas": [
-        {
-          "path": "src/app.tsx",
-          "responsibility": "Hash-routed application entry and page composition"
-        },
-        {
-          "path": "src/components/ui",
-          "responsibility": "shadcn-style accessible source primitives"
-        },
-        {
-          "path": "src/components/layout",
-          "responsibility": "Persistent shell, global navigation, and footer"
-        },
-        {
-          "path": "src/components/search",
-          "responsibility": "Global search trigger, keyboard contract, dialog, and result navigation"
-        },
-        {
-          "path": "src/components/topics",
-          "responsibility": "Topic cards, visual diagrams, sections, tables, examples, callouts, and local outline"
-        },
-        {
-          "path": "src/lib/query-normalization.ts",
-          "responsibility": "Natural-language tokenization, domain synonym expansion, and query-intent inference"
-        },
-        {
-          "path": "src/lib/search.ts",
-          "responsibility": "Lazy MiniSearch initialization and weighted fuzzy topic retrieval"
-        },
-        {
-          "path": "public/content/topics",
-          "responsibility": "Authoritative independent topic documents"
-        },
-        {
-          "path": "scripts",
-          "responsibility": "Deterministic generation and validation of content and dependency contracts"
-        },
-        {
-          "path": "src/generated/topic-catalog.ts",
-          "responsibility": "Generated lightweight topic metadata for discovery pages"
-        },
-        {
-          "path": "public/search/topic-search-index.json",
-          "responsibility": "Generated lazy-loading search corpus"
-        },
-        {
-          "path": "docs/topic-registry.json",
-          "responsibility": "Generated topic inventory, source locations, counts, and SHA-256 content hashes"
-        },
-        {
-          "path": "src/index.css",
-          "responsibility": "Tailwind theme tokens, adaptive shell rules, container-query visuals, and accessibility preferences"
-        },
-        {
-          "path": ".github/workflows/pages.yml",
-          "responsibility": "Pull-request verification and automatic main-branch Pages deployment"
-        }
+        {"path": "src/app.tsx", "responsibility": "Hash-routed application entry and page composition"},
+        {"path": "src/components/ui", "responsibility": "shadcn-style accessible source primitives"},
+        {"path": "src/components/layout", "responsibility": "Persistent shell, global navigation, and footer"},
+        {"path": "src/components/search", "responsibility": "Global search trigger, keyboard contract, dialog, and result navigation"},
+        {"path": "src/components/topics", "responsibility": "Topic cards, visual diagrams, sections, tables, examples, callouts, and local outline"},
+        {"path": "src/lib/query-normalization.ts", "responsibility": "Natural-language tokenization, domain synonym expansion, and query-intent inference"},
+        {"path": "src/lib/search.ts", "responsibility": "Lazy MiniSearch initialization and weighted fuzzy topic retrieval"},
+        {"path": "public/content/topics", "responsibility": "Authoritative independent topic documents"},
+        {"path": "scripts", "responsibility": "Deterministic generation and validation of content and dependency contracts"},
+        {"path": "src/generated/topic-catalog.ts", "responsibility": "Generated lightweight topic metadata for discovery pages"},
+        {"path": "public/search/topic-search-index.json", "responsibility": "Generated lazy-loading search corpus"},
+        {"path": "docs/topic-registry.json", "responsibility": "Generated topic inventory, source locations, counts, and SHA-256 content hashes"},
+        {"path": "src/index.css", "responsibility": "Tailwind theme tokens, adaptive shell rules, container-query visuals, and accessibility preferences"},
+        {"path": ".github/workflows/pages.yml", "responsibility": "Pull-request verification and automatic main-branch Pages deployment"}
       ]
     },
     {
@@ -70,54 +28,18 @@
       "date": "2026-08-05",
       "summary": "Exact dependency locking and current-toolchain verification hardening",
       "areas": [
-        {
-          "path": "package.json",
-          "responsibility": "Registry-current exact runtime, build, type, lint, component, routing, icon, and search dependency contract"
-        },
-        {
-          "path": "pnpm-lock.yaml",
-          "responsibility": "Deterministic transitive dependency graph enforced by frozen CI and deployment installs"
-        },
-        {
-          "path": "tsconfig.app.json",
-          "responsibility": "Strict TypeScript 7 browser and Node-test compilation contract with explicit path aliases and Node ambient types"
-        },
-        {
-          "path": "vite.config.ts",
-          "responsibility": "Vite 8 GitHub Pages base path, React and Tailwind plugins, alias resolution, source maps, and native Rolldown chunking"
-        },
-        {
-          "path": ".oxlintrc.json",
-          "responsibility": "Oxlint correctness, suspicious, performance, React automatic JSX runtime, and narrowly scoped immutable-content exceptions"
-        },
-        {
-          "path": "src/lib/search.ts",
-          "responsibility": "Lazy weighted fuzzy retrieval with intent attachment that avoids result-object copying"
-        },
-        {
-          "path": "scripts/content-utils.mjs",
-          "responsibility": "Immutable deterministic topic discovery, parsing, catalog projection, and SHA-256 hashing"
-        },
-        {
-          "path": "scripts/generate-content-artifacts.mjs",
-          "responsibility": "Concurrent deterministic generation and stale-artifact verification"
-        },
-        {
-          "path": "scripts/validate-content.mjs",
-          "responsibility": "Topic schema, relationship, HTTPS source, date, and 5,000-topic ceiling validation"
-        },
-        {
-          "path": ".github/workflows/pages.yml",
-          "responsibility": "Frozen-lockfile pull-request proof and gated GitHub Pages deployment after every main update"
-        },
-        {
-          "path": "changelog.md",
-          "responsibility": "Append-only turncount-indexed project history"
-        },
-        {
-          "path": "todo.md",
-          "responsibility": "Append-only delivery and external release-gate ledger"
-        }
+        {"path": "package.json", "responsibility": "Registry-current exact runtime, build, type, lint, component, routing, icon, and search dependency contract"},
+        {"path": "pnpm-lock.yaml", "responsibility": "Deterministic transitive dependency graph enforced by frozen CI and deployment installs"},
+        {"path": "tsconfig.app.json", "responsibility": "Strict TypeScript 7 browser and Node-test compilation contract with explicit path aliases and Node ambient types"},
+        {"path": "vite.config.ts", "responsibility": "Vite 8 GitHub Pages base path, React and Tailwind plugins, alias resolution, source maps, and native Rolldown chunking"},
+        {"path": ".oxlintrc.json", "responsibility": "Oxlint correctness, suspicious, performance, React automatic JSX runtime, and narrowly scoped immutable-content exceptions"},
+        {"path": "src/lib/search.ts", "responsibility": "Lazy weighted fuzzy retrieval with intent attachment that avoids result-object copying"},
+        {"path": "scripts/content-utils.mjs", "responsibility": "Immutable deterministic topic discovery, parsing, catalog projection, and SHA-256 hashing"},
+        {"path": "scripts/generate-content-artifacts.mjs", "responsibility": "Concurrent deterministic generation and stale-artifact verification"},
+        {"path": "scripts/validate-content.mjs", "responsibility": "Topic schema, relationship, HTTPS source, date, and 5,000-topic ceiling validation"},
+        {"path": ".github/workflows/pages.yml", "responsibility": "Frozen-lockfile pull-request proof and gated GitHub Pages deployment after every main update"},
+        {"path": "changelog.md", "responsibility": "Append-only turncount-indexed project history"},
+        {"path": "todo.md", "responsibility": "Append-only delivery and external release-gate ledger"}
       ]
     },
     {
@@ -126,54 +48,18 @@
       "date": "2026-08-05",
       "summary": "Independent review hardening for accessibility, metadata integrity, and 5,000-topic discovery scale",
       "areas": [
-        {
-          "path": "src/lib/document-title.ts",
-          "responsibility": "Pure browser-title contract that keeps loaded topic content immutable"
-        },
-        {
-          "path": "src/pages/topic-page.tsx",
-          "responsibility": "Lazy topic loading, browser metadata updates, guide rendering, glossary, sources, and related navigation"
-        },
-        {
-          "path": "src/components/search/global-search.tsx",
-          "responsibility": "Native list and button search-result semantics with Tab-accessible navigation"
-        },
-        {
-          "path": "src/lib/catalog.ts",
-          "responsibility": "Precise lightweight filtering and bounded 24-topic discovery windows"
-        },
-        {
-          "path": "src/pages/home-page.tsx",
-          "responsibility": "Six-topic launch preview with generated total count and full-catalog handoff"
-        },
-        {
-          "path": "src/pages/topics-page.tsx",
-          "responsibility": "Category filtering, precise metadata search, result counts, and progressive catalog disclosure"
-        },
-        {
-          "path": "src/types/content.ts",
-          "responsibility": "Separate lean catalog and deep lazy-search document interfaces"
-        },
-        {
-          "path": "scripts/content-utils.mjs",
-          "responsibility": "Independent catalog and deep-search projections from authoritative topic documents"
-        },
-        {
-          "path": "tests/catalog.test.ts",
-          "responsibility": "Regression proof for precise filtering and bounded 5,000-topic display behavior"
-        },
-        {
-          "path": "tests/document-title.test.ts",
-          "responsibility": "Regression proof that browser titles do not alter displayed guide content"
-        },
-        {
-          "path": "src/index.css",
-          "responsibility": "Direction-agnostic skip-link safe-area placement across both physical inset edges"
-        },
-        {
-          "path": ".github/workflows/pages.yml",
-          "responsibility": "Read-only frozen-lockfile verification followed by gated main-branch Pages deployment"
-        }
+        {"path": "src/lib/document-title.ts", "responsibility": "Pure browser-title contract that keeps loaded topic content immutable"},
+        {"path": "src/pages/topic-page.tsx", "responsibility": "Lazy topic loading, browser metadata updates, guide rendering, glossary, sources, and related navigation"},
+        {"path": "src/components/search/global-search.tsx", "responsibility": "Native list and button search-result semantics with Tab-accessible navigation"},
+        {"path": "src/lib/catalog.ts", "responsibility": "Precise lightweight filtering and bounded 24-topic discovery windows"},
+        {"path": "src/pages/home-page.tsx", "responsibility": "Six-topic launch preview with generated total count and full-catalog handoff"},
+        {"path": "src/pages/topics-page.tsx", "responsibility": "Category filtering, precise metadata search, result counts, and progressive catalog disclosure"},
+        {"path": "src/types/content.ts", "responsibility": "Separate lean catalog and deep lazy-search document interfaces"},
+        {"path": "scripts/content-utils.mjs", "responsibility": "Independent catalog and deep-search projections from authoritative topic documents"},
+        {"path": "tests/catalog.test.ts", "responsibility": "Regression proof for precise filtering and bounded 5,000-topic display behavior"},
+        {"path": "tests/document-title.test.ts", "responsibility": "Regression proof that browser titles do not alter displayed guide content"},
+        {"path": "src/index.css", "responsibility": "Direction-agnostic skip-link safe-area placement across both physical inset edges"},
+        {"path": ".github/workflows/pages.yml", "responsibility": "Read-only frozen-lockfile verification followed by gated main-branch Pages deployment"}
       ]
     },
     {
@@ -182,22 +68,10 @@
       "date": "2026-08-06",
       "summary": "Main-branch release consolidation and externally blocked initial GitHub Pages enablement",
       "areas": [
-        {
-          "path": ".github/workflows/pages.yml",
-          "responsibility": "Read-only pull-request verification and automatic main-only Pages build/deployment using configure-pages v6 after the repository Pages site is enabled"
-        },
-        {
-          "path": "changelog.md",
-          "responsibility": "Append-only release evidence including merged commit, successful verification/build gates, exact Pages API failures, and the remaining external setting"
-        },
-        {
-          "path": "todo.md",
-          "responsibility": "Append-only release checklist distinguishing completed repository work from the one repository-admin Pages enablement action"
-        },
-        {
-          "path": "codemap.json",
-          "responsibility": "Append-only architecture and release-state map for this project"
-        }
+        {"path": ".github/workflows/pages.yml", "responsibility": "Read-only pull-request verification and automatic main-only Pages build/deployment using configure-pages v6 after the repository Pages site is enabled"},
+        {"path": "changelog.md", "responsibility": "Append-only release evidence including merged commit, successful verification/build gates, exact Pages API failures, and the remaining external setting"},
+        {"path": "todo.md", "responsibility": "Append-only release checklist distinguishing completed repository work from the one repository-admin Pages enablement action"},
+        {"path": "codemap.json", "responsibility": "Append-only architecture and release-state map for this project"}
       ]
     },
     {
@@ -205,22 +79,10 @@
       "date": "2026-08-06",
       "summary": "Exact GitHub Actions release pinning and branch authority reconciliation",
       "areas": [
-        {
-          "path": ".github/workflows/pages.yml",
-          "responsibility": "Exact stable action tags for checkout, pnpm, Node, Pages configuration, Pages artifact upload, and Pages deployment while preserving least-privilege verification and main-only release behavior"
-        },
-        {
-          "path": "changelog.md",
-          "responsibility": "Append-only Turn 3 record of workflow release maintenance and the remaining external Pages setting"
-        },
-        {
-          "path": "todo.md",
-          "responsibility": "Append-only Turn 3 checklist separating completed repository maintenance from external Pages enablement"
-        },
-        {
-          "path": "codemap.json",
-          "responsibility": "Append-only mapping of the current authoritative workflow and release state"
-        }
+        {"path": ".github/workflows/pages.yml", "responsibility": "Exact stable action tags for checkout, pnpm, Node, Pages configuration, Pages artifact upload, and Pages deployment while preserving least-privilege verification and main-only release behavior"},
+        {"path": "changelog.md", "responsibility": "Append-only Turn 3 record of workflow release maintenance and the remaining external Pages setting"},
+        {"path": "todo.md", "responsibility": "Append-only Turn 3 checklist separating completed repository maintenance from external Pages enablement"},
+        {"path": "codemap.json", "responsibility": "Append-only mapping of the current authoritative workflow and release state"}
       ]
     },
     {
@@ -229,22 +91,10 @@
       "date": "2026-08-06",
       "summary": "Immutable GitHub Actions supply-chain pinning",
       "areas": [
-        {
-          "path": ".github/workflows/pages.yml",
-          "responsibility": "Full-length official release commit SHAs for every external action, accompanied by readable semantic version comments"
-        },
-        {
-          "path": "changelog.md",
-          "responsibility": "Append-only evidence for immutable workflow dependency selection"
-        },
-        {
-          "path": "todo.md",
-          "responsibility": "Append-only completion state for immutable action pinning and the external Pages gate"
-        },
-        {
-          "path": "codemap.json",
-          "responsibility": "Append-only map of the workflow supply-chain trust boundary"
-        }
+        {"path": ".github/workflows/pages.yml", "responsibility": "Full-length official release commit SHAs for every external action, accompanied by readable semantic version comments"},
+        {"path": "changelog.md", "responsibility": "Append-only evidence for immutable workflow dependency selection"},
+        {"path": "todo.md", "responsibility": "Append-only completion state for immutable action pinning and the external Pages gate"},
+        {"path": "codemap.json", "responsibility": "Append-only map of the workflow supply-chain trust boundary"}
       ]
     },
     {
@@ -252,22 +102,23 @@
       "date": "2026-08-06",
       "summary": "Repository-level GitHub Pages enablement and first deployment trigger",
       "areas": [
-        {
-          "path": ".github/workflows/pages.yml",
-          "responsibility": "Existing immutable, least-privilege workflow triggered by the fresh main update after GitHub Actions became the Pages publishing source"
-        },
-        {
-          "path": "changelog.md",
-          "responsibility": "Append-only record of administrator-confirmed Pages enablement and the deployment trigger"
-        },
-        {
-          "path": "todo.md",
-          "responsibility": "Append-only release checklist with repository enablement completed and live verification remaining"
-        },
-        {
-          "path": "codemap.json",
-          "responsibility": "Append-only map of the transition from an external repository gate to active deployment verification"
-        }
+        {"path": ".github/workflows/pages.yml", "responsibility": "Existing immutable, least-privilege workflow triggered by the fresh main update after GitHub Actions became the Pages publishing source"},
+        {"path": "changelog.md", "responsibility": "Append-only record of administrator-confirmed Pages enablement and the deployment trigger"},
+        {"path": "todo.md", "responsibility": "Append-only release checklist with repository enablement completed and live verification remaining"},
+        {"path": "codemap.json", "responsibility": "Append-only map of the transition from an external repository gate to active deployment verification"}
+      ]
+    },
+    {
+      "turncount": 5,
+      "date": "2026-08-07",
+      "summary": "GitHub Pages workflow root-cause correction and CI separation",
+      "areas": [
+        {"path": ".github/workflows/pages.yml", "responsibility": "Production-only main-push and manual Pages verification, build, upload, and deployment without authorization-invalid repository self-enablement"},
+        {"path": ".github/workflows/actions.yml", "responsibility": "Pull-request-only frozen-lockfile source, generated-content, test, type, lint, and production-build verification"},
+        {"path": "vite.config.ts", "responsibility": "Verified project-site base path /eaboutedev/ for GitHub Pages asset resolution"},
+        {"path": "changelog.md", "responsibility": "Append-only Turn 5 root-cause and remediation evidence"},
+        {"path": "todo.md", "responsibility": "Append-only Turn 5 deployment verification checklist"},
+        {"path": "codemap.json", "responsibility": "Append-only workflow responsibility and release-state map"}
       ]
     }
   ]
