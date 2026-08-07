@@ -7,10 +7,12 @@ async function readProjectFile(path: string) {
 }
 
 test("visual renderer preserves relationship semantics by visual kind", async () => {
-  const [renderer, styles] = await Promise.all([
+  const [renderer, baseStyles, learningStyles] = await Promise.all([
     readProjectFile("src/components/topics/topic-visual.tsx"),
     readProjectFile("src/index.css"),
+    readProjectFile("src/learning.css"),
   ]);
+  const styles = `${baseStyles}\n${learningStyles}`;
 
   assert.match(renderer, /visual\.kind === "flow"/);
   assert.match(renderer, /visual\.kind === "cycle"/);
