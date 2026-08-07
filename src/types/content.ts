@@ -146,3 +146,10 @@ export interface TopicSearchStoredFields {
   level: TopicLevel;
   estimatedMinutes: number;
 }
+
+export interface TopicSearchIndexDocument extends TopicSearchStoredFields {
+  aliases: string;
+  keywords: string;
+  sectionTitles: string;
+  glossaryText: string;
+}

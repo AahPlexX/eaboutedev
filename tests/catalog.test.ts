@@ -35,12 +35,15 @@ test("catalog filtering uses aliases, keywords, and category without the deep se
 
 test("catalog sorting is deterministic for every supported mode", () => {
   const topics = makeTopics(8);
-  topics[0]!.title = "Zulu";
-  topics[1]!.title = "Alpha";
-  topics[0]!.estimatedMinutes = 40;
-  topics[1]!.estimatedMinutes = 10;
-  topics[0]!.level = "Advanced";
-  topics[1]!.level = "Foundational";
+  const first = topics[0];
+  const second = topics[1];
+  assert.ok(first && second);
+  first.title = "Zulu";
+  second.title = "Alpha";
+  first.estimatedMinutes = 40;
+  second.estimatedMinutes = 10;
+  first.level = "Advanced";
+  second.level = "Foundational";
 
   assert.deepEqual(sortCatalogTopics(topics, "recommended").slice(0, 2).map(({ order }) => order), [0, 1]);
   assert.equal(sortCatalogTopics(topics, "az")[0]?.title, "Alpha");

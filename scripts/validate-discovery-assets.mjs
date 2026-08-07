@@ -31,8 +31,10 @@ if (/generated\/topic-catalog/u.test(homeSource)) failures.push("homepage eagerl
 if (/import\s+\{\s*TopicsPage\s*\}|import\s+\{\s*TopicPage\s*\}/u.test(appSource)) failures.push("heavy topic routes are statically imported");
 if (/^import\s+\{[^}]*searchTopics[^}]*\}\s+from\s+["']@\/lib\/search["']/mu.test(hookSource)) failures.push("search implementation is statically imported by the shell path");
 
-for (const obsolete of ["src/generated/topic-catalog.ts", "public/search/topic-search-index.json"]) {
-  if (await exists(obsolete)) failures.push(`obsolete discovery artifact still exists: ${obsolete}`);
+const obsoleteArtifacts = ["src/generated/topic-catalog.ts", "public/search/topic-search-index.json"];
+const obsoleteResults = await Promise.all(obsoleteArtifacts.map(async (artifact) => [artifact, await exists(artifact)]));
+for (const [artifact, isPresent] of obsoleteResults) {
+  if (isPresent) failures.push(`obsolete discovery artifact still exists: ${artifact}`);
 }
 
 if (failures.length > 0) {

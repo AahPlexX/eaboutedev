@@ -1,25 +1,25 @@
 import MiniSearch, { type SearchResult } from "minisearch";
 import { buildSearchQuery, inferQueryIntent } from "@/lib/query-normalization";
 import { SEARCH_OPTIONS } from "@/lib/search-config";
-import type { TopicSearchStoredFields } from "@/types/content";
+import type { TopicSearchIndexDocument, TopicSearchStoredFields } from "@/types/content";
 
 export interface TopicSearchResult extends SearchResult, TopicSearchStoredFields {
   intent: ReturnType<typeof inferQueryIntent>;
 }
 
-let searchPromise: Promise<MiniSearch<TopicSearchStoredFields>> | undefined;
+let searchPromise: Promise<MiniSearch<TopicSearchIndexDocument>> | undefined;
 
 function getBaseUrl(): string {
   return import.meta.env?.BASE_URL ?? "/";
 }
 
-async function createSearch(): Promise<MiniSearch<TopicSearchStoredFields>> {
+async function createSearch(): Promise<MiniSearch<TopicSearchIndexDocument>> {
   const response = await fetch(`${getBaseUrl()}search/topic-search.minisearch.json`);
   if (!response.ok) throw new Error(`Search index failed to load (${response.status})`);
-  return MiniSearch.loadJSONAsync<TopicSearchStoredFields>(await response.text(), SEARCH_OPTIONS);
+  return MiniSearch.loadJSONAsync<TopicSearchIndexDocument>(await response.text(), SEARCH_OPTIONS);
 }
 
-function getTopicSearch(): Promise<MiniSearch<TopicSearchStoredFields>> {
+function getTopicSearch(): Promise<MiniSearch<TopicSearchIndexDocument>> {
   searchPromise ??= createSearch().catch((error: unknown) => {
     searchPromise = undefined;
     throw error;

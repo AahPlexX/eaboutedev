@@ -92,11 +92,12 @@ export function getPaginationItems(page: number, pageCount: number): Array<numbe
     .filter((item) => item >= 1 && item <= pageCount)
     .toSorted((left, right) => left - right);
   const items: Array<number | "ellipsis"> = [];
+  let previousPage: number | undefined;
 
   for (const current of pages) {
-    const previousNumber = [...items].reverse().find((item): item is number => typeof item === "number");
-    if (previousNumber !== undefined && current - previousNumber > 1) items.push("ellipsis");
+    if (previousPage !== undefined && current - previousPage > 1) items.push("ellipsis");
     items.push(current);
+    previousPage = current;
   }
 
   return items;

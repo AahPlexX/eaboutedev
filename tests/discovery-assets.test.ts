@@ -3,7 +3,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import MiniSearch from "minisearch";
 import { SEARCH_OPTIONS } from "../src/lib/search-config.ts";
-import type { TopicSearchStoredFields } from "../src/types/content.ts";
+import type { TopicSearchIndexDocument } from "../src/types/content.ts";
 
 async function readProjectFile(path: string) {
   return readFile(new URL(`../${path}`, import.meta.url), "utf8");
@@ -42,7 +42,7 @@ test("full catalog, topic routes, and search implementation are outside the eage
 
 test("serialized MiniSearch index restores and finds representative topics", async () => {
   const serialized = await readProjectFile("public/search/topic-search.minisearch.json");
-  const search = await MiniSearch.loadJSONAsync<TopicSearchStoredFields>(serialized, SEARCH_OPTIONS);
+  const search = await MiniSearch.loadJSONAsync<TopicSearchIndexDocument>(serialized, SEARCH_OPTIONS);
   const dnsResults = search.search("dns") as Array<{ slug?: string }>;
   const graphResults = search.search("graph db", { combineWith: "OR", prefix: true, fuzzy: 0.2 }) as Array<{ slug?: string }>;
 
