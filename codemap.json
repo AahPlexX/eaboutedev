@@ -173,6 +173,42 @@
         {"path": "todo.md", "responsibility": "Append-only Turn 7 design-complete/implementation-pending ledger"},
         {"path": "codemap.json", "responsibility": "Append-only mapping of approved scalability architecture before implementation"}
       ]
+    },
+    {
+      "turncount": 7,
+      "sequence": 2,
+      "date": "2026-08-07",
+      "summary": "Implemented catalog/search scalability hardening for large topic growth",
+      "areas": [
+        {"path": "src/lib/catalog.ts", "responsibility": "Pure metadata filtering, five-mode stable sorting, fixed 24-item pagination, result ranges, and compact pagination model"},
+        {"path": "src/lib/catalog-state.ts", "responsibility": "Canonical q/category/sort/page URL parsing, default omission, and invalid-state normalization"},
+        {"path": "src/lib/catalog-loader.ts", "responsibility": "Lazy full-catalog fetch with in-flight/success reuse and retry after failure"},
+        {"path": "src/lib/topic-loader.ts", "responsibility": "Per-slug topic request reuse while preserving invalid-slug and 404 semantics and retryable transport failures"},
+        {"path": "src/components/topics/catalog-pagination.tsx", "responsibility": "Accessible compact Previous/page/Next controls with current-page semantics and wrap-safe layout"},
+        {"path": "src/pages/topics-page.tsx", "responsibility": "URL-driven filter/sort/page catalog experience rendering only the active 24-item page with loading, retry, and normalized-page behavior"},
+        {"path": "src/pages/home-page.tsx", "responsibility": "Eager homepage limited to generated six-topic bootstrap metadata rather than the complete catalog"},
+        {"path": "src/pages/topic-page.tsx", "responsibility": "Independent topic load plus non-blocking related-topic metadata resolution through the shared lazy catalog"},
+        {"path": "src/app.tsx", "responsibility": "Eager shell/home route with code-split catalog and topic route implementations"},
+        {"path": "src/hooks/use-search.ts", "responsibility": "Debounced non-empty-query dynamic import boundary for global search implementation"},
+        {"path": "src/lib/search.ts", "responsibility": "On-demand asynchronous restoration and reuse of the build-time serialized MiniSearch index"},
+        {"path": "src/lib/search-config.ts", "responsibility": "Shared generation/runtime MiniSearch fields, stored result metadata, weights, and identifier contract"},
+        {"path": "scripts/content-utils.mjs", "responsibility": "Lean catalog projection and non-duplicated search-index source projection from authoritative topics"},
+        {"path": "scripts/generate-content-artifacts.mjs", "responsibility": "Deterministic lazy catalog, bounded homepage bootstrap, serialized MiniSearch index, and topic-registry generation"},
+        {"path": "scripts/validate-discovery-assets.mjs", "responsibility": "Per-topic catalog/search byte budgets, fixed bootstrap budget, obsolete-artifact checks, and eager-import regression guardrails"},
+        {"path": "public/catalog/topic-catalog.json", "responsibility": "Generated complete lean catalog fetched only by experiences that require the complete catalog"},
+        {"path": "src/generated/topic-bootstrap.ts", "responsibility": "Generated bounded homepage metadata containing topic count and at most six featured cards"},
+        {"path": "public/search/topic-search.minisearch.json", "responsibility": "Generated prebuilt MiniSearch index restored only after search is actually used"},
+        {"path": "tests/catalog.test.ts", "responsibility": "Sorting, pagination, compact control, and 100/500/1000-topic scale-shape regression proof"},
+        {"path": "tests/catalog-state.test.ts", "responsibility": "Catalog URL-state normalization and default-serialization regression proof"},
+        {"path": "tests/catalog-loader.test.ts", "responsibility": "Catalog request deduplication and retry regression proof"},
+        {"path": "tests/topic-loader.test.ts", "responsibility": "Topic request reuse, 404, invalid slug, and failed-request retry regression proof"},
+        {"path": "tests/discovery-assets.test.ts", "responsibility": "Generated discovery, eager-boundary, serialized-index restoration, and search-result regression proof"},
+        {"path": ".github/workflows/actions.yml", "responsibility": "Pull-request verification that now detects stale, modified, or untracked generated discovery artifacts"},
+        {"path": ".github/workflows/pages.yml", "responsibility": "Permanent main-only production verification/build/deploy path with strict generated discovery integrity checks"},
+        {"path": "changelog.md", "responsibility": "Append-only Turn 7 implementation and GitHub-hosted validation evidence"},
+        {"path": "todo.md", "responsibility": "Append-only Turn 7 implementation completion ledger with only independent live deployment inspection remaining"},
+        {"path": "codemap.json", "responsibility": "Append-only map of the implemented scalable discovery architecture"}
+      ]
     }
   ]
 }

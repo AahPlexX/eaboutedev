@@ -160,3 +160,24 @@ This file is append-only. Add a new dated turn section; do not rewrite or remove
 - [ ] Implement sorting, pagination, lazy catalog/routes/search, prebuilt search serialization, caching/deduplication, and performance guardrails on `main`.
 - [ ] Regenerate discovery artifacts and remove obsolete eager catalog/search artifacts only after all consumers migrate.
 - [ ] Pass the complete `pnpm check` gate and record the exact validation evidence.
+
+### Scalability implementation outcome — Turn 7, sequence 2
+
+- [x] Review and approve the Turn 7 scalability specification.
+- [x] Commit the task-by-task scalability implementation plan.
+- [x] Implement the five approved sort modes and fixed 24-topic true pagination.
+- [x] Persist query/category/sort/page catalog state in URL search parameters.
+- [x] Move the full catalog to lazy static JSON and bound homepage bootstrap metadata to six entries plus count.
+- [x] Add catalog/topic in-session request reuse with retry after failures.
+- [x] Lazy-load catalog/topic routes and dynamically import search only for non-empty queries.
+- [x] Prebuild MiniSearch during generation and asynchronously restore the serialized index in the browser.
+- [x] Remove obsolete `src/generated/topic-catalog.ts` and `public/search/topic-search-index.json`.
+- [x] Add 100/500/1,000-topic scale-shape coverage and deterministic generated-discovery size budgets.
+- [x] Make permanent generated-artifact CI verification detect untracked generated outputs.
+- [x] Pass GitHub-hosted `pnpm check` after correcting the single denied Oxlint warning: 25/25 tests, TypeScript, Oxlint, and production build all green.
+- [x] Commit exact generated discovery artifacts and remove temporary verification scaffolding.
+
+### Remaining release verification
+
+- [ ] Independently confirm the latest permanent GitHub Pages deployment completes after the clean `main` updates.
+- [ ] Inspect the deployed catalog/search interaction at `https://aahplexx.github.io/eaboutedev/`.

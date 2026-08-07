@@ -147,3 +147,24 @@ Append-only project history. The highest recorded `turncount` is authoritative.
 - Approved scale-shape tests for hundreds of topics and deterministic per-topic generated-asset size budgets instead of treating the existing 5,000-topic numerical ceiling as a performance claim.
 - Explicitly excluded database/CMS/backend migration, infinite scroll, virtualization, Web Workers without measured need, service workers, persistent client caches, configurable page size, new state management, and other YAGNI scope growth.
 - Committed the approved design specification at `docs/superpowers/specs/2026-08-07-catalog-scalability-design.md`; implementation remains gated on spec review and a written implementation plan.
+
+### Scalability hardening implementation — Turn 7, sequence 2
+
+- Replaced progressive “Show more” discovery with true fixed 24-topic pagination and compact Previous/numbered/Next controls.
+- Added URL-addressable `q`, `category`, `sort`, and `page` state with safe invalid-page normalization and page reset after filter/sort changes.
+- Added Recommended, A–Z, Shortest first, Longest first, and Foundational → Advanced stable sorting.
+- Moved the complete catalog out of eager application JavaScript into `public/catalog/topic-catalog.json`; homepage discovery now consumes a generated bootstrap bounded to six topic cards plus total count.
+- Added shared in-session catalog/topic request deduplication with retryable failures and preserved topic 404 behavior.
+- Lazy-loaded catalog and topic route implementations and dynamically loaded global search only after a non-empty query.
+- Moved MiniSearch `addAll()` index construction to build-time generation and changed the browser to asynchronously restore the serialized `public/search/topic-search.minisearch.json` index.
+- Removed the redundant source-like search corpus and obsolete generated TypeScript full catalog.
+- Added 100/500/1,000-topic scale-shape tests, URL-state/loader/search-restoration regression tests, and deterministic catalog/search/bootstrap byte budgets.
+- Tightened permanent generated-artifact verification so CI detects both modified and newly untracked generated discovery files.
+
+### Verification — Turn 7, sequence 2
+
+- The first GitHub-hosted run passed generation, five-topic content validation, exact-version validation, generated freshness, discovery budgets, all 25 tests, and TypeScript; Oxlint correctly stopped on one `unicorn/no-array-sort` warning.
+- Replaced copied mutable `.sort()` with native immutable `.toSorted()` and reran the complete GitHub-hosted `pnpm check`.
+- The success-only verifier then returned exit code 0 and committed exact generated artifacts at `e89fd173dd180b92c89626923f379e2306c87107`; all 25 tests, TypeScript, Oxlint with denied warnings, and the Vite production build passed.
+- Removed the temporary scalability verifier, resolved failure diagnostic, and verification trigger after success.
+- No database, CMS, backend search/pagination, infinite scroll, virtualization, Web Worker, service worker, state library, persistent browser cache, or configurable page size was added.
