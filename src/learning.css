@@ -1,0 +1,116 @@
+.checkpoint {
+  overflow: clip;
+  border: 0.0625rem solid color-mix(in oklch, var(--topic-accent, var(--primary)) 30%, var(--border));
+  border-radius: 1rem;
+  background: color-mix(in oklch, var(--topic-accent, var(--primary)) 6%, var(--card));
+}
+
+.checkpoint summary {
+  display: grid;
+  gap: 0.35rem;
+  min-block-size: 2.75rem;
+  cursor: pointer;
+  padding: clamp(1rem, 3vw, 1.35rem);
+}
+
+.checkpoint summary::marker { color: var(--topic-accent, var(--primary)); }
+.checkpoint summary span { color: var(--topic-accent, var(--primary)); font-size: 0.72rem; font-weight: 900; letter-spacing: 0.1em; text-transform: uppercase; }
+.checkpoint summary strong { font-family: var(--font-display); font-size: clamp(1rem, 0.95rem + 0.35vw, 1.2rem); line-height: 1.4; }
+
+.checkpoint-answer {
+  display: grid;
+  gap: 0.65rem;
+  border-block-start: 0.0625rem solid var(--border);
+  background: var(--card);
+  padding: clamp(1rem, 3vw, 1.35rem);
+}
+
+.checkpoint-answer p { margin: 0; line-height: 1.7; }
+.checkpoint-answer p:last-child { color: var(--muted-foreground); }
+
+.visual-panel-layers .visual-layers {
+  grid-template-columns: 1fr !important;
+}
+
+.visual-panel-layers .visual-node-wrap {
+  margin-inline-start: min(calc(var(--layer-index, 0) * 0.45rem), 2rem);
+}
+
+.visual-panel-layers .visual-node {
+  border-inline-start: 0.25rem solid color-mix(in oklch, var(--topic-accent) 65%, var(--border));
+}
+
+.visual-panel-comparison .visual-comparison,
+.visual-panel-map .visual-map {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)) !important;
+}
+
+.visual-panel-comparison .visual-node,
+.visual-panel-map .visual-node {
+  block-size: 100%;
+}
+
+.visual-panel-comparison .visual-step {
+  display: grid;
+  min-block-size: 1.75rem;
+  min-inline-size: 1.75rem;
+  place-items: center;
+  border: 0.0625rem solid color-mix(in oklch, var(--topic-accent) 35%, var(--border));
+  border-radius: 999rem;
+}
+
+.visual-panel-map .visual-step {
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.visual-panel-map .visual-node {
+  border-style: dashed;
+}
+
+.cycle-repeat {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin: 1rem 0 0;
+  border-block-start: 0.0625rem solid var(--border);
+  padding-block-start: 1rem;
+  color: var(--muted-foreground);
+  font-size: 0.82rem;
+}
+
+.cycle-repeat-mark {
+  display: grid;
+  block-size: 2rem;
+  inline-size: 2rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 999rem;
+  background: color-mix(in oklch, var(--topic-accent) 14%, var(--card));
+  color: var(--topic-accent);
+  font-size: 1.15rem;
+  font-weight: 900;
+}
+
+.topic-prerequisites {
+  display: grid;
+  gap: 0.4rem;
+  margin-block-start: 1.5rem;
+  border-radius: 0.9rem;
+  background: color-mix(in oklch, var(--topic-accent) 7%, var(--card));
+  padding: 1rem;
+}
+
+.topic-prerequisites p { margin: 0; font-size: 0.78rem; font-weight: 850; }
+.topic-prerequisites ul { display: grid; gap: 0.3rem; margin: 0; padding-inline-start: 1.2rem; color: var(--muted-foreground); font-size: 0.82rem; }
+
+@media (max-width: 31rem) {
+  .visual-panel-layers .visual-node-wrap { margin-inline-start: 0; }
+}
+
+@media (forced-colors: active) {
+  .checkpoint,
+  .visual-panel-layers .visual-node,
+  .visual-panel-comparison .visual-step,
+  .cycle-repeat-mark { border-color: CanvasText; }
+}
