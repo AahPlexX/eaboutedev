@@ -130,3 +130,20 @@ Append-only project history. The highest recorded `turncount` is authoritative.
 - GitHub-hosted `pnpm check` generated the content artifacts, validated all five topics, verified exact dependency versions and generated-artifact freshness, passed all 13 tests, passed TypeScript, passed Oxlint with denied warnings, and completed the production build before the success-only generated-artifact commit `21a3bab06d7bd5af5d9a77ed25dd6831809a3857` was created.
 - Regenerated `src/generated/topic-catalog.ts`, `public/search/topic-search-index.json`, and `docs/topic-registry.json`; the registry verification date advanced to `2026-08-07` and all rewritten source hashes were refreshed.
 - Removed the temporary regeneration/diagnostic workflow and failure log after verification; the permanent workflow surface remains `.github/workflows/actions.yml` and `.github/workflows/pages.yml`.
+
+## Turn 7 — 2026-08-07
+
+**turncount: 7**
+
+### Catalog scalability design approved
+
+- Audited the current scale boundaries before adding more topics: independent topic JSON loading and the dynamic topic route already scale well, while eager full-catalog metadata and browser-built global search are the two central growth risks.
+- Approved true fixed 24-topic pagination with URL-addressable query, category, sort, and page state so refresh, browser history, bookmarks, and shared catalog views remain deterministic.
+- Approved five learner-useful sort modes only: Recommended, A–Z, Shortest first, Longest first, and Foundational → Advanced.
+- Approved migration of the complete catalog from eager TypeScript application data to a lazy static JSON asset, while keeping homepage bootstrap metadata permanently bounded to six featured topics plus the total count.
+- Approved route-level lazy loading for catalog/topic implementations and on-demand dynamic loading of the search implementation.
+- Approved build-time MiniSearch indexing and serialized asynchronous browser restoration so visitors no longer rebuild the full search index with `addAll()`.
+- Approved in-session request deduplication/reuse for successful catalog/topic loads, with failures remaining retryable.
+- Approved scale-shape tests for hundreds of topics and deterministic per-topic generated-asset size budgets instead of treating the existing 5,000-topic numerical ceiling as a performance claim.
+- Explicitly excluded database/CMS/backend migration, infinite scroll, virtualization, Web Workers without measured need, service workers, persistent client caches, configurable page size, new state management, and other YAGNI scope growth.
+- Committed the approved design specification at `docs/superpowers/specs/2026-08-07-catalog-scalability-design.md`; implementation remains gated on spec review and a written implementation plan.
