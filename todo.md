@@ -90,3 +90,21 @@ This file is append-only. Add a new dated turn section; do not rewrite or remove
 
 - [ ] Confirm the fresh workflow completes source/content verification, production build, artifact upload, and Pages deployment.
 - [ ] Confirm the generated Pages endpoint serves the application successfully.
+
+## Turn 5 — 2026-08-07
+
+**turncount: 5**
+
+### Completed
+
+- [x] Identify `configure-pages` self-enablement with `GITHUB_TOKEN` as an authorization-invalid deployment path.
+- [x] Remove `enablement: true` from the production Pages workflow.
+- [x] Allow both `main` pushes and manual `workflow_dispatch` runs to execute the Pages deployment.
+- [x] Create `.github/workflows/actions.yml` for pull-request verification without duplicating production deployment behavior.
+- [x] Refresh immutable workflow pins for checkout, pnpm setup, and Node setup to their current verified stable releases.
+- [x] Confirm `vite.config.ts` still uses the project Pages base `/eaboutedev/`.
+
+### Remaining release verification
+
+- [ ] Confirm the corrected `main` workflow completes verification, production build, artifact upload, and `actions/deploy-pages` successfully.
+- [ ] Confirm `https://aahplexx.github.io/eaboutedev/` serves the deployed application.
