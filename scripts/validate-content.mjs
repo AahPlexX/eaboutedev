@@ -25,6 +25,7 @@ for (const { filename, document: topic } of topics) {
   }
   if (!allowedKinds.has(topic.heroVisual?.kind) || topic.heroVisual?.nodes?.length < 2) fail("heroVisual must be complete");
   const sectionIds = new Set();
+  let checkpointCount = 0;
   for (const section of topic.sections ?? []) {
     if (!section.id || sectionIds.has(section.id)) fail(`section id must be unique: ${section.id}`);
     sectionIds.add(section.id);
@@ -35,12 +36,14 @@ for (const { filename, document: topic } of topics) {
       if (!allowedBlocks.has(block.type)) fail(`section ${section.id} contains unsupported block type: ${block.type ?? "missing"}`);
       if (block.type === "table" && block.rows.some((row) => row.length !== block.columns.length)) fail(`section ${section.id} table row width differs from columns`);
       if (block.type === "checkpoint") {
+        checkpointCount += 1;
         if (!isNonEmptyString(block.prompt)) fail(`section ${section.id} checkpoint prompt must be a non-empty string`);
         if (!isNonEmptyString(block.answer)) fail(`section ${section.id} checkpoint answer must be a non-empty string`);
         if (!isNonEmptyString(block.explanation)) fail(`section ${section.id} checkpoint explanation must be a non-empty string`);
       }
     }
   }
+  if (checkpointCount < 2) fail("topic must include at least two comprehension checkpoints");
   for (const source of topic.sources ?? []) {
     if (!source.url.startsWith("https://")) fail(`source must use HTTPS: ${source.url}`);
     if (!/^\d{4}-\d{2}-\d{2}$/.test(source.accessed)) fail(`source accessed date is invalid: ${source.accessed}`);
