@@ -3,11 +3,10 @@ import { Link } from "react-router-dom";
 import { TopicCard } from "@/components/topics/topic-card";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { topicCatalog } from "@/generated/topic-catalog";
-import { HOME_TOPIC_PREVIEW_SIZE } from "@/lib/catalog";
+import { topicBootstrap } from "@/generated/topic-bootstrap";
 
 export function HomePage() {
-  const featured = topicCatalog.slice(0, HOME_TOPIC_PREVIEW_SIZE);
+  const { featuredTopics: featured, topicCount } = topicBootstrap;
 
   return (
     <>
@@ -43,9 +42,9 @@ export function HomePage() {
         <div className="topic-grid">
           {featured.map((topic) => <TopicCard topic={topic} key={topic.slug} />)}
         </div>
-        {topicCatalog.length > featured.length && (
+        {topicCount > featured.length && (
           <div className="mt-8 flex justify-center">
-            <Button asChild variant="outline"><Link to="/topics">Browse all {topicCatalog.length} topics</Link></Button>
+            <Button asChild variant="outline"><Link to="/topics">Browse all {topicCount} topics</Link></Button>
           </div>
         )}
       </section>

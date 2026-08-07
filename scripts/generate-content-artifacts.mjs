@@ -7,7 +7,7 @@ import { createCatalogEntry, createSearchDocument, digest, readTopics, rootDirec
 const checkOnly = process.argv.includes("--check");
 const topics = await readTopics();
 const catalog = topics.map(({ document }, order) => createCatalogEntry(document, order));
-const searchDocuments = topics.map(({ document }, order) => createSearchDocument(document, order));
+const searchDocuments = topics.map(({ document }) => createSearchDocument(document));
 const search = new MiniSearch(SEARCH_OPTIONS);
 search.addAll(searchDocuments);
 const latestVerification = topics
@@ -21,12 +21,9 @@ const bootstrap = {
 };
 
 const files = new Map([
-  [path.join(rootDirectory, "src/generated/topic-catalog.ts"),
-`import type { TopicCatalogEntry } from "@/types/content";\n\nexport const topicCatalog: TopicCatalogEntry[] = ${JSON.stringify(catalog, null, 2)};\n`],
   [path.join(rootDirectory, "src/generated/topic-bootstrap.ts"),
 `import type { TopicCatalogEntry } from "@/types/content";\n\nexport const topicBootstrap: { topicCount: number; featuredTopics: TopicCatalogEntry[] } = ${JSON.stringify(bootstrap, null, 2)};\n`],
   [path.join(rootDirectory, "public/catalog/topic-catalog.json"), `${JSON.stringify(catalog)}\n`],
-  [path.join(rootDirectory, "public/search/topic-search-index.json"), `${JSON.stringify(searchDocuments, null, 2)}\n`],
   [path.join(rootDirectory, "public/search/topic-search.minisearch.json"), `${JSON.stringify(search)}\n`],
   [path.join(rootDirectory, "docs/topic-registry.json"), `${JSON.stringify({
     schemaVersion: 1,

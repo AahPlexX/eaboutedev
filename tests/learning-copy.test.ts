@@ -20,6 +20,9 @@ test("discovery pages speak to learners instead of describing implementation int
   assert.doesNotMatch(discoveryCopy, /catalog count is generated from source content/i);
   assert.match(home, /how-the-web-works/);
   assert.match(home, /without needing the jargon first/i);
+  assert.match(topics, /Sort topics/);
+  assert.match(topics, /Recommended/);
+  assert.doesNotMatch(topics, /Show .* more/i);
   assert.match(card, /Learn this topic/);
   assert.match(topicPage, /Helpful before this guide/);
   assert.match(topicPage, /By the end, you will be able to/);

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { searchTopics, type TopicSearchResult } from "@/lib/search";
+import type { TopicSearchResult } from "@/lib/search";
 
 export function useSearch(query: string): {
   results: TopicSearchResult[];
@@ -16,6 +16,7 @@ export function useSearch(query: string): {
 
     if (!normalized) {
       setResults([]);
+      setIsLoading(false);
       setError(undefined);
       return () => controller.abort();
     }
@@ -23,16 +24,17 @@ export function useSearch(query: string): {
     const timer = window.setTimeout(() => {
       setIsLoading(true);
       setError(undefined);
-      searchTopics(normalized)
-        .then((nextResults) => {
+      void (async () => {
+        try {
+          const { searchTopics } = await import("@/lib/search");
+          const nextResults = await searchTopics(normalized);
           if (!controller.signal.aborted) setResults(nextResults);
-        })
-        .catch(() => {
+        } catch {
           if (!controller.signal.aborted) setError("Search is temporarily unavailable.");
-        })
-        .finally(() => {
+        } finally {
           if (!controller.signal.aborted) setIsLoading(false);
-        });
+        }
+      })();
     }, 120);
 
     return () => {

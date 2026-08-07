@@ -21,7 +21,7 @@ export function parseCatalogState(searchParams: URLSearchParams): CatalogState {
   const rawPage = Number(searchParams.get("page") ?? DEFAULT_CATALOG_STATE.page);
 
   return {
-    query: searchParams.get("q")?.trim() ?? "",
+    query: searchParams.get("q") ?? "",
     category: searchParams.get("category")?.trim() || DEFAULT_CATALOG_STATE.category,
     sort: catalogSorts.has(rawSort as CatalogSort) ? rawSort as CatalogSort : DEFAULT_CATALOG_STATE.sort,
     page: Number.isInteger(rawPage) && rawPage > 0 ? rawPage : DEFAULT_CATALOG_STATE.page,
@@ -30,10 +30,9 @@ export function parseCatalogState(searchParams: URLSearchParams): CatalogState {
 
 export function toCatalogSearchParams(state: CatalogState): URLSearchParams {
   const params = new URLSearchParams();
-  const query = state.query.trim();
   const category = state.category.trim();
 
-  if (query) params.set("q", query);
+  if (state.query.trim()) params.set("q", state.query);
   if (category && category !== DEFAULT_CATALOG_STATE.category) params.set("category", category);
   if (state.sort !== DEFAULT_CATALOG_STATE.sort) params.set("sort", state.sort);
   if (state.page > 1) params.set("page", String(Math.floor(state.page)));

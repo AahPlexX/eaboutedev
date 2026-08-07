@@ -138,7 +138,11 @@ export interface TopicCatalogEntry {
   order: number;
 }
 
-export interface TopicSearchDocument extends TopicCatalogEntry {
-  sectionTitles: string[];
-  searchText: string;
+export interface TopicSearchStoredFields {
+  slug: string;
+  title: string;
+  summary: string;
+  category: string;
+  level: TopicLevel;
+  estimatedMinutes: number;
 }

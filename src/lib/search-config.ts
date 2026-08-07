@@ -1,5 +1,5 @@
 export const SEARCH_OPTIONS = {
-  fields: ["title", "summary", "category", "aliases", "keywords", "sectionTitles", "searchText"],
+  fields: ["title", "summary", "category", "aliases", "keywords", "sectionTitles", "glossaryText"],
   storeFields: ["slug", "title", "summary", "category", "level", "estimatedMinutes"],
   idField: "slug",
   searchOptions: {

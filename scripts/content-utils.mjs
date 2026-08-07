@@ -34,25 +34,18 @@ export function createCatalogEntry(topic, order = 0) {
   };
 }
 
-export function createSearchDocument(topic, order = 0) {
-  const catalogEntry = createCatalogEntry(topic, order);
-  const sectionTitles = topic.sections.map((section) => section.title);
-  const searchable = [
-    topic.title,
-    topic.eyebrow,
-    topic.summary,
-    topic.category,
-    topic.level,
-    ...topic.aliases,
-    ...topic.keywords,
-    ...sectionTitles,
-    ...topic.glossary.flatMap((entry) => [entry.term, entry.definition]),
-  ];
-
+export function createSearchDocument(topic) {
   return {
-    ...catalogEntry,
-    sectionTitles,
-    searchText: searchable.join(" "),
+    slug: topic.slug,
+    title: topic.title,
+    summary: topic.summary,
+    category: topic.category,
+    level: topic.level,
+    estimatedMinutes: topic.estimatedMinutes,
+    aliases: topic.aliases.join(" "),
+    keywords: topic.keywords.join(" "),
+    sectionTitles: topic.sections.map((section) => section.title).join(" "),
+    glossaryText: topic.glossary.flatMap((entry) => [entry.term, entry.definition]).join(" "),
   };
 }
 

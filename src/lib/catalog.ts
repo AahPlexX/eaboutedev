@@ -2,7 +2,6 @@ import { tokenizeNaturalLanguage } from "./query-normalization.ts";
 import type { TopicCatalogEntry, TopicLevel } from "../types/content.ts";
 
 export const CATALOG_PAGE_SIZE = 24;
-export const CATALOG_WINDOW_SIZE = CATALOG_PAGE_SIZE;
 export const HOME_TOPIC_PREVIEW_SIZE = 6;
 
 export type CatalogSort = "recommended" | "az" | "shortest" | "longest" | "level";
@@ -95,19 +94,10 @@ export function getPaginationItems(page: number, pageCount: number): Array<numbe
   const items: Array<number | "ellipsis"> = [];
 
   for (const current of pages) {
-    const previous = items.at(-1);
-    if (typeof previous === "number" && current - previous > 1) items.push("ellipsis");
+    const previousNumber = [...items].reverse().find((item): item is number => typeof item === "number");
+    if (previousNumber !== undefined && current - previousNumber > 1) items.push("ellipsis");
     items.push(current);
   }
 
   return items;
-}
-
-// Transitional helpers retained until the catalog page migrates to true pagination.
-export function getCatalogWindow(topics: TopicCatalogEntry[], visibleCount: number): TopicCatalogEntry[] {
-  return topics.slice(0, Math.max(0, visibleCount));
-}
-
-export function getNextVisibleCount(current: number, total: number): number {
-  return Math.min(total, current + CATALOG_WINDOW_SIZE);
 }

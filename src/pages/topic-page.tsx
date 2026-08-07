@@ -6,15 +6,16 @@ import { TopicToc } from "@/components/topics/topic-toc";
 import { TopicVisualPanel } from "@/components/topics/topic-visual";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { topicCatalog } from "@/generated/topic-catalog";
+import { loadCatalog } from "@/lib/catalog-loader";
 import { getTopicDocumentTitle, SITE_TITLE } from "@/lib/document-title";
 import { loadTopic } from "@/lib/topic-loader";
-import type { TopicDocument } from "@/types/content";
+import type { TopicCatalogEntry, TopicDocument } from "@/types/content";
 import { NotFoundPage } from "@/pages/not-found-page";
 
 export function TopicPage() {
   const { slug = "" } = useParams();
   const [topic, setTopic] = useState<TopicDocument>();
+  const [relatedTopics, setRelatedTopics] = useState<TopicCatalogEntry[]>([]);
   const [status, setStatus] = useState<"loading" | "ready" | "missing" | "error">("loading");
 
   useEffect(() => {
@@ -42,13 +43,27 @@ export function TopicPage() {
     };
   }, [slug]);
 
+  useEffect(() => {
+    let active = true;
+    setRelatedTopics([]);
+    if (status !== "ready" || !topic || topic.related.length === 0) return () => { active = false; };
+
+    loadCatalog()
+      .then((catalog) => {
+        if (!active) return;
+        const related = topic.related
+          .map((relatedSlug) => catalog.find((entry) => entry.slug === relatedSlug))
+          .filter((entry): entry is TopicCatalogEntry => Boolean(entry));
+        setRelatedTopics(related);
+      })
+      .catch(() => active && setRelatedTopics([]));
+
+    return () => { active = false; };
+  }, [status, topic]);
+
   if (status === "missing") return <NotFoundPage />;
   if (status === "error") return <ErrorState />;
   if (status !== "ready" || !topic) return <TopicSkeleton />;
-
-  const relatedTopics = topic.related
-    .map((relatedSlug) => topicCatalog.find((entry) => entry.slug === relatedSlug))
-    .filter(Boolean);
 
   return (
     <article style={{ "--topic-accent": topic.accent } as React.CSSProperties}>
@@ -89,7 +104,7 @@ export function TopicPage() {
             <section className="topic-section">
               <header><p className="eyebrow">Continue learning</p><h2>Related topics</h2></header>
               <div className="concept-grid">
-                {relatedTopics.map((related) => related && (
+                {relatedTopics.map((related) => (
                   <Card className="p-5" key={related.slug}>
                     <h3 className="font-bold"><Link className="text-link" to={`/topics/${related.slug}`}>{related.title}</Link></h3>
                     <p className="mt-2 text-sm text-muted-foreground">{related.summary}</p>
