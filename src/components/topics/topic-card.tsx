@@ -28,7 +28,7 @@ export function TopicCard({ topic }: { topic: TopicCatalogEntry }) {
         </CardContent>
         <CardFooter className="justify-between text-xs text-muted-foreground">
           <span className="flex items-center gap-1"><Clock3 className="size-3.5" aria-hidden="true" /> {topic.estimatedMinutes} min</span>
-          <span className="flex items-center gap-1 font-semibold text-foreground">Open guide <ArrowUpRight className="size-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transition-none" aria-hidden="true" /></span>
+          <span className="flex items-center gap-1 font-semibold text-foreground">Learn this topic <ArrowUpRight className="size-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transition-none" aria-hidden="true" /></span>
         </CardFooter>
       </Card>
     </article>
