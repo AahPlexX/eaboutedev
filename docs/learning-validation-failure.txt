@@ -1,0 +1,393 @@
+Temporary validation diagnostic
+
+pnpm check exit status: 1
+
+$ pnpm run generate && pnpm run validate:content && pnpm run validate:versions && pnpm run check:generated && pnpm run test && pnpm run typecheck && pnpm run lint && pnpm run build
+$ node scripts/generate-content-artifacts.mjs
+generated src/generated/topic-catalog.ts
+generated docs/topic-registry.json
+generated public/search/topic-search-index.json
+$ node scripts/validate-content.mjs
+validated 5 topic documents
+$ node scripts/validate-exact-versions.mjs
+all dependencies and package manager versions are exact
+$ node scripts/generate-content-artifacts.mjs --check
+$ node --test --experimental-strip-types tests/**/*.test.ts
+✔ catalog filtering uses aliases, keywords, and category without the deep search corpus (3.106518ms)
+✔ catalog windows render a bounded subset and grow by one window (0.263523ms)
+✔ checkpoint is typed, rendered with native disclosure, and validated (4.73638ms)
+✔ every guide includes at least two immediate comprehension checkpoints (11.743653ms)
+✔ authoring contract requires concrete-first dependency ordering (1.615008ms)
+✔ topic titles extend the browser title without mutating guide content (1.492181ms)
+✔ the base site title is used when no topic is active (0.224541ms)
+✔ discovery pages speak to learners instead of describing implementation internals (5.392325ms)
+✔ removes low-value words while retaining meaningful development terms (2.444533ms)
+✔ expands common abbreviations and concept aliases (0.51624ms)
+✔ builds a search string containing normalized and expanded terms (0.405171ms)
+✔ infers comparison and troubleshooting intent (0.547491ms)
+✖ visual renderer preserves relationship semantics by visual kind (5.277333ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 12
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 324.061305
+
+✖ failing tests:
+
+test at tests/topic-visual.test.ts:9:1
+✖ visual renderer preserves relationship semantics by visual kind (5.277333ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /\.cycle-repeat/. Input:
+  
+  '@import "tailwindcss";\n' +
+    '\n' +
+    '@theme inline {\n' +
+    '  --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;\n' +
+    '  --font-display: "Avenir Next", Avenir, Inter, ui-sans-serif, system-ui, sans-serif;\n' +
+    '  --color-background: var(--background);\n' +
+    '  --color-foreground: var(--foreground);\n' +
+    '  --color-card: var(--card);\n' +
+    '  --color-card-foreground: var(--card-foreground);\n' +
+    '  --color-popover: var(--popover);\n' +
+    '  --color-popover-foreground: var(--popover-foreground);\n' +
+    '  --color-primary: var(--primary);\n' +
+    '  --color-primary-foreground: var(--primary-foreground);\n' +
+    '  --color-secondary: var(--secondary);\n' +
+    '  --color-secondary-foreground: var(--secondary-foreground);\n' +
+    '  --color-muted: var(--muted);\n' +
+    '  --color-muted-foreground: var(--muted-foreground);\n' +
+    '  --color-accent: var(--accent);\n' +
+    '  --color-accent-foreground: var(--accent-foreground);\n' +
+    '  --color-destructive: var(--destructive);\n' +
+    '  --color-border: var(--border);\n' +
+    '  --color-input: var(--input);\n' +
+    '  --color-ring: var(--ring);\n' +
+    '}\n' +
+    '\n' +
+    ':root {\n' +
+    '  color-scheme: light dark;\n' +
+    '  --background: oklch(0.985 0.008 255);\n' +
+    '  --foreground: oklch(0.19 0.025 255);\n' +
+    '  --card: oklch(1 0 0);\n' +
+    '  --card-foreground: oklch(0.19 0.025 255);\n' +
+    '  --popover: oklch(1 0 0);\n' +
+    '  --popover-foreground: oklch(0.19 0.025 255);\n' +
+    '  --primary: oklch(0.49 0.19 252);\n' +
+    '  --primary-foreground: oklch(0.99 0.005 255);\n' +
+    '  --secondary: oklch(0.94 0.025 250);\n' +
+    '  --secondary-foreground: oklch(0.24 0.05 252);\n' +
+    '  --muted: oklch(0.955 0.014 255);\n' +
+    '  --muted-foreground: oklch(0.47 0.035 255);\n' +
+    '  --accent: oklch(0.925 0.04 250);\n' +
+    '  --accent-foreground: oklch(0.25 0.07 252);\n' +
+    '  --destructive: oklch(0.56 0.22 25);\n' +
+    '  --border: oklch(0.88 0.025 255);\n' +
+    '  --input: oklch(0.88 0.025 255);\n' +
+    '  --ring: oklch(0.57 0.2 252);\n' +
+    '  --shadow-soft: 0 1rem 3rem oklch(0.2 0.04 255 / 0.08);\n' +
+    '}\n' +
+    '\n' +
+    '@media (prefers-color-scheme: dark) {\n' +
+    '  :root {\n' +
+    '    --background: oklch(0.15 0.022 255);\n' +
+    '    --foreground: oklch(0.94 0.012 255);\n' +
+    '    --card: oklch(0.19 0.026 255);\n' +
+    '    --card-foreground: oklch(0.94 0.012 255);\n' +
+    '    --popover: oklch(0.18 0.026 255);\n' +
+    '    --popover-foreground: oklch(0.94 0.012 255);\n' +
+    '    --primary: oklch(0.72 0.16 250);\n' +
+    '    --primary-foreground: oklch(0.16 0.03 255);\n' +
+    '    --secondary: oklch(0.25 0.04 255);\n' +
+    '    --secondary-foreground: oklch(0.92 0.02 250);\n' +
+    '    --muted: oklch(0.23 0.025 255);\n' +
+    '    --muted-foreground: oklch(0.71 0.03 255);\n' +
+    '    --accent: oklch(0.27 0.06 252);\n' +
+    '    --accent-foreground: oklch(0.94 0.02 250);\n' +
+    '    --destructive: oklch(0.7 0.18 25);\n' +
+    '    --border: oklch(0.32 0.035 255);\n' +
+    '    --input: oklch(0.32 0.035 255);\n' +
+    '    --ring: oklch(0.72 0.16 250);\n' +
+    '    --shadow-soft: 0 1rem 3rem oklch(0 0 0 / 0.25);\n' +
+    '  }\n' +
+    '}\n' +
+    '\n' +
+    '* {\n' +
+    '  box-sizing: border-box;\n' +
+    '  min-inline-size: 0;\n' +
+    '}\n' +
+    '\n' +
+    'html {\n' +
+    '  scroll-behavior: smooth;\n' +
+    '  text-size-adjust: 100%;\n' +
+    '  -webkit-text-size-adjust: 100%;\n' +
+    '  overflow-wrap: anywhere;\n' +
+    '}\n' +
+    '\n' +
+    'body {\n' +
+    '  margin: 0;\n' +
+    '  min-inline-size: 20rem;\n' +
+    '  background: var(--background);\n' +
+    '  color: var(--foreground);\n' +
+    '  font-family: var(--font-sans);\n' +
+    '  font-size: clamp(1rem, 0.96rem + 0.18vw, 1.125rem);\n' +
+    '  line-height: 1.65;\n' +
+    '  text-rendering: optimizeLegibility;\n' +
+    '}\n' +
+    '\n' +
+    'button,\n' +
+    'input,\n' +
+    'select,\n' +
+    'textarea {\n' +
+    '  font: inherit;\n' +
+    '}\n' +
+    '\n' +
+    'img,\n' +
+    'svg,\n' +
+    'video,\n' +
+    'canvas {\n' +
+    '  display: block;\n' +
+    '  max-inline-size: 100%;\n' +
+    '}\n' +
+    '\n' +
+    ':focus-visible {\n' +
+    '  outline: 0.1875rem solid var(--ring);\n' +
+    '  outline-offset: 0.1875rem;\n' +
+    '}\n' +
+    '\n' +
+    '::selection {\n' +
+    '  background: color-mix(in oklch, var(--primary) 28%, transparent);\n' +
+    '}\n' +
+    '\n' +
+    '.shell {\n' +
+    '  inline-size: min(100% - clamp(1.25rem, 5vw, 5rem), 90rem);\n' +
+    '  margin-inline: auto;\n' +
+    '}\n' +
+    '\n' +
+    '.skip-link {\n' +
+    '  position: fixed;\n' +
+    '  inset-block-start: max(0.5rem, env(safe-area-inset-top));\n' +
+    '  inset-inline-start: max(0.5rem, env(safe-area-inset-left), env(safe-area-inset-right));\n' +
+    '  z-index: 100;\n' +
+    '  translate: 0 -200%;\n' +
+    '  border-radius: 0.75rem;\n' +
+    '  background: var(--foreground);\n' +
+    '  color: var(--background);\n' +
+    '  padding: 0.75rem 1rem;\n' +
+    '  font-weight: 700;\n' +
+    '}\n' +
+    '\n' +
+    '.skip-link:focus { translate: 0; }\n' +
+    '\n' +
+    '.site-header {\n' +
+    '  position: sticky;\n' +
+    '  inset-block-start: 0;\n' +
+    '  z-index: 40;\n' +
+    '  border-block-end: 0.0625rem solid color-mix(in oklch, var(--border) 82%, transparent);\n' +
+    '  background: color-mix(in oklch, var(--background) 90%, transparent);\n' +
+    '  padding-block-start: env(safe-area-inset-top);\n' +
+    '  backdrop-filter: blur(1rem);\n' +
+    '}\n' +
+    '\n' +
+    '.brand-link {\n' +
+    '  display: inline-flex;\n' +
+    '  min-block-size: 2.75rem;\n' +
+    '  align-items: center;\n' +
+    '  gap: 0.75rem;\n' +
+    '  border-radius: 0.75rem;\n' +
+    '  color: inherit;\n' +
+    '  text-decoration: none;\n' +
+    '}\n' +
+    '\n' +
+    '.brand-mark {\n' +
+    '  display: grid;\n' +
+    '  min-block-size: 2.75rem;\n' +
+    '  min-inline-size: 4.25rem;\n' +
+    '  place-items: center;\n' +
+    '  border: 0.0625rem solid color-mix(in oklch, var(--primary) 35%, var(--border));\n' +
+    '  border-radius: 0.75rem;\n' +
+    '  background: linear-gradient(145deg, color-mix(in oklch, var(--primary) 18%, var(--card)), var(--card));\n' +
+    '  font-family: var(--font-display);\n' +
+    '  font-size: 0.8rem;\n' +
+    '  font-weight: 900;\n' +
+    '  letter-spacing: 0.08em;\n' +
+    '}\n' +
+    '\n' +
+    '.nav-link {\n' +
+    '  display: inline-flex;\n' +
+    '  min-block-size: 2.75rem;\n' +
+    '  align-items: center;\n' +
+    '  border-radius: 0.75rem;\n' +
+    '  padding-inline: 0.9rem;\n' +
+    '  color: var(--muted-foreground);\n' +
+    '  font-size: 0.875rem;\n' +
+    '  font-weight: 700;\n' +
+    '  text-decoration: none;\n' +
+    '}\n' +
+    '\n' +
+    '.nav-link:hover { color: var(--foreground); background: var(--accent); }\n' +
+    '\n' +
+    '.search-trigger { inline-size: 100%; }\n' +
+    '\n' +
+    '.section-block { padding-block: clamp(3rem, 8vw, 7rem); }\n' +
+    '\n' +
+    '.hero-section {\n' +
+    '  position: relative;\n' +
+    '  isolation: isolate;\n' +
+    '  overflow: clip;\n' +
+    '  border-block-end: 0.0625rem solid var(--border);\n' +
+    '  background:\n' +
+    '    radial-gradient(circle at 10% 15%, color-mix(in oklch, var(--primary) 16%, transparent), transparent 35%),\n' +
+    '    linear-gradient(180deg, color-mix(in oklch, var(--card) 85%, transparent), var(--background));\n' +
+    '}\n' +
+    '\n' +
+    '.hero-section::after {\n' +
+    '  position: absolute;\n' +
+    '  z-index: -1;\n' +
+    '  inset: 0;\n' +
+    '  background-image: linear-gradient(var(--border) 0.0625rem, transparent 0.0625rem), linear-gradient(90deg, var(--border) 0.0625rem, transparent 0.0625rem);\n' +
+    '  background-size: 3rem 3rem;\n' +
+    '  content: "";\n' +
+    '  opacity: 0.22;\n' +
+    '  mask-image: linear-gradient(to bottom, black, transparent 80%);\n' +
+    '}\n' +
+    '\n' +
+    '.hero-grid {\n' +
+    '  display: grid;\n' +
+    '  align-items: center;\n' +
+    '  gap: clamp(2rem, 6vw, 6rem);\n' +
+    '  min-block-size: max(40rem, 80svh);\n' +
+    '  padding-block: clamp(4rem, 9vw, 8rem);\n' +
+    '}\n' +
+    '\n' +
+    '.hero-copy { max-inline-size: 48rem; }\n' +
+    '\n' +
+    '.eyebrow {\n' +
+    '  color: var(--primary);\n' +
+    '  font-size: 0.75rem;\n' +
+    '  font-weight: 900;\n' +
+    '  letter-spacing: 0.13em;\n' +
+    '  line-height: 1.4;\n' +
+    '  text-transform: uppercase;\n' +
+    '}\n' +
+    '\n' +
+    '.hero-copy h1,\n' +
+    '.topic-hero h1,\n' +
+    '.section-heading h1 {\n' +
+    '  margin-block: 0.75rem 1.25rem;\n' +
+    '  font-family: var(--font-display);\n' +
+    '  font-size: clamp(2.35rem, 1.55rem + 4vw, 5.75rem);\n' +
+    '  font-weight: 850;\n' +
+    '  letter-spacing: -0.045em;\n' +
+    '  line-height: 0.98;\n' +
+    '  text-wrap: balance;\n' +
+    '}\n' +
+    '\n' +
+    '.section-heading h1 { font-size: clamp(2.1rem, 1.5rem + 2.8vw, 4rem); line-height: 1.05; }\n' +
+    '\n' +
+    '.hero-lede,\n' +
+    '.topic-summary {\n' +
+    '  max-inline-size: 68ch;\n' +
+    '  color: var(--muted-foreground);\n' +
+    '  font-size: clamp(1.05rem, 0.98rem + 0.4vw, 1.35rem);\n' +
+    '  line-height: 1.75;\n' +
+    '}\n' +
+    '\n' +
+    '.hero-copy > .flex { margin-block-start: 2rem; }\n' +
+    '\n' +
+    '.hero-stats {\n' +
+    '  display: grid;\n' +
+    '  grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr));\n' +
+    '  gap: 1rem;\n' +
+    '  margin-block-start: clamp(2.5rem, 6vw, 4rem);\n' +
+    '}\n' +
+    '\n' +
+    '.hero-stats div {\n' +
+    '  border-inline-start: 0.1875rem solid var(--primary);\n' +
+    '  padding-inline-start: 0.9rem;\n' +
+    '}\n' +
+    '\n' +
+    '.hero-stats dt { font-family: var(--font-display); font-size: 1.5rem; font-weight: 900; line-height: 1; }\n' +
+    '.hero-stats dd { margin: 0.4rem 0 0; color: var(--muted-foreground); font-size: 0.8rem; }\n' +
+    '\n' +
+    '.hero-map {\n' +
+    '  container-type: inline-size;\n' +
+    '  margin: 0;\n' +
+    '  border: 0.0625rem solid var(--border);\n' +
+    '  border-radius: clamp(1.25rem, 5cqi, 2rem);\n' +
+    '  background: color-mix(in oklch, var(--card) 94%, transparent);\n' +
+    '  padding: clamp(1.25rem, 5cqi, 2.5rem);\n' +
+    '  box-shadow: var(--shadow-soft);\n' +
+    '}\n' +
+    '\n' +
+    '.hero-map figcaption { font-family: var(--font-display); font-size: clamp(1rem, 4cqi, 1.4rem); font-weight: 800; }\n' +
+    '.hero-map > p { margin-block-end: 0; color: var(--muted-foreground); font-size: 0.8rem; }\n' +
+    '.hero-map-track { display: grid; gap: 0.7rem; margin-block-start: 1.5rem; }\n' +
+    '.hero-map-node-wrap { display: grid; grid-template-columns: 1fr; justify-items: stretch; gap: 0.6rem; }\n' +
+    '.hero-map-node {\n' +
+    '  display: flex;\n' +
+    '  min-block-size: 3.5rem;\n' +
+    '  align-items: center;\n' +
+    '  justify-content: space-between;\n' +
+    '  border: 0.0625rem solid color-mix(in oklch, var(--primary) 28%, var(--border));\n' +
+    '  border-radius: 0.9rem;\n' +
+    '  background: var(--background);\n' +
+    '  padding-inline: 1rem;\n' +
+    '}\n' +
+    '.hero-map-node span { color: var(--primary); font-family: ui-monospace, monospace; font-size: 0.7rem; }\n' +
+    '.hero-map-node-wrap i { justify-self: center; block-size: 1rem; inline-size: 0.125rem; background: var(--primary); }\n' +
+    '\n' +
+    '.section-heading { max-inline-size: 52rem; margin-block-end: clamp(2rem, 5vw, 3.5rem); }\n' +
+    '.section-heading h2,\n' +
+    '.topic-section h2 {\n' +
+    '  margin-block: 0.65rem 0;\n' +
+    '  font-family: var(--font-display);\n' +
+    '  font-size: clamp(1.8rem, 1.35rem + 2.2vw, 3.25rem);\n' +
+    '  font-weight: 850;\n' +
+    '  letter-spacing: -0.035em;\n' +
+    '  line-height: 1.08;\n' +
+    '  text-wrap: balance;\n' +
+    '}\n' +
+    '.section-heading > p:last-child,\n' +
+    '.topic-section > header > p:last-child { color: var(--muted-foreground); max-inline-size: 68ch; }\n' +
+    '\n' +
+    '.topic-grid,\n' +
+    '.feature-grid,\n' +
+    '.concept-grid,\n' +
+    '.glossary-grid {\n' +
+    '  display: grid;\n' +
+    '  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));\n' +
+    '  gap: clamp(1rem, 3vw, 1.5rem);\n' +
+    '}\n' +
+    '\n' +
+    '.topic-card,\n' +
+    '.feature-grid > *,\n' +
+    '.concept-grid > * { container-type: inline-size; position: relative; }\n' +
+    '.topic-card-visual {\n' +
+    '  position: relative;\n' +
+    '  display: flex;\n' +
+    '  min-block-size: clamp(8rem, 35cqi, 12rem);\n' +
+    '  align-items: center;\n' +
+    '  justify-content: space-between;\n' +
+    '  overflow: hidden;\n' +
+    '  background:\n' +
+    '    linear-gradient(135deg, color-mix(in oklch, var(--topic-accent) 35%, var(--card)), color-mix(in oklch, var(--topic-accent) 8%, var(--background)));\n' +
+    '  padding: clamp(1rem, 5cqi, 1.75rem);\n' +
+    '}\n' +
+    '.topic-card-icon { font-family: var(--font-display); font-size: clamp(2.5rem, 14cqi, 5rem); font-weight: 900; color: color-mix(in oklch, var(--topic-accent) 82%, var(--foreground)); }\n' +
+    '.topic-card-lines { display: grid; inline-size: 42%; gap: 0.5rem; }\n' +
+    '.topic-card-lines i { block-size: 0.35rem; border-radius: 999rem; background: color-mix(in oklch, var(--topic-accent) 5'... 11320 more characters
+  
+      at TestContext.<anonymous> (file:///home/runner/work/eaboutedev/eaboutedev/tests/topic-visual.test.ts:23:10)
+      at async Test.run (node:internal/test_runner/test:1332:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '@import "tailwindcss";\n\n@theme inline {\n  --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;\n  --font-display: "Avenir Next", Avenir, Inter, ui-sans-serif, system-ui, sans-serif;\n  --color-background: var(--background);\n  --color-foreground: var(--foreground);\n  --color-card: var(--card);\n  --color-card-foreground: var(--card-foreground);\n  --color-popover: var(--popover);\n  --color-popover-foreground: var(--popover-foreground);\n  --color-primary: var(--primary);\n  --color-primary-foreground: var(--primary-foreground);\n  --color-secondary: var(--secondary);\n  --color-secondary-foreground: var(--secondary-foreground);\n  --color-muted: var(--muted);\n  --color-muted-foreground: var(--muted-foreground);\n  --color-accent: var(--accent);\n  --color-accent-foreground: var(--accent-foreground);\n  --color-destructive: var(--destructive);\n  --color-border: var(--border);\n  --color-input: var(--input);\n  --color-ring: var(--ring);\n}\n\n:root {\n  color-scheme: light dark;\n  --background: oklch(0.985 0.008 255);\n  --foreground: oklch(0.19 0.025 255);\n  --card: oklch(1 0 0);\n  --card-foreground: oklch(0.19 0.025 255);\n  --popover: oklch(1 0 0);\n  --popover-foreground: oklch(0.19 0.025 255);\n  --primary: oklch(0.49 0.19 252);\n  --primary-foreground: oklch(0.99 0.005 255);\n  --secondary: oklch(0.94 0.025 250);\n  --secondary-foreground: oklch(0.24 0.05 252);\n  --muted: oklch(0.955 0.014 255);\n  --muted-foreground: oklch(0.47 0.035 255);\n  --accent: oklch(0.925 0.04 250);\n  --accent-foreground: oklch(0.25 0.07 252);\n  --destructive: oklch(0.56 0.22 25);\n  --border: oklch(0.88 0.025 255);\n  --input: oklch(0.88 0.025 255);\n  --ring: oklch(0.57 0.2 252);\n  --shadow-soft: 0 1rem 3rem oklch(0.2 0.04 255 / 0.08);\n}\n\n@media (prefers-color-scheme: dark) {\n  :root {\n    --background: oklch(0.15 0.022 255);\n    --foreground: oklch(0.94 0.012 255);\n    --card: oklch(0.19 0.026 255);\n    --card-foreground: oklch(0.94 0.012 255);\n    --popover: oklch(0.18 0.026 255);\n    --popover-foreground: oklch(0.94 0.012 255);\n    --primary: oklch(0.72 0.16 250);\n    --primary-foreground: oklch(0.16 0.03 255);\n    --secondary: oklch(0.25 0.04 255);\n    --secondary-foreground: oklch(0.92 0.02 250);\n    --muted: oklch(0.23 0.025 255);\n    --muted-foreground: oklch(0.71 0.03 255);\n    --accent: oklch(0.27 0.06 252);\n    --accent-foreground: oklch(0.94 0.02 250);\n    --destructive: oklch(0.7 0.18 25);\n    --border: oklch(0.32 0.035 255);\n    --input: oklch(0.32 0.035 255);\n    --ring: oklch(0.72 0.16 250);\n    --shadow-soft: 0 1rem 3rem oklch(0 0 0 / 0.25);\n  }\n}\n\n* {\n  box-sizing: border-box;\n  min-inline-size: 0;\n}\n\nhtml {\n  scroll-behavior: smooth;\n  text-size-adjust: 100%;\n  -webkit-text-size-adjust: 100%;\n  overflow-wrap: anywhere;\n}\n\nbody {\n  margin: 0;\n  min-inline-size: 20rem;\n  background: var(--background);\n  color: var(--foreground);\n  font-family: var(--font-sans);\n  font-size: clamp(1rem, 0.96rem + 0.18vw, 1.125rem);\n  line-height: 1.65;\n  text-rendering: optimizeLegibility;\n}\n\nbutton,\ninput,\nselect,\ntextarea {\n  font: inherit;\n}\n\nimg,\nsvg,\nvideo,\ncanvas {\n  display: block;\n  max-inline-size: 100%;\n}\n\n:focus-visible {\n  outline: 0.1875rem solid var(--ring);\n  outline-offset: 0.1875rem;\n}\n\n::selection {\n  background: color-mix(in oklch, var(--primary) 28%, transparent);\n}\n\n.shell {\n  inline-size: min(100% - clamp(1.25rem, 5vw, 5rem), 90rem);\n  margin-inline: auto;\n}\n\n.skip-link {\n  position: fixed;\n  inset-block-start: max(0.5rem, env(safe-area-inset-top));\n  inset-inline-start: max(0.5rem, env(safe-area-inset-left), env(safe-area-inset-right));\n  z-index: 100;\n  translate: 0 -200%;\n  border-radius: 0.75rem;\n  background: var(--foreground);\n  color: var(--background);\n  padding: 0.75rem 1rem;\n  font-weight: 700;\n}\n\n.skip-link:focus { translate: 0; }\n\n.site-header {\n  position: sticky;\n  inset-block-start: 0;\n  z-index: 40;\n  border-block-end: 0.0625rem solid color-mix(in oklch, var(--border) 82%, transparent);\n  background: color-mix(in oklch, var(--background) 90%, transparent);\n  padding-block-start: env(safe-area-inset-top);\n  backdrop-filter: blur(1rem);\n}\n\n.brand-link {\n  display: inline-flex;\n  min-block-size: 2.75rem;\n  align-items: center;\n  gap: 0.75rem;\n  border-radius: 0.75rem;\n  color: inherit;\n  text-decoration: none;\n}\n\n.brand-mark {\n  display: grid;\n  min-block-size: 2.75rem;\n  min-inline-size: 4.25rem;\n  place-items: center;\n  border: 0.0625rem solid color-mix(in oklch, var(--primary) 35%, var(--border));\n  border-radius: 0.75rem;\n  background: linear-gradient(145deg, color-mix(in oklch, var(--primary) 18%, var(--card)), var(--card));\n  font-family: var(--font-display);\n  font-size: 0.8rem;\n  font-weight: 900;\n  letter-spacing: 0.08em;\n}\n\n.nav-link {\n  display: inline-flex;\n  min-block-size: 2.75rem;\n  align-items: center;\n  border-radius: 0.75rem;\n  padding-inline: 0.9rem;\n  color: var(--muted-foreground);\n  font-size: 0.875rem;\n  font-weight: 700;\n  text-decoration: none;\n}\n\n.nav-link:hover { color: var(--foreground); background: var(--accent); }\n\n.search-trigger { inline-size: 100%; }\n\n.section-block { padding-block: clamp(3rem, 8vw, 7rem); }\n\n.hero-section {\n  position: relative;\n  isolation: isolate;\n  overflow: clip;\n  border-block-end: 0.0625rem solid var(--border);\n  background:\n    radial-gradient(circle at 10% 15%, color-mix(in oklch, var(--primary) 16%, transparent), transparent 35%),\n    linear-gradient(180deg, color-mix(in oklch, var(--card) 85%, transparent), var(--background));\n}\n\n.hero-section::after {\n  position: absolute;\n  z-index: -1;\n  inset: 0;\n  background-image: linear-gradient(var(--border) 0.0625rem, transparent 0.0625rem), linear-gradient(90deg, var(--border) 0.0625rem, transparent 0.0625rem);\n  background-size: 3rem 3rem;\n  content: "";\n  opacity: 0.22;\n  mask-image: linear-gradient(to bottom, black, transparent 80%);\n}\n\n.hero-grid {\n  display: grid;\n  align-items: center;\n  gap: clamp(2rem, 6vw, 6rem);\n  min-block-size: max(40rem, 80svh);\n  padding-block: clamp(4rem, 9vw, 8rem);\n}\n\n.hero-copy { max-inline-size: 48rem; }\n\n.eyebrow {\n  color: var(--primary);\n  font-size: 0.75rem;\n  font-weight: 900;\n  letter-spacing: 0.13em;\n  line-height: 1.4;\n  text-transform: uppercase;\n}\n\n.hero-copy h1,\n.topic-hero h1,\n.section-heading h1 {\n  margin-block: 0.75rem 1.25rem;\n  font-family: var(--font-display);\n  font-size: clamp(2.35rem, 1.55rem + 4vw, 5.75rem);\n  font-weight: 850;\n  letter-spacing: -0.045em;\n  line-height: 0.98;\n  text-wrap: balance;\n}\n\n.section-heading h1 { font-size: clamp(2.1rem, 1.5rem + 2.8vw, 4rem); line-height: 1.05; }\n\n.hero-lede,\n.topic-summary {\n  max-inline-size: 68ch;\n  color: var(--muted-foreground);\n  font-size: clamp(1.05rem, 0.98rem + 0.4vw, 1.35rem);\n  line-height: 1.75;\n}\n\n.hero-copy > .flex { margin-block-start: 2rem; }\n\n.hero-stats {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr));\n  gap: 1rem;\n  margin-block-start: clamp(2.5rem, 6vw, 4rem);\n}\n\n.hero-stats div {\n  border-inline-start: 0.1875rem solid var(--primary);\n  padding-inline-start: 0.9rem;\n}\n\n.hero-stats dt { font-family: var(--font-display); font-size: 1.5rem; font-weight: 900; line-height: 1; }\n.hero-stats dd { margin: 0.4rem 0 0; color: var(--muted-foreground); font-size: 0.8rem; }\n\n.hero-map {\n  container-type: inline-size;\n  margin: 0;\n  border: 0.0625rem solid var(--border);\n  border-radius: clamp(1.25rem, 5cqi, 2rem);\n  background: color-mix(in oklch, var(--card) 94%, transparent);\n  padding: clamp(1.25rem, 5cqi, 2.5rem);\n  box-shadow: var(--shadow-soft);\n}\n\n.hero-map figcaption { font-family: var(--font-display); font-size: clamp(1rem, 4cqi, 1.4rem); font-weight: 800; }\n.hero-map > p { margin-block-end: 0; color: var(--muted-foreground); font-size: 0.8rem; }\n.hero-map-track { display: grid; gap: 0.7rem; margin-block-start: 1.5rem; }\n.hero-map-node-wrap { display: grid; grid-template-columns: 1fr; justify-items: stretch; gap: 0.6rem; }\n.hero-map-node {\n  display: flex;\n  min-block-size: 3.5rem;\n  align-items: center;\n  justify-content: space-between;\n  border: 0.0625rem solid color-mix(in oklch, var(--primary) 28%, var(--border));\n  border-radius: 0.9rem;\n  background: var(--background);\n  padding-inline: 1rem;\n}\n.hero-map-node span { color: var(--primary); font-family: ui-monospace, monospace; font-size: 0.7rem; }\n.hero-map-node-wrap i { justify-self: center; block-size: 1rem; inline-size: 0.125rem; background: var(--primary); }\n\n.section-heading { max-inline-size: 52rem; margin-block-end: clamp(2rem, 5vw, 3.5rem); }\n.section-heading h2,\n.topic-section h2 {\n  margin-block: 0.65rem 0;\n  font-family: var(--font-display);\n  font-size: clamp(1.8rem, 1.35rem + 2.2vw, 3.25rem);\n  font-weight: 850;\n  letter-spacing: -0.035em;\n  line-height: 1.08;\n  text-wrap: balance;\n}\n.section-heading > p:last-child,\n.topic-section > header > p:last-child { color: var(--muted-foreground); max-inline-size: 68ch; }\n\n.topic-grid,\n.feature-grid,\n.concept-grid,\n.glossary-grid {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));\n  gap: clamp(1rem, 3vw, 1.5rem);\n}\n\n.topic-card,\n.feature-grid > *,\n.concept-grid > * { container-type: inline-size; position: relative; }\n.topic-card-visual {\n  position: relative;\n  display: flex;\n  min-block-size: clamp(8rem, 35cqi, 12rem);\n  align-items: center;\n  justify-content: space-between;\n  overflow: hidden;\n  background:\n    linear-gradient(135deg, color-mix(in oklch, var(--topic-accent) 35%, var(--card)), color-mix(in oklch, var(--topic-accent) 8%, var(--background)));\n  padding: clamp(1rem, 5cqi, 1.75rem);\n}\n.topic-card-icon { font-family: var(--font-display); font-size: clamp(2.5rem, 14cqi, 5rem); font-weight: 900; color: color-mix(in oklch, var(--topic-accent) 82%, var(--foreground)); }\n.topic-card-lines { display: grid; inline-size: 42%; gap: 0.5rem; }\n.topic-card-lines i { block-size: 0.35rem; border-radius: 999rem; background: color-mix(in oklch, var(--topic-accent) 5'... 11320 more characters,
+    expected: /\.cycle-repeat/,
+    operator: 'match',
+    diff: 'simple'
+  }
+[ELIFECYCLE] Test failed. See above for more details.
+[ELIFECYCLE] Command failed with exit code 1.
