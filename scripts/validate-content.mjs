@@ -5,7 +5,8 @@ const failures = [];
 const slugs = new Set();
 const allowedLevels = new Set(["Foundational", "Intermediate", "Advanced"]);
 const allowedKinds = new Set(["flow", "layers", "comparison", "cycle", "map"]);
-const allowedBlocks = new Set(["paragraph", "steps", "cards", "code", "table", "callout", "checklist"]);
+const allowedBlocks = new Set(["paragraph", "steps", "cards", "code", "table", "callout", "checklist", "checkpoint"]);
+const isNonEmptyString = (value) => typeof value === "string" && value.trim().length > 0;
 
 for (const { filename, document: topic } of topics) {
   const fail = (message) => failures.push(`${filename}: ${message}`);
@@ -15,7 +16,7 @@ for (const { filename, document: topic } of topics) {
   if (slugs.has(topic.slug)) fail("slug must be unique");
   slugs.add(topic.slug);
   for (const field of ["title", "eyebrow", "summary", "category", "icon", "accent"]) {
-    if (typeof topic[field] !== "string" || !topic[field].trim()) fail(`${field} must be a non-empty string`);
+    if (!isNonEmptyString(topic[field])) fail(`${field} must be a non-empty string`);
   }
   if (!allowedLevels.has(topic.level)) fail("level is invalid");
   if (!Number.isInteger(topic.estimatedMinutes) || topic.estimatedMinutes < 1) fail("estimatedMinutes must be a positive integer");
@@ -33,6 +34,11 @@ for (const { filename, document: topic } of topics) {
     for (const block of section.blocks ?? []) {
       if (!allowedBlocks.has(block.type)) fail(`section ${section.id} contains unsupported block type: ${block.type ?? "missing"}`);
       if (block.type === "table" && block.rows.some((row) => row.length !== block.columns.length)) fail(`section ${section.id} table row width differs from columns`);
+      if (block.type === "checkpoint") {
+        if (!isNonEmptyString(block.prompt)) fail(`section ${section.id} checkpoint prompt must be a non-empty string`);
+        if (!isNonEmptyString(block.answer)) fail(`section ${section.id} checkpoint answer must be a non-empty string`);
+        if (!isNonEmptyString(block.explanation)) fail(`section ${section.id} checkpoint explanation must be a non-empty string`);
+      }
     }
   }
   for (const source of topic.sources ?? []) {
