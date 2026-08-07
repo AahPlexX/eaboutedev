@@ -71,6 +71,13 @@ export interface ChecklistBlock {
   items: string[];
 }
 
+export interface CheckpointBlock {
+  type: "checkpoint";
+  prompt: string;
+  answer: string;
+  explanation: string;
+}
+
 export type ContentBlock =
   | ParagraphBlock
   | StepsBlock
@@ -78,7 +85,8 @@ export type ContentBlock =
   | CodeBlock
   | TableBlock
   | CalloutBlock
-  | ChecklistBlock;
+  | ChecklistBlock
+  | CheckpointBlock;
 
 export interface TopicSection {
   id: string;
