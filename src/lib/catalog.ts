@@ -47,7 +47,7 @@ export function filterCatalogTopics(
 }
 
 export function sortCatalogTopics(topics: TopicCatalogEntry[], sort: CatalogSort): TopicCatalogEntry[] {
-  return [...topics].sort((left, right) => {
+  return topics.toSorted((left, right) => {
     const orderDifference = left.order - right.order;
     const titleDifference = left.title.localeCompare(right.title, "en");
 
