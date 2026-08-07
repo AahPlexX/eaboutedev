@@ -1,0 +1,55 @@
+$ pnpm run generate && pnpm run validate:content && pnpm run validate:versions && pnpm run check:generated && pnpm run validate:discovery && pnpm run test && pnpm run typecheck && pnpm run lint && pnpm run build
+$ node scripts/generate-content-artifacts.mjs
+generated public/search/topic-search.minisearch.json
+generated public/catalog/topic-catalog.json
+generated src/generated/topic-bootstrap.ts
+generated docs/topic-registry.json
+$ node scripts/validate-content.mjs
+validated 5 topic documents
+$ node scripts/validate-exact-versions.mjs
+all dependencies and package manager versions are exact
+$ node scripts/generate-content-artifacts.mjs --check
+$ node scripts/validate-discovery-assets.mjs
+validated discovery assets for 5 topics
+$ node --test --experimental-strip-types tests/**/*.test.ts
+✔ catalog loader deduplicates successful requests (31.197062ms)
+✔ catalog loader clears a failed request so retry can succeed (0.963161ms)
+✔ catalog URL state parses supported values and normalizes invalid input (2.158729ms)
+✔ catalog URL serialization omits defaults and empty values (0.431094ms)
+✔ catalog filtering uses aliases, keywords, and category without the deep search corpus (3.521559ms)
+✔ catalog sorting is deterministic for every supported mode (11.259274ms)
+✔ pagination clamps invalid pages and returns at most 24 topics (0.289664ms)
+✔ catalog scale shape remains bounded at 100, 500, and 1000 topics (2.294022ms)
+✔ compact pagination keeps first, last, and nearby pages without hundreds of controls (0.480989ms)
+✔ checkpoint is typed, rendered with native disclosure, and validated (6.018514ms)
+✔ every guide includes at least two immediate comprehension checkpoints (6.539763ms)
+✔ authoring contract requires concrete-first dependency ordering (5.105098ms)
+✔ generation emits bounded catalog bootstrap and prebuilt search assets (9.370769ms)
+✔ full catalog, topic routes, and search implementation are outside the eager home path (3.233978ms)
+✔ serialized MiniSearch index restores and finds representative topics (13.321639ms)
+✔ topic titles extend the browser title without mutating guide content (1.340646ms)
+✔ the base site title is used when no topic is active (0.148883ms)
+✔ discovery pages speak to learners instead of describing implementation internals (8.492595ms)
+✔ removes low-value words while retaining meaningful development terms (2.807891ms)
+✔ expands common abbreviations and concept aliases (0.567239ms)
+✔ builds a search string containing normalized and expanded terms (0.58803ms)
+✔ infers comparison and troubleshooting intent (0.600849ms)
+✔ topic loader deduplicates successful requests and keeps 404 semantics (29.430324ms)
+✔ topic loader retries non-404 failures and rejects invalid slugs without fetching (0.794599ms)
+✔ visual renderer preserves relationship semantics by visual kind (5.401631ms)
+ℹ tests 25
+ℹ suites 0
+ℹ pass 25
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 521.10624
+$ tsc -b
+$ oxlint . --deny-warnings
+::warning file=src/lib/catalog.ts,line=50,endLine=50,col=22,endColumn=26,title=unicorn(no-array-sort)::src/lib/catalog.ts:50:22: Use `Array#toSorted()` instead of `Array#sort()`.
+
+Found 1 warning and 0 errors.
+Finished in 10ms on 50 files with 162 rules using 4 threads.
+[ELIFECYCLE] Command failed with exit code 1.
+[ELIFECYCLE] Command failed with exit code 1.
