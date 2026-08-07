@@ -38,16 +38,16 @@ export function TopicsPage() {
   return (
     <section className="shell section-block">
       <header className="section-heading max-w-3xl">
-        <p className="eyebrow">Topic catalog</p>
-        <h1>Browse the development system by the question you need answered.</h1>
-        <p>The catalog count is generated from source content. Add a topic file and the library, search index, and registry update together.</p>
+        <p className="eyebrow">Choose what you need to understand</p>
+        <h1>Browse by the question, system, or concept you are working on.</h1>
+        <p>You do not need to know the official terminology first. Each guide introduces the words it needs in context, then continues into real code, trade-offs, failures, and production decisions.</p>
       </header>
 
       <div className="catalog-toolbar">
         <label className="relative block flex-1">
           <span className="sr-only">Filter topics</span>
           <Search className="pointer-events-none absolute inset-inline-start-4 inset-block-start-1/2 size-5 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
-          <Input value={query} onChange={(event) => updateQuery(event.target.value)} placeholder="Filter by title, alias, or concept…" className="ps-11" />
+          <Input value={query} onChange={(event) => updateQuery(event.target.value)} placeholder="Try “how websites load”, “git”, “API”, or “database”…" className="ps-11" />
         </label>
         <div className="flex flex-wrap items-center gap-2 pb-1" aria-label="Filter by category">
           <Filter className="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
@@ -86,7 +86,7 @@ export function TopicsPage() {
       ) : (
         <div className="empty-state">
           <h2>No topic matches that filter</h2>
-          <p>Clear the category or use a broader term. Global search also supports fuzzy matching and aliases.</p>
+          <p>Try the problem in your own words, remove the category filter, or use the global search for broader related-term matching.</p>
         </div>
       )}
     </section>
