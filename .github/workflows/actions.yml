@@ -37,7 +37,11 @@ jobs:
       - name: Verify generated content artifacts are committed
         run: |
           pnpm run generate
-          git diff --exit-code -- src/generated public/search docs/topic-registry.json
+          if [ -n "$(git status --porcelain -- src/generated public/catalog public/search docs/topic-registry.json)" ]; then
+            git status --short -- src/generated public/catalog public/search docs/topic-registry.json
+            echo "Generated discovery artifacts are not committed or are stale."
+            exit 1
+          fi
 
       - name: Run full project checks
         run: pnpm run check

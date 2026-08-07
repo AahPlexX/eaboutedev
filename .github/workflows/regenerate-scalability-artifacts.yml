@@ -1,0 +1,71 @@
+name: Regenerate scalability artifacts
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: regenerate-scalability-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  regenerate:
+    name: Verify and commit generated discovery artifacts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+        with:
+          run_install: false
+
+      - name: Install Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install exact dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate and validate
+        id: verify
+        shell: bash
+        run: |
+          set +e
+          pnpm check > /tmp/scalability-check.log 2>&1
+          status=$?
+          set -e
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          if [ "$status" -ne 0 ]; then
+            tail -n 500 /tmp/scalability-check.log > docs/scalability-validation-failure.txt
+          fi
+
+      - name: Commit successful generated artifacts
+        if: steps.verify.outputs.status == '0'
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/generated public/catalog public/search docs/topic-registry.json
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: regenerate scalability artifacts [generated-discovery]"
+            git push
+          fi
+
+      - name: Commit failure diagnostic
+        if: steps.verify.outputs.status != '0'
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/scalability-validation-failure.txt
+          git commit -m "test: capture scalability validation failure [generated-discovery]"
+          git push
+          exit 1
