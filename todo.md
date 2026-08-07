@@ -135,3 +135,28 @@ This file is append-only. Add a new dated turn section; do not rewrite or remove
 
 - [ ] Independently confirm the latest GitHub Pages deployment completes successfully after these `main` updates.
 - [ ] Inspect the deployed learning experience at `https://aahplexx.github.io/eaboutedev/` once the endpoint is serving the latest commit.
+
+## Turn 7 — 2026-08-07
+
+**turncount: 7**
+
+### Completed design work
+
+- [x] Audit real catalog/search/topic loading boundaries before expanding the topic count.
+- [x] Approve fixed 24-topic URL-addressable pagination and compact accessible pagination controls.
+- [x] Approve Recommended, A–Z, Shortest first, Longest first, and Foundational → Advanced sorting.
+- [x] Approve a lazy full-catalog JSON asset plus bounded homepage bootstrap metadata.
+- [x] Approve route-level lazy loading for heavy catalog/topic routes.
+- [x] Approve on-demand dynamic loading of MiniSearch and build-time serialized search-index construction/restoration.
+- [x] Approve successful-request deduplication and retryable failures for catalog/topic loading.
+- [x] Approve scale-shape regression fixtures and deterministic generated-asset size budgets.
+- [x] Define YAGNI exclusions so no backend, CMS, database, infinite scroll, virtualization, service worker, worker thread, persistent cache, state library, or configurable page-size scope is added without measured need.
+- [x] Commit `docs/superpowers/specs/2026-08-07-catalog-scalability-design.md`.
+
+### Implementation gate
+
+- [ ] Review/accept the committed Turn 7 scalability specification.
+- [ ] Write the task-by-task implementation plan under `docs/superpowers/plans/`.
+- [ ] Implement sorting, pagination, lazy catalog/routes/search, prebuilt search serialization, caching/deduplication, and performance guardrails on `main`.
+- [ ] Regenerate discovery artifacts and remove obsolete eager catalog/search artifacts only after all consumers migrate.
+- [ ] Pass the complete `pnpm check` gate and record the exact validation evidence.
