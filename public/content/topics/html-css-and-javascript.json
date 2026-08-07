@@ -2,95 +2,146 @@
   "version": 1,
   "slug": "html-css-and-javascript",
   "title": "HTML, CSS, and JavaScript",
-  "eyebrow": "Foundation · Structure, presentation, behavior",
-  "summary": "Understand the three core browser languages, the boundary each owns, and how they cooperate without becoming tangled.",
+  "eyebrow": "Frontend foundation · Meaning, appearance, and behavior",
+  "summary": "Learn the three core browser languages by building one small page: HTML gives content meaning and structure, CSS controls presentation and layout, and JavaScript adds behavior when the page needs to react or change.",
   "category": "Frontend",
   "level": "Foundational",
-  "estimatedMinutes": 24,
+  "estimatedMinutes": 28,
   "icon": "◇",
   "accent": "oklch(0.71 0.17 155)",
   "aliases": [
     "html css js",
     "frontend basics",
     "web page languages",
-    "markup styling scripting"
+    "markup styling scripting",
+    "how websites are built"
   ],
   "keywords": [
+    "html",
     "semantic html",
-    "css cascade",
+    "css",
+    "cascade",
+    "flexbox",
+    "grid",
+    "container queries",
     "javascript",
     "dom",
+    "events",
+    "state",
+    "browser api",
     "accessibility",
     "progressive enhancement",
     "responsive design"
   ],
   "prerequisites": [
-    "How the Web Works is helpful but not required."
+    "How the Web Works is helpful because it explains how these files reach the browser, but this guide explains the page-building concepts it uses."
   ],
   "learningOutcomes": [
-    "Assign structure, presentation, and behavior to the correct language.",
-    "Explain the DOM, cascade, and event-driven behavior.",
-    "Build a progressively enhanced, accessible component."
+    "Look at a page requirement and decide whether HTML, CSS, JavaScript, or a combination should handle it.",
+    "Explain elements, CSS rules and the cascade, the DOM, events, state, and browser APIs in the context of a working page.",
+    "Build an accessible component that starts with native browser behavior and adds styling or JavaScript only where the requirement needs it."
   ],
   "heroVisual": {
     "kind": "layers",
-    "title": "One interface, three responsibilities",
-    "caption": "The layers cooperate best when each retains a clear job.",
+    "title": "One page, three different responsibilities",
+    "caption": "The layers cooperate, but keeping their jobs clear makes the page easier to understand, change, test, and recover when something fails.",
     "nodes": [
       {
-        "label": "HTML",
-        "detail": "Defines meaning, order, relationships, and native controls."
+        "label": "HTML · meaning and structure",
+        "detail": "Defines headings, paragraphs, links, buttons, forms, images, sections, and the relationships between them."
       },
       {
-        "label": "CSS",
-        "detail": "Controls layout, typography, color, states, and adaptation."
+        "label": "CSS · presentation and layout",
+        "detail": "Controls visual styling, spacing, sizing, layout, responsive adaptation, and visual states."
       },
       {
-        "label": "JavaScript",
-        "detail": "Responds to events, coordinates state, and changes behavior."
-      },
-      {
-        "label": "Browser APIs",
-        "detail": "Expose the document, network, storage, media, and device capabilities."
+        "label": "JavaScript · behavior and change",
+        "detail": "Responds to events, calls browser or network APIs, keeps application state, and changes the page when needed."
       }
     ]
   },
   "sections": [
     {
-      "id": "html",
-      "title": "1. HTML creates the meaningful document",
-      "summary": "HTML should describe what content is before describing how it looks.",
+      "id": "three-jobs",
+      "title": "1. Start with one page and separate its three jobs",
+      "summary": "Before syntax, learn what each language is responsible for. That decision prevents many later accessibility, maintenance, and performance problems.",
       "blocks": [
         {
           "type": "paragraph",
-          "text": "HTML provides the document outline, landmarks, controls, labels, links, media alternatives, and relationships that browsers and assistive technologies can understand before CSS or JavaScript runs."
+          "text": "Imagine a small article card with a heading, a description, and a link to read more. HTML identifies those things and their meaning. CSS can make the card two columns on a wide container and one column on a narrow one. If the card later needs live filtering, saved preferences, or data loaded after an interaction, JavaScript can coordinate that behavior."
         },
         {
           "type": "code",
           "language": "HTML",
-          "code": "<article>\n  <h2>Database types</h2>\n  <p>Choose by access pattern and guarantees.</p>\n  <a href=\"/databases\">Open the guide</a>\n</article>",
-          "explanation": "The elements communicate that this is a self-contained article with a heading, paragraph, and real destination."
+          "code": "<article class=\"guide-card\">\n  <h2>How the Web Works</h2>\n  <p>Follow one request from browser to server and back.</p>\n  <a href=\"/topics/how-the-web-works\">Read the guide</a>\n</article>",
+          "explanation": "The article element identifies a self-contained piece of content, h2 gives it a heading, p is descriptive text, and a is a real link to another location. No styling is required for those meanings to exist."
+        },
+        {
+          "type": "code",
+          "language": "CSS",
+          "code": ".guide-card {\n  display: grid;\n  gap: 1rem;\n  padding: 1rem;\n  border: 1px solid currentColor;\n}\n\n.guide-card a {\n  font-weight: 700;\n}",
+          "explanation": "CSS selects the article and link and changes presentation: grid layout, spacing, padding, border, and font weight. It does not change the link into a different kind of control."
+        },
+        {
+          "type": "checkpoint",
+          "prompt": "A control should take the user to another page. Which language should provide that basic capability first?",
+          "answer": "HTML, with a real link such as an <a href=\"…\"> element.",
+          "explanation": "Navigation is already a native browser capability. CSS can style the link and JavaScript can enhance navigation when a real requirement calls for it, but neither should replace the correct HTML meaning without a reason."
+        }
+      ]
+    },
+    {
+      "id": "html",
+      "title": "2. HTML tells the browser what the content is",
+      "summary": "HTML is markup: elements and attributes describe content, relationships, controls, and document structure so browsers and assistive technology can understand them.",
+      "visual": {
+        "kind": "layers",
+        "title": "Build meaning from the document outward",
+        "caption": "Start with the content's job, then choose the element whose built-in meaning and behavior matches it.",
+        "nodes": [
+          {
+            "label": "Document structure",
+            "detail": "Headings, main content, navigation, sections, articles, lists, and other landmarks organize information."
+          },
+          {
+            "label": "Content meaning",
+            "detail": "Paragraphs, emphasis, tables, figures, time values, and other elements communicate what the content represents."
+          },
+          {
+            "label": "Native interaction",
+            "detail": "Links, buttons, forms, inputs, details, and other controls bring browser behavior and accessibility semantics with them."
+          },
+          {
+            "label": "Attributes",
+            "detail": "Values such as href, type, name, required, alt, and autocomplete add information or configure behavior."
+          }
+        ]
+      },
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "An HTML element usually has a defined purpose and behavior. Choosing <button> for an action or <a href> for navigation is more than a naming preference: the browser already knows how those controls should participate in keyboard navigation, activation, accessibility APIs, and other platform behavior. Semantic HTML means choosing elements for what the content or control is, not simply for how you want it to look."
         },
         {
           "type": "cards",
           "items": [
             {
-              "title": "Use native elements",
-              "summary": "Buttons, links, inputs, details, tables, and headings already carry behavior and semantics.",
-              "whenToUse": "Start with the element whose built-in meaning matches the task.",
-              "avoidWhen": "Avoid replacing a button with a clickable div.",
+              "title": "Link",
+              "summary": "Moves to a resource or location.",
+              "whenToUse": "The outcome is navigation.",
+              "avoidWhen": "Do not use a link with a fake URL for an in-page action.",
+              "example": "<a href=\"/settings\">Settings</a>"
+            },
+            {
+              "title": "Button",
+              "summary": "Triggers an action in the current context.",
+              "whenToUse": "Submit, open, close, save, toggle, or run another action.",
+              "avoidWhen": "Do not make a clickable div imitate a button.",
               "example": "<button type=\"button\">Save</button>"
             },
             {
-              "title": "Keep heading order meaningful",
-              "summary": "Headings create a navigable hierarchy.",
-              "whenToUse": "Use levels to represent sections, not visual size.",
-              "avoidWhen": "Do not skip levels only to get a preferred appearance.",
-              "example": "h1 → h2 → h3"
-            },
-            {
-              "title": "Name controls",
-              "summary": "Every input needs a programmatic name.",
+              "title": "Label and input",
+              "summary": "A form control needs a programmatic name so the user knows what information is requested.",
               "whenToUse": "Use a visible label whenever possible.",
               "avoidWhen": "Placeholder text is not a replacement for a label.",
               "example": "<label>Email <input type=\"email\"></label>"
@@ -99,289 +150,323 @@
         },
         {
           "type": "callout",
-          "tone": "definition",
-          "title": "Semantic HTML",
-          "body": "Markup whose element choices communicate the role and structure of the content, not merely its appearance."
+          "tone": "tip",
+          "title": "Heading levels describe hierarchy, not font size",
+          "body": "Use h1, h2, h3, and later levels to represent nested sections. Change their appearance with CSS instead of choosing a heading level merely because its default size looks right."
         }
       ]
     },
     {
       "id": "css",
-      "title": "2. CSS computes presentation from rules",
-      "summary": "The cascade resolves competing declarations; layout then responds to content and context.",
-      "visual": {
-        "kind": "flow",
-        "title": "From selector to pixels",
-        "caption": "A declaration is only one input to the computed result.",
-        "nodes": [
-          {
-            "label": "Match",
-            "detail": "Selectors identify eligible elements."
-          },
-          {
-            "label": "Cascade",
-            "detail": "Origin, importance, layer, specificity, scope, and order resolve conflicts."
-          },
-          {
-            "label": "Compute",
-            "detail": "Relative values and inherited properties become usable values."
-          },
-          {
-            "label": "Layout",
-            "detail": "Formatting contexts size and place boxes."
-          },
-          {
-            "label": "Paint",
-            "detail": "Color, borders, text, effects, and layers are drawn."
-          }
-        ]
-      },
+      "title": "3. CSS turns rules into presentation",
+      "summary": "CSS lets several rules describe how HTML should look. The browser matches those rules, resolves conflicts, calculates values, lays out boxes, and paints them.",
       "blocks": [
         {
           "type": "code",
           "language": "CSS",
-          "code": "@container (inline-size > 36rem) {\n  .topic-card {\n    grid-template-columns: 10rem 1fr;\n  }\n}\n\n.title {\n  font-size: clamp(1.5rem, 1.1rem + 2cqi, 2.5rem);\n}",
-          "explanation": "The card adapts to its own container, while type scales within explicit root-relative bounds."
+          "code": ".guide-card {\n  background: white;\n  color: #172033;\n  padding: 1rem;\n  border-radius: 1rem;\n}\n\n.guide-card a {\n  color: blue;\n}",
+          "explanation": ".guide-card and .guide-card a are selectors: they describe which elements a rule can apply to. Inside each rule, properties such as background and padding name what is being set, and values such as white or 1rem supply the setting."
+        },
+        {
+          "type": "paragraph",
+          "text": "More than one CSS declaration can try to set the same property on the same element. The cascade is the browser's conflict-resolution process. It considers where a declaration came from, importance, cascade layers, selector specificity, scoping proximity where applicable, and source order to decide which declaration wins. You do not need to memorize every tie-breaker before using CSS, but you do need the mental model: the browser is resolving competing rules, not randomly ignoring one."
         },
         {
           "type": "table",
           "columns": [
-            "Tool",
-            "Best for",
-            "Common mistake"
+            "Layout tool",
+            "Use it when",
+            "Mental model"
           ],
           "rows": [
             [
               "Normal flow",
-              "Readable documents and vertical rhythm",
-              "Positioning everything manually."
+              "Content should follow the document's natural block/inline reading order.",
+              "Let content create the page before adding a layout system."
             ],
             [
               "Flexbox",
-              "One-dimensional alignment and distribution",
-              "Using it for a complex two-dimensional matrix."
+              "Items need alignment or distribution mainly along one dimension.",
+              "A row or column whose children share available space."
             ],
             [
               "Grid",
-              "Two-dimensional layout and named regions",
-              "Hard-coding tracks that cannot wrap."
+              "Rows and columns need to work together.",
+              "A two-dimensional set of tracks and areas."
             ],
             [
               "Container queries",
-              "Reusable components in different contexts",
-              "Using viewport width for every component decision."
+              "A reusable component should adapt to the space its container gives it.",
+              "Ask about the component's available context rather than only the whole viewport."
             ]
           ],
-          "caption": "Choose the layout mechanism that matches the relationship"
+          "caption": "Choose a layout mechanism from the relationship between the content, not from habit"
         },
         {
-          "type": "checklist",
-          "items": [
-            "Prefer intrinsic sizing, wrapping, minmax(), and auto-fit before breakpoints.",
-            "Use logical properties so flow can change direction.",
-            "Express design tokens once and reuse them.",
-            "Test text spacing, zoom, and long content."
-          ]
+          "type": "code",
+          "language": "CSS · later responsive refinement",
+          "code": ".guide-card {\n  container-type: inline-size;\n}\n\n@container (inline-size > 36rem) {\n  .guide-card {\n    grid-template-columns: 10rem 1fr;\n  }\n}\n\n.guide-card h2 {\n  font-size: clamp(1.5rem, 1.1rem + 2cqi, 2.5rem);\n}",
+          "explanation": "After the basic card works, container-type makes it eligible for size queries. The @container rule changes the card to two columns only when its own inline size is wider than 36rem. cqi is a container-query length unit; here it helps the heading scale with the container while clamp() keeps explicit minimum and maximum sizes."
+        },
+        {
+          "type": "checkpoint",
+          "prompt": "Two CSS rules set different colors on the same link. Is one rule automatically 'broken'?",
+          "answer": "No.",
+          "explanation": "CSS is designed to combine many rules. The cascade decides which applicable declaration wins. Debug by inspecting which declarations match and why one has priority instead of assuming the browser ignored CSS."
         }
       ]
     },
     {
       "id": "javascript",
-      "title": "3. JavaScript coordinates behavior and state",
-      "summary": "JavaScript adds behavior; it should not recreate capabilities the platform already provides.",
+      "title": "4. JavaScript reacts when the page needs behavior or changing state",
+      "summary": "JavaScript is a programming language. In a browser it can listen for events, calculate values, call browser APIs, request data, and change the document or application state.",
+      "visual": {
+        "kind": "flow",
+        "title": "A simple browser interaction",
+        "caption": "Events tell code that something happened; state represents what the application needs to remember; rendering or DOM changes make the result visible.",
+        "nodes": [
+          {
+            "label": "Event",
+            "detail": "Something happens, such as a click, form submit, timer, or network result."
+          },
+          {
+            "label": "Handler",
+            "detail": "JavaScript runs code registered to respond to that event."
+          },
+          {
+            "label": "State or calculation",
+            "detail": "The code determines what the application should now know or do."
+          },
+          {
+            "label": "Visible effect",
+            "detail": "The document, focus, URL, stored data, network request, or another browser capability changes."
+          }
+        ]
+      },
       "blocks": [
         {
           "type": "paragraph",
-          "text": "JavaScript runs tasks, reacts to events, calls browser APIs, updates state, and can change the DOM. Because it can delay interaction or fail entirely, essential content and navigation should not depend on unnecessary scripting."
+          "text": "The browser exposes the page to JavaScript through objects and APIs. The DOM, or Document Object Model, is the object representation of the document: elements become nodes JavaScript can find, inspect, and change. An event is a notification that something happened. State is the minimum information the application needs to remember so it can determine the current interface or behavior."
         },
         {
           "type": "code",
           "language": "JavaScript",
-          "code": "const button = document.querySelector(\"[data-toggle]\");\nconst panel = document.querySelector(\"#details\");\n\nbutton?.addEventListener(\"click\", () => {\n  const expanded = button.getAttribute(\"aria-expanded\") === \"true\";\n  button.setAttribute(\"aria-expanded\", String(!expanded));\n  panel.hidden = expanded;\n});",
-          "explanation": "The event changes one explicit state and keeps the exposed accessibility state synchronized."
+          "code": "const button = document.querySelector(\"[data-theme-toggle]\");\n\nbutton?.addEventListener(\"click\", () => {\n  const root = document.documentElement;\n  const isDark = root.dataset.theme === \"dark\";\n  root.dataset.theme = isDark ? \"light\" : \"dark\";\n});",
+          "explanation": "querySelector finds the button in the DOM. addEventListener registers a function for the click event. The function reads the current theme state from a data attribute, calculates the opposite value, and writes the new value back so CSS can present the corresponding theme."
         },
         {
           "type": "cards",
           "items": [
             {
               "title": "Events",
-              "summary": "Signals such as click, input, submit, and keydown.",
-              "whenToUse": "Use event delegation when many similar descendants behave alike.",
+              "summary": "Notifications such as click, input, submit, keydown, load, or a custom application event.",
               "example": "submit on a form"
             },
             {
               "title": "State",
-              "summary": "The minimum data needed to derive the current interface.",
-              "whenToUse": "Keep one owner for each state value.",
+              "summary": "Information that must persist long enough to determine what the application should currently show or do.",
+              "whenToUse": "Keep one clear owner for each state value and derive other values when possible.",
               "example": "selectedTopicId"
             },
             {
+              "title": "Browser APIs",
+              "summary": "Capabilities supplied by the browser rather than by the JavaScript language itself, such as the DOM, Fetch, storage, history, media, and timers.",
+              "example": "fetch('/api/topics')"
+            },
+            {
               "title": "Effects",
-              "summary": "Work outside pure calculation, such as network requests or storage.",
-              "whenToUse": "Isolate and clean up effects.",
-              "example": "fetch() and AbortController"
+              "summary": "Work that changes or communicates with something outside a pure calculation, such as a network request, timer, DOM mutation, or storage write.",
+              "whenToUse": "Keep effects focused and clean up long-lived subscriptions or in-flight work when their owner ends.",
+              "example": "fetch() with AbortController"
             }
           ]
         },
         {
           "type": "callout",
           "tone": "warning",
-          "title": "More JavaScript is not automatically more capability",
-          "body": "Native HTML and CSS often provide faster, more resilient, and more accessible behavior with no runtime bundle cost."
+          "title": "JavaScript is powerful, not automatically necessary",
+          "body": "If HTML or CSS already provides the required behavior, replacing it with custom JavaScript can add download, execution, failure, accessibility, and maintenance costs without adding user value."
         }
       ]
     },
     {
       "id": "cooperation",
-      "title": "4. The layers cooperate through stable boundaries",
-      "summary": "A component is easier to change when meaning, appearance, and behavior are not fused.",
+      "title": "5. Build the useful baseline first, then enhance it",
+      "summary": "A page is more resilient when meaning and core interaction exist before optional presentation or scripting is layered on top.",
       "blocks": [
         {
           "type": "steps",
           "items": [
             {
-              "title": "Start with the task",
-              "explanation": "Describe what the person must understand or do.",
-              "result": "The requirement is independent of technology."
+              "title": "Describe the user's task",
+              "explanation": "State what the person must understand or accomplish without naming a framework or implementation yet.",
+              "result": "The requirement is about the outcome instead of a favorite tool."
             },
             {
-              "title": "Choose semantic HTML",
-              "explanation": "Create a usable reading and interaction order.",
-              "result": "The component works with basic browser behavior."
+              "title": "Choose HTML that already matches the task",
+              "explanation": "Create a meaningful reading order and use native links, buttons, inputs, details, and other elements where they fit.",
+              "result": "The page has a usable structural baseline."
             },
             {
-              "title": "Add adaptive CSS",
-              "explanation": "Make the component legible in every available container.",
-              "result": "Presentation changes without changing meaning."
+              "title": "Add CSS for presentation and adaptation",
+              "explanation": "Improve hierarchy, layout, spacing, responsive behavior, states, and visual comfort without changing the underlying meaning.",
+              "result": "The interface adapts while its semantics stay stable."
             },
             {
-              "title": "Add only necessary JavaScript",
-              "explanation": "Introduce state or orchestration that native behavior cannot provide.",
-              "result": "Behavior is focused and testable."
+              "title": "Add JavaScript for requirements the platform baseline does not satisfy",
+              "explanation": "Introduce application state, asynchronous data, coordinated interaction, or other behavior only where it produces needed capability.",
+              "result": "The script has a clear reason to exist."
             },
             {
-              "title": "Verify every layer",
-              "explanation": "Test keyboard, pointer, touch, zoom, reduced motion, and failure states.",
-              "result": "The complete experience remains coherent."
+              "title": "Test the complete experience",
+              "explanation": "Use keyboard, pointer, touch, zoom, text spacing, reduced motion, errors, slow networks, and long content where applicable.",
+              "result": "The layers work together under real conditions."
             }
           ]
         },
         {
           "type": "callout",
-          "tone": "tip",
+          "tone": "definition",
           "title": "Progressive enhancement",
-          "body": "Begin with a functional baseline, then add capabilities when the browser supports them. This is a reliability strategy, not a preference for plain design."
-        },
-        {
-          "type": "checklist",
-          "items": [
-            "A link navigates; a button performs an action.",
-            "Visual order and reading order remain aligned.",
-            "State is represented in the DOM when users need to perceive it.",
-            "Loading and error states are part of the component contract."
-          ]
+          "body": "Progressive enhancement means starting with a functional baseline and layering richer capabilities on top when the platform and context support them. It is a reliability strategy, not a rule that pages should look plain."
         }
       ]
     },
     {
       "id": "responsive",
-      "title": "5. Responsive means content survives changing context",
-      "summary": "A responsive interface changes priorities and composition, not merely scale.",
+      "title": "6. Responsive design means the content keeps working as its context changes",
+      "summary": "A robust interface does not merely shrink. It reflows, reprioritizes, wraps, and sometimes changes composition while preserving meaning and access to controls.",
       "blocks": [
         {
           "type": "table",
           "columns": [
-            "Context",
-            "Layout job",
-            "Keep visible"
+            "Context change",
+            "What the design should do",
+            "What must not be lost"
           ],
           "rows": [
             [
               "Narrow container",
-              "Preserve primary content and actions in one clear sequence.",
-              "Identity, title, current task, primary action."
+              "Reflow into a clear primary sequence and wrap content/actions.",
+              "Identity, meaning, current task, and required actions."
             ],
             [
-              "Mid container",
-              "Reveal comparisons and local navigation when they reduce backtracking.",
-              "Primary content plus useful context."
+              "More available space",
+              "Add useful side-by-side context only when it reduces effort.",
+              "Readable line length and obvious hierarchy."
             ],
             [
-              "Wide container",
-              "Add parallel orientation without lengthening prose indefinitely.",
-              "Bounded reading measure and contextual rail."
+              "Zoom or larger text spacing",
+              "Reflow instead of clipping, overlapping, or hiding information.",
+              "All content and controls."
             ],
             [
-              "Zoom or text spacing",
-              "Reflow rather than clip, overlap, or truncate meaning.",
-              "All information and controls."
+              "Reduced motion preference",
+              "Remove or greatly reduce nonessential motion.",
+              "State changes and meaning through non-motion cues."
+            ],
+            [
+              "Different input methods",
+              "Keep focus visible and targets operable by keyboard, touch, pointer, and assistive technology.",
+              "Equivalent task completion."
             ]
           ],
-          "caption": "Adaptation decisions follow task priority"
+          "caption": "Responsive behavior follows content and task pressure, not a list of device brands"
         },
         {
           "type": "callout",
-          "tone": "note",
-          "title": "Breakpoints are evidence of content pressure",
-          "body": "Add a breakpoint where the current composition stops working, not at a device brand or model width."
+          "tone": "tip",
+          "title": "Breakpoints are evidence that the current composition needs to change",
+          "body": "Add a media or container breakpoint where content no longer fits or reads well. A device model is not the reason; the content relationship is."
         },
         {
           "type": "checklist",
           "items": [
-            "No page-level horizontal scrolling at 320 CSS pixels.",
-            "Interactive targets meet the required target-size outcome or spacing exception.",
-            "The design works in both orientations.",
-            "Motion and color do not carry the only meaning."
+            "Prefer natural flow, wrapping, minmax(), auto-fit, and intrinsic sizing before adding many breakpoints.",
+            "Use logical properties when the layout should support different writing directions.",
+            "Keep visual order aligned with reading and keyboard focus order.",
+            "Do not use color or motion as the only way to communicate a state.",
+            "Test narrow layouts, both orientations, zoom, text spacing, long translations, and realistic content."
           ]
         }
       ]
     },
     {
       "id": "build",
-      "title": "6. Build a small accessible disclosure",
-      "summary": "A complete example shows the separation of responsibilities.",
+      "title": "7. Put the model together with one disclosure component",
+      "summary": "A small native disclosure shows why choosing the platform capability first can remove code while improving resilience.",
       "blocks": [
         {
           "type": "code",
           "language": "HTML",
-          "code": "<details class=\"concept\">\n  <summary>What is the DOM?</summary>\n  <p>The browser model of the document that scripts can inspect and change.</p>\n</details>",
-          "explanation": "The details element provides keyboard interaction, state, and disclosure semantics without JavaScript."
+          "code": "<details class=\"concept\">\n  <summary>What is the DOM?</summary>\n  <p>The browser's object representation of the document.</p>\n</details>",
+          "explanation": "details and summary already define a disclosure control. The browser supplies open/closed state, keyboard activation, and native semantics. The paragraph is the content revealed when the details element is open."
         },
         {
           "type": "code",
           "language": "CSS",
-          "code": ".concept {\n  container-type: inline-size;\n  padding: clamp(1rem, 4cqi, 1.5rem);\n  border: 0.0625rem solid currentColor;\n  border-radius: 1rem;\n}\n\n.concept > summary {\n  min-block-size: 2.75rem;\n  cursor: pointer;\n}",
-          "explanation": "CSS improves presentation and target comfort while preserving native behavior."
+          "code": ".concept {\n  padding: 1rem;\n  border: 1px solid currentColor;\n  border-radius: 1rem;\n}\n\n.concept > summary {\n  min-block-size: 2.75rem;\n  cursor: pointer;\n  font-weight: 700;\n}",
+          "explanation": "CSS improves visual grouping and target comfort but leaves the disclosure behavior owned by the native HTML control."
         },
         {
-          "type": "callout",
-          "tone": "tip",
-          "title": "Add JavaScript only when the requirement expands",
-          "body": "For example, JavaScript may coordinate several disclosures or persist a preference. It is not needed merely to open and close this one."
+          "type": "checkpoint",
+          "prompt": "Do you need JavaScript just to make this one details/summary disclosure open and close?",
+          "answer": "No.",
+          "explanation": "The HTML element already provides that behavior. Add JavaScript only if a later requirement genuinely needs coordination or behavior the native element does not provide, such as synchronizing several disclosures with application state."
+        },
+        {
+          "type": "checklist",
+          "items": [
+            "HTML communicates the content and native interaction correctly before styling.",
+            "CSS changes presentation without creating fake semantics.",
+            "JavaScript has a named behavior or state requirement before it is added.",
+            "Loading, empty, error, disabled, and success states are designed when the component can enter them.",
+            "The component remains understandable at zoom, with keyboard navigation, and when content is longer than expected."
+          ]
         }
       ]
     }
   ],
   "glossary": [
     {
+      "term": "HTML",
+      "definition": "HyperText Markup Language, the web markup language used to describe document content, structure, and native controls."
+    },
+    {
       "term": "Semantic HTML",
-      "definition": "HTML that communicates content meaning and relationships through appropriate elements."
+      "definition": "Choosing HTML elements because their defined meaning and behavior match the content or task."
+    },
+    {
+      "term": "CSS",
+      "definition": "Cascading Style Sheets, the language used to describe presentation and layout for structured documents such as HTML."
     },
     {
       "term": "Cascade",
-      "definition": "The CSS conflict-resolution process that determines which declarations apply."
+      "definition": "The CSS conflict-resolution process that decides which applicable declarations win when multiple rules set the same property."
+    },
+    {
+      "term": "JavaScript",
+      "definition": "A programming language commonly used in browsers to react to events, coordinate state, call APIs, and change application behavior."
     },
     {
       "term": "DOM",
-      "definition": "The browser object model representing the document as nodes that APIs can inspect and change."
+      "definition": "The Document Object Model, the browser's object representation of the document that APIs and scripts can inspect and change."
     },
     {
       "term": "Event",
-      "definition": "A signal that something happened, such as input, navigation, or a network result."
+      "definition": "A notification that something happened, such as a click, input, submit, timer, or network-related result."
+    },
+    {
+      "term": "State",
+      "definition": "Information an application needs to remember so it can determine its current behavior or interface."
+    },
+    {
+      "term": "Browser API",
+      "definition": "A capability supplied by the browser environment to code, such as the DOM, Fetch, History, Storage, media, or timers."
     },
     {
       "term": "Progressive enhancement",
-      "definition": "Delivering a functional baseline first and adding supported capabilities without making the baseline unusable."
+      "definition": "Starting with a functional baseline and adding richer supported capabilities without making the baseline unusable."
     }
   ],
   "related": [
@@ -392,22 +477,27 @@
     {
       "label": "WHATWG HTML Living Standard",
       "url": "https://html.spec.whatwg.org/",
-      "accessed": "2026-08-05"
+      "accessed": "2026-08-07"
     },
     {
       "label": "W3C CSS Snapshot",
       "url": "https://www.w3.org/TR/css/",
-      "accessed": "2026-08-05"
+      "accessed": "2026-08-07"
     },
     {
       "label": "ECMAScript Language Specification",
       "url": "https://tc39.es/ecma262/",
-      "accessed": "2026-08-05"
+      "accessed": "2026-08-07"
     },
     {
       "label": "W3C WAI — Introduction to Web Accessibility",
       "url": "https://www.w3.org/WAI/fundamentals/accessibility-intro/",
-      "accessed": "2026-08-05"
+      "accessed": "2026-08-07"
+    },
+    {
+      "label": "MDN — Learn web development",
+      "url": "https://developer.mozilla.org/en-US/docs/Learn_web_development",
+      "accessed": "2026-08-07"
     }
   ]
 }
