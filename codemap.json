@@ -780,6 +780,49 @@
           "responsibility": "Append-only production verification map for the nine-topic curriculum"
         }
       ]
+    },
+    {
+      "turncount": 10,
+      "date": "2026-08-09",
+      "summary": "Model-agnostic topic quality North Star",
+      "areas": [
+        {
+          "path": "NORTHSTAR.md",
+          "responsibility": "Canonical, vendor-neutral definition of publishable topic quality, research discipline, self-audit, prohibitions, and instruction hierarchy without a rigid topic template"
+        },
+        {
+          "path": "AGENTS.md",
+          "responsibility": "Short open-format agent entry point that routes cross-vendor coding agents to the canonical governance and current authoring/registry context"
+        },
+        {
+          "path": "CLAUDE.md",
+          "responsibility": "Thin Claude Code project adapter importing the shared agent guidance, North Star, and content-authoring contract"
+        },
+        {
+          "path": "GEMINI.md",
+          "responsibility": "Thin Gemini project adapter directing topic work to the shared agent guidance, North Star, authoring contract, and registry"
+        },
+        {
+          "path": "docs/content-authoring.md",
+          "responsibility": "Current JSON/block/visual authoring contract explicitly subordinate to North Star educational quality and clarified as non-template dependency guidance"
+        },
+        {
+          "path": "README.md",
+          "responsibility": "Human-facing discovery of the canonical topic-governance hierarchy"
+        },
+        {
+          "path": "changelog.md",
+          "responsibility": "Append-only Turn 10 governance change record"
+        },
+        {
+          "path": "todo.md",
+          "responsibility": "Append-only Turn 10 governance completion record"
+        },
+        {
+          "path": "codemap.json",
+          "responsibility": "Append-only map of the model-agnostic topic-governance surfaces"
+        }
+      ]
     }
   ]
 }

@@ -255,3 +255,19 @@ This file is append-only. Add a new dated turn section; do not rewrite or remove
 - [x] Verify zero browser console errors and zero relevant failed neural runtime/model responses in the successful deployment-aware run.
 - [x] Preserve machine-readable evidence in `docs/turn8-live-qa-result.json`.
 
+## Turn 10 — 2026-08-09
+
+**turncount: 10**
+
+### Model-agnostic topic quality governance
+
+- [x] Research current cross-agent repository instruction conventions from authoritative OpenAI, Anthropic, Google, and AGENTS.md/AAIF sources.
+- [x] Add root `NORTHSTAR.md` as the canonical educational-quality constitution for all topic additions, rewrites, and curriculum expansions.
+- [x] Define observable quality dimensions rather than forcing one repeated topic template.
+- [x] Govern epistemic integrity, zero-gap continuity, mechanistic understanding, progressive depth, explanatory density, example integrity, decision literacy, failure literacy, production realism, visual semantics, human readability, accessibility, curriculum coherence, integration integrity, and consistency without sameness.
+- [x] Add a current-date authoritative-source research protocol, publication self-audit, hard prohibitions, and explicit instruction hierarchy.
+- [x] Add a short root `AGENTS.md` as the vendor-neutral agent entry point.
+- [x] Add thin `CLAUDE.md` and `GEMINI.md` adapters that route those agent ecosystems to the same North Star instead of duplicating policy.
+- [x] Update `docs/content-authoring.md` so it is explicitly subordinate to the North Star on educational quality and does not imply identical topic outlines.
+- [x] Update `README.md` so human contributors encounter the same governance hierarchy.
+- [x] Preserve topic JSON, generated discovery artifacts, application runtime, dependencies, and client-facing content unchanged.

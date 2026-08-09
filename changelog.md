@@ -233,3 +233,16 @@ Append-only project history. The highest recorded `turncount` is authoritative.
 - The successful run recorded zero browser console errors and zero relevant failed jsDelivr/Hugging Face neural runtime/model responses.
 - Preserved the machine-readable production result in `docs/turn8-live-qa-result.json`.
 
+## Turn 10 — 2026-08-09
+
+**turncount: 10**
+
+### Model-agnostic content quality governance
+
+- Added `NORTHSTAR.md` as the repository's canonical definition of topic quality, intentionally governing outcomes rather than imposing a fixed page/template silhouette.
+- Qualified the project's quality bar through observable dimensions covering truth/evidence, no-gap dependency continuity, causal/mechanistic teaching, beginner-to-production depth, examples, decisions/trade-offs, failure diagnosis, production constraints, meaningful visuals, human readability, accessibility, curriculum coherence, and repository integration.
+- Added an authoritative current-date research protocol and explicit prohibitions against guessing, stale model-memory claims, low-authority convenience sourcing, unexplained jargon/code, decorative visuals, unconditional “best” claims, filler, arbitrary omission, template cloning, and weakening validation/governance to force acceptance.
+- Added `AGENTS.md` as the short cross-agent entry point and thin `CLAUDE.md` / `GEMINI.md` adapters so multiple agent ecosystems converge on the same governing document rather than maintaining vendor-specific policy copies.
+- Updated `docs/content-authoring.md` to clarify that its sequence is a dependency/encoding contract rather than a mandatory heading template and that North Star quality remains the publication gate.
+- Updated `README.md` with the governance hierarchy for human contributors.
+- No topic source, generated discovery artifact, application code, dependency, narration behavior, or client-facing lesson content changed in this governance turn.
