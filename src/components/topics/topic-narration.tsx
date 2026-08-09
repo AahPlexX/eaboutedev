@@ -123,7 +123,7 @@ export function TopicNarration({ topic }: { topic: TopicDocument }) {
       setStatus("loading");
       setStatusMessage(audioUrlsRef.current.size === 0 ? "Preparing the neural voice…" : `Preparing passage ${index + 1}…`);
     }
-    ensureWorker().postMessage({ type: "synthesize", requestId, text: passages[index]!.text });
+    ensureWorker().postMessage({ type: "synthesize", requestId, text: passages[index]!.text }, { transfer: [] });
   }, [ensureWorker, loadCachedPassage, passages]);
 
   const prefetch = useCallback((index: number) => {
