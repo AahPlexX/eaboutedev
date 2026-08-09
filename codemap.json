@@ -649,6 +649,38 @@
           "responsibility": "Append-only Turn 9 map of the free neural narration architecture and its verification surfaces"
         }
       ]
+    },
+    {
+      "turncount": 9,
+      "sequence": 2,
+      "date": "2026-08-09",
+      "summary": "Neural narration release and deployed-browser verification",
+      "areas": [
+        {
+          "path": "docs/turn9-live-qa-result.json",
+          "responsibility": "Machine-readable production proof for deployed marker presence, real neural playback, pause/resume, synchronized transcript current state, desktop/mobile reflow, control sizing, relevant network success, and console cleanliness"
+        },
+        {
+          "path": "src/components/topics/topic-narration.tsx",
+          "responsibility": "Production-verified shared narration player now live on GitHub Pages"
+        },
+        {
+          "path": "src/workers/narration.worker.ts",
+          "responsibility": "Production-verified browser Worker synthesis path through exact Kokoro browser runtime and Hugging Face model assets"
+        },
+        {
+          "path": "changelog.md",
+          "responsibility": "Append-only Turn 9 sequence 2 merge, deployment, and live-browser verification outcome"
+        },
+        {
+          "path": "todo.md",
+          "responsibility": "Append-only Turn 9 sequence 2 closure of merge and live deployment verification gates"
+        },
+        {
+          "path": "codemap.json",
+          "responsibility": "Append-only mapping of production verification evidence for the released narration architecture"
+        }
+      ]
     }
   ]
 }

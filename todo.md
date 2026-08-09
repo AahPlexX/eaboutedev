@@ -209,3 +209,18 @@ This file is append-only. Add a new dated turn section; do not rewrite or remove
 - [ ] Merge PR #8 into authoritative `main`.
 - [ ] Confirm the resulting `main` Pages workflow completes verification, build, artifact upload, and deployment.
 - [ ] Inspect the deployed player on the live GitHub Pages site at desktop and narrow mobile widths and record any runtime/model-loading limitation truthfully.
+
+
+### Release outcome — Turn 9, sequence 2
+
+- [x] Squash-merge PR #8 into authoritative `main` at commit `e7199e67f0ad28c24e9eaa2b0f5d49aa30d10244`.
+- [x] Preserve the successful permanent pull-request gate after README and append-only record updates.
+- [x] Confirm the public GitHub Pages topic exposes the Turn 9 narration player.
+- [x] Run exact Playwright 1.62.0 against the deployed How the Web Works topic and start real neural synthesis successfully.
+- [x] Confirm Play, Pause, and Resume behavior against generated audio.
+- [x] Confirm exactly one current transcript passage while audio is active.
+- [x] Confirm no page-level horizontal overflow at 1440×900 or 390×844.
+- [x] Confirm the primary narration control measures 47.61 CSS pixels high.
+- [x] Confirm jsDelivr and Hugging Face neural runtime/model requests complete with zero relevant failed responses and zero browser console errors.
+- [x] Commit auditable live-browser evidence at `docs/turn9-live-qa-result.json`.
+- [x] Remove the ephemeral live-QA workflow after evidence was captured.

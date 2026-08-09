@@ -195,3 +195,13 @@ Append-only project history. The highest recorded `turncount` is authoritative.
 ### Release state
 
 - PR #8 remains the release gate until the append-only records and README changes pass the same permanent pull-request verification. After that, merge to authoritative `main`, verify the Pages deployment, and inspect the live player rather than treating CI alone as runtime proof.
+
+
+### Release and live-browser verification — Turn 9, sequence 2
+
+- Squash-merged PR #8 into authoritative `main` at `e7199e67f0ad28c24e9eaa2b0f5d49aa30d10244` only after the permanent post-record pull-request gate passed.
+- The deployed Pages topic exposed the new narration player and successfully started real Kokoro neural synthesis in headless Chromium through the same public jsDelivr and Hugging Face network path used by visitors.
+- Live controls passed Play, Pause, and Resume; the synchronized transcript exposed exactly one current passage; the primary control measured 47.61 CSS pixels high.
+- Desktop 1440×900 and mobile 390×844 both remained free of page-level horizontal overflow.
+- Relevant neural runtime/model traffic completed without failed HTTP responses, and the browser emitted zero console errors during the test.
+- Preserved the exact machine-readable result in `docs/turn9-live-qa-result.json` at commit `4b46c1ef3e3265c52b0aa97d3db615179ef513ed`, then removed the ephemeral QA workflow from `main`.
