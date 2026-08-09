@@ -13,7 +13,7 @@ test("Turn 8 generator replacement writes real newlines instead of literal backs
 
   assert.match(
     workflow,
-    /replacement = '''const catalog = topics\n\s*\.map\([^\n]+\)\n\s*\.toSorted/,
-    "workflow should define the replacement as a real multiline Python string",
+    /'const catalog = topics\\n\s*\.map\([^\n]+\)\\n\s*\.toSorted/,
+    "workflow should use Python newline escapes that materialize as real JavaScript line breaks",
   );
 });
