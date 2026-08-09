@@ -23,6 +23,21 @@ jobs:
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
+      - name: Apply minimal Turn 8 newline correction
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('.github/workflows/turn8-topic-expansion.yml')
+          text = path.read_text()
+          corrected = text.replace(
+              'const catalog = topics\\\\n  .map(({ document }, order) => createCatalogEntry(document, order))\\\\n  .toSorted',
+              'const catalog = topics\\n  .map(({ document }, order) => createCatalogEntry(document, order))\\n  .toSorted',
+          )
+          if corrected == text:
+              raise SystemExit('Expected double-escaped generator replacement was not found.')
+          path.write_text(corrected)
+          PY
       - name: Run Turn 8 workflow regression
         shell: bash
         run: |
@@ -32,11 +47,11 @@ jobs:
           set -e
           cp /tmp/result.txt docs/turn8-workflow-regression-result.txt
           echo "$status" > docs/turn8-workflow-regression-status.txt
-      - name: Commit regression evidence
+      - name: Commit correction and regression evidence
         shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/turn8-workflow-regression-result.txt docs/turn8-workflow-regression-status.txt
-          git commit -m "test: record Turn 8 workflow regression result"
+          git add .github/workflows/turn8-topic-expansion.yml docs/turn8-workflow-regression-result.txt docs/turn8-workflow-regression-status.txt
+          git commit -m "fix: correct Turn 8 generator newline mutation"
           git push
