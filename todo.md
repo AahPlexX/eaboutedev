@@ -243,3 +243,15 @@ This file is append-only. Add a new dated turn section; do not rewrite or remove
 
 - [ ] Continue with another 2–5 dependency-ordered topics without weakening per-guide completeness.
 - [ ] Re-check search coverage, recommended order, related links, generated artifacts, narration inheritance, and internal docs in the same turn.
+
+### Production verification — Turn 8, sequence 2
+
+- [x] Wait for the public Pages deployment to serve the new Node.js topic asset and a nine-topic catalog before browser assertions.
+- [x] Verify Node.js and Package Management, TypeScript, React, and Vite routes render on the public GitHub Pages site.
+- [x] Verify all four new routes inherit the shared neural narration player.
+- [x] Verify all four routes have no page-level horizontal overflow at 1440×900 and 390×844.
+- [x] Verify the React guide starts real neural narration and supports Pause and Resume.
+- [x] Verify exactly one React transcript passage is current during playback.
+- [x] Verify zero browser console errors and zero relevant failed neural runtime/model responses in the successful deployment-aware run.
+- [x] Preserve machine-readable evidence in `docs/turn8-live-qa-result.json`.
+

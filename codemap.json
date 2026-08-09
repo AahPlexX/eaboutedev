@@ -740,6 +740,46 @@
           "responsibility": "Append-only map of the expanded curriculum architecture"
         }
       ]
+    },
+    {
+      "turncount": 8,
+      "sequence": 2,
+      "date": "2026-08-09",
+      "summary": "Nine-topic production deployment and live browser verification",
+      "areas": [
+        {
+          "path": "docs/turn8-live-qa-result.json",
+          "responsibility": "Machine-readable proof that the public nine-topic deployment serves all four new routes, responsive layouts, inherited narration, and real React neural playback without browser/runtime network errors"
+        },
+        {
+          "path": "public/content/topics/nodejs-and-package-management.json",
+          "responsibility": "Production-verified new Node.js and package-management guide"
+        },
+        {
+          "path": "public/content/topics/typescript.json",
+          "responsibility": "Production-verified new TypeScript guide"
+        },
+        {
+          "path": "public/content/topics/react.json",
+          "responsibility": "Production-verified new React guide including live neural narration"
+        },
+        {
+          "path": "public/content/topics/vite.json",
+          "responsibility": "Production-verified new Vite guide"
+        },
+        {
+          "path": "changelog.md",
+          "responsibility": "Append-only Turn 8 production verification and deployment-race diagnosis"
+        },
+        {
+          "path": "todo.md",
+          "responsibility": "Append-only Turn 8 production QA completion checklist"
+        },
+        {
+          "path": "codemap.json",
+          "responsibility": "Append-only production verification map for the nine-topic curriculum"
+        }
+      ]
     }
   ]
 }

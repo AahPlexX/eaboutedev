@@ -223,3 +223,13 @@ Append-only project history. The highest recorded `turncount` is authoritative.
 
 - The first staged Turn 8 run failed before content commit because its workflow double-escaped JavaScript newlines in a generated source replacement.
 - Added a regression test, reproduced that defect as RED, corrected the source mutation, and required the full project gate to pass before release.
+
+### Production verification — Turn 8, sequence 2
+
+- The first live browser attempt correctly exposed a deployment race: rapid verification commits canceled in-progress Pages deployments because the permanent Pages workflow uses `cancel-in-progress: true`.
+- Replaced timing assumptions with a deployment-aware gate that first required the public Node.js topic JSON and nine-topic catalog to be available before browser checks began.
+- The successful Playwright 1.62.0 run rendered all four new guides, confirmed the shared narration player on each, and found no horizontal overflow at 1440×900 or 390×844.
+- The React guide generated real neural audio and passed Play/Pause/Resume with exactly one current transcript passage.
+- The successful run recorded zero browser console errors and zero relevant failed jsDelivr/Hugging Face neural runtime/model responses.
+- Preserved the machine-readable production result in `docs/turn8-live-qa-result.json`.
+
