@@ -104,6 +104,49 @@
 .topic-prerequisites p { margin: 0; font-size: 0.78rem; font-weight: 850; }
 .topic-prerequisites ul { display: grid; gap: 0.3rem; margin: 0; padding-inline-start: 1.2rem; color: var(--muted-foreground); font-size: 0.82rem; }
 
+.topic-narration {
+  display: grid;
+  gap: 1.25rem;
+  margin-block: clamp(2rem, 5vw, 4rem);
+  border: 0.0625rem solid color-mix(in oklch, var(--topic-accent, var(--primary)) 30%, var(--border));
+  border-radius: 1.25rem;
+  background: color-mix(in oklch, var(--topic-accent, var(--primary)) 5%, var(--card));
+  padding: clamp(1rem, 3vw, 1.5rem);
+}
+
+.narration-header { display: flex; align-items: flex-start; gap: 1rem; }
+.narration-header h2, .narration-header p { margin-block: 0; }
+.narration-icon { display: grid; block-size: 2.75rem; inline-size: 2.75rem; flex: 0 0 auto; place-items: center; border-radius: 999rem; background: color-mix(in oklch, var(--topic-accent, var(--primary)) 14%, var(--card)); }
+.narration-disclosure { margin: 0; color: var(--muted-foreground); font-size: 0.9rem; line-height: 1.65; }
+.narration-controls { display: grid; grid-template-columns: max-content minmax(12rem, 1fr); align-items: end; gap: 0.75rem; }
+.narration-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+.narration-control { min-block-size: 2.75rem; }
+.narration-position { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.35rem 0.75rem; align-items: center; }
+.narration-position label { grid-column: 1 / -1; font-size: 0.78rem; font-weight: 800; }
+.narration-position input { inline-size: 100%; accent-color: var(--topic-accent, var(--primary)); }
+.narration-position span { color: var(--muted-foreground); font-size: 0.78rem; white-space: nowrap; }
+.narration-status { display: grid; gap: 0.45rem; min-block-size: 1.6rem; color: var(--muted-foreground); font-size: 0.82rem; }
+.narration-status progress { inline-size: 100%; max-inline-size: 24rem; accent-color: var(--topic-accent, var(--primary)); }
+.narration-now { display: grid; gap: 0.35rem; border-inline-start: 0.25rem solid var(--topic-accent, var(--primary)); padding: 0.8rem 1rem; background: var(--card); }
+.narration-now > span { color: var(--topic-accent, var(--primary)); font-size: 0.72rem; font-weight: 900; letter-spacing: 0.08em; text-transform: uppercase; }
+.narration-now p { margin: 0; color: var(--muted-foreground); }
+.narration-transcript { display: grid; gap: 0.5rem; max-block-size: 28rem; margin: 0; overflow-y: auto; overscroll-behavior: contain; padding: 0.25rem; list-style: none; }
+.narration-transcript li { border: 0.0625rem solid var(--border); border-radius: 0.9rem; background: var(--card); }
+.narration-transcript li.is-current { border-color: var(--topic-accent, var(--primary)); box-shadow: inset 0.25rem 0 0 var(--topic-accent, var(--primary)); }
+.narration-transcript-entry { display: grid; grid-template-columns: 2rem minmax(0, 1fr); inline-size: 100%; min-block-size: 2.75rem; align-items: start; gap: 0.75rem; border: 0; border-radius: inherit; background: transparent; color: inherit; padding: 0.8rem; text-align: start; cursor: pointer; }
+.narration-transcript-entry:hover { background: color-mix(in oklch, var(--topic-accent, var(--primary)) 7%, transparent); }
+.narration-transcript-entry > span:last-child { display: grid; gap: 0.2rem; }
+.narration-transcript-entry strong { font-size: 0.82rem; }
+.narration-transcript-entry span span { color: var(--muted-foreground); font-size: 0.84rem; line-height: 1.55; }
+.narration-transcript-index { display: grid; block-size: 2rem; inline-size: 2rem; place-items: center; border-radius: 999rem; background: var(--muted); color: var(--muted-foreground); font-size: 0.72rem; font-weight: 850; }
+
+@media (max-width: 40rem) {
+  .narration-controls { grid-template-columns: 1fr; }
+  .narration-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .narration-control { inline-size: 100%; }
+  .narration-header { display: grid; }
+}
+
 @media (max-width: 31rem) {
   .visual-panel-layers .visual-node-wrap { margin-inline-start: 0; }
 }
@@ -112,5 +155,11 @@
   .checkpoint,
   .visual-panel-layers .visual-node,
   .visual-panel-comparison .visual-step,
-  .cycle-repeat-mark { border-color: CanvasText; }
+  .cycle-repeat-mark,
+  .topic-narration,
+  .narration-now,
+  .narration-transcript li,
+  .narration-transcript li.is-current { border-color: CanvasText; }
+
+  .narration-transcript li.is-current { outline: 0.125rem solid Highlight; outline-offset: 0.125rem; }
 }
