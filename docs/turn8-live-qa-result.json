@@ -1,0 +1,14 @@
+{
+  "checkedAt": "2026-08-09T20:39:24.541Z",
+  "playwright": "1.62.0",
+  "routes": [],
+  "reactNeuralStarted": false,
+  "reactPauseWorked": false,
+  "reactResumeWorked": false,
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 ()"
+  ],
+  "relevantFailedResponses": [],
+  "success": false,
+  "failure": "Deployed route did not render expected guide: nodejs-and-package-management"
+}
