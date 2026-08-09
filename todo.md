@@ -181,3 +181,31 @@ This file is append-only. Add a new dated turn section; do not rewrite or remove
 
 - [ ] Independently confirm the latest permanent GitHub Pages deployment completes after the clean `main` updates.
 - [ ] Inspect the deployed catalog/search interaction at `https://aahplexx.github.io/eaboutedev/`.
+
+## Turn 9 — 2026-08-09
+
+**turncount: 9**
+
+### Free neural read-aloud implementation
+
+- [x] Research the current browser speech and on-device neural TTS options from authoritative specifications, platform documentation, and upstream model/runtime sources.
+- [x] Reject browser `speechSynthesis` as the quality-critical primary path because its available voices are supplied by the visitor's browser/device rather than controlled by this product.
+- [x] Select exact `kokoro-js@1.2.1` with Kokoro-82M v1.0 ONNX `q8`, WebAssembly, and the `af_heart` voice for the free client-side baseline.
+- [x] Commit the feature specification and task-by-task implementation plan under `docs/superpowers/`.
+- [x] Add a pure `TopicDocument` narration projector covering every current content-block type in learner reading order, with bounded synthesis passages.
+- [x] Keep literal source code and raw URLs visible instead of reading punctuation/link text aloud while retaining their learner-facing explanations and source labels.
+- [x] Add a lazy module Web Worker that loads the exact neural runtime/model only after intentional narration use and synthesizes passages outside the React/UI thread.
+- [x] Add shared automatic topic playback with Play/Pause/Resume, Restart, range seek, retry, first-use progress, current passage, and clickable visible transcript.
+- [x] Keep narration completely free of API keys, accounts, paid TTS requests, backend infrastructure, billing paths, autoplay, and system-voice fallback.
+- [x] Preserve responsive wrapping, 2.75rem control targets, keyboard controls, polite status announcements, current-passage semantics, forced-colors support, and readable-topic fallback on narration failure.
+- [x] Prove the focused red/green narration contract locally with 7/7 passing tests.
+- [x] Pass GitHub-hosted frozen-lockfile installation and generated-artifact drift verification.
+- [x] Correct Oxlint's documented worker-context `postMessage` false positive without weakening the lint configuration by using the standards-defined worker transfer-options overload.
+- [x] Pass GitHub-hosted `pnpm check`: five-topic validation, exact-version validation, generated/discovery validation, 32/32 tests, TypeScript, Oxlint with 0 warnings/errors, and the Vite 8 production build.
+
+### Remaining release verification
+
+- [ ] Pass the final pull-request gate after documentation/project-record updates.
+- [ ] Merge PR #8 into authoritative `main`.
+- [ ] Confirm the resulting `main` Pages workflow completes verification, build, artifact upload, and deployment.
+- [ ] Inspect the deployed player on the live GitHub Pages site at desktop and narrow mobile widths and record any runtime/model-loading limitation truthfully.
