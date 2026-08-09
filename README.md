@@ -11,6 +11,18 @@ A visual, plain-language, deeply sourced reference for understanding web develop
 - **Generated discovery artifacts:** topic source documents generate the catalog, search index, homepage bootstrap, and topic registry together.
 - **Free neural read-aloud:** every topic automatically exposes user-initiated natural narration with transcript navigation without a paid speech API or account.
 
+## Governing topic quality
+
+`NORTHSTAR.md` is the canonical, model-agnostic quality standard for every topic addition, rewrite, and curriculum expansion. It defines the qualities a publishable guide must preserve—truthfulness, zero-gap learning continuity, mechanistic depth, real-world applicability, source discipline, accessibility, curriculum coherence, and repository integration—without forcing unrelated subjects into one rigid outline.
+
+Agent-specific entry files (`AGENTS.md`, `CLAUDE.md`, and `GEMINI.md`) intentionally stay small and route different coding-agent ecosystems back to the same North Star so the standard does not drift by model/vendor.
+
+For topic work, read in this order:
+
+1. `NORTHSTAR.md`
+2. `docs/content-authoring.md`
+3. `docs/topic-registry.json` and the relevant existing topic sources
+
 ## Stack
 
 - React 19 and TypeScript 7
@@ -46,7 +58,7 @@ Authoritative topic files live in `public/content/topics/<slug>.json`. Run `pnpm
 
 The validator requires unique slugs, complete sections, supported visual and content block types, valid source dates, valid related-topic references, and a maximum of 5,000 topics. Discovery validation separately enforces generated-asset size and eager-loading boundaries.
 
-See `docs/content-authoring.md` before adding a topic.
+Read `NORTHSTAR.md` before topic work, then use `docs/content-authoring.md` for the current file/block contract.
 
 ## Free neural read-aloud
 
