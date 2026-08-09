@@ -1,0 +1,457 @@
+{
+  "version": 1,
+  "slug": "vite",
+  "title": "Vite",
+  "eyebrow": "Frontend build pipeline · Development server, module graph, transformation, and production output",
+  "summary": "Start with the practical problem of serving many modern frontend modules during development, then learn Vite’s dev server, ESM module graph, HMR, dependency handling, asset transforms, TypeScript transpilation boundary, configuration, plugins, environment modes, production build, base paths, code splitting, and deployment diagnosis.",
+  "category": "Tooling",
+  "level": "Intermediate",
+  "estimatedMinutes": 40,
+  "icon": "⚡",
+  "accent": "oklch(0.74 0.17 95)",
+  "aliases": [
+    "vite js",
+    "vite build tool",
+    "dev server",
+    "frontend bundler",
+    "hmr",
+    "hot module replacement"
+  ],
+  "keywords": [
+    "vite",
+    "dev server",
+    "esm",
+    "module graph",
+    "hmr",
+    "dependency prebundle",
+    "rolldown",
+    "transpile",
+    "typescript",
+    "assets",
+    "css",
+    "plugin",
+    "config",
+    "import.meta.env",
+    "mode",
+    "base",
+    "build",
+    "code splitting",
+    "dynamic import",
+    "static deploy"
+  ],
+  "prerequisites": [
+    "HTML, CSS, and JavaScript is helpful because Vite transforms and serves those browser resources.",
+    "Node.js and Package Management is helpful because Vite is installed and invoked as project tooling.",
+    "TypeScript is helpful for understanding why Vite can transform .ts files without performing type checking."
+  ],
+  "learningOutcomes": [
+    "Explain what Vite does differently during development and production, including native ESM, HMR, transformation, and Rolldown builds.",
+    "Trace an import, asset, environment value, or base-path setting from source through the dev server or production build.",
+    "Diagnose common Vite failures involving TypeScript checking, client-exposed environment values, aliases, stale modules, chunk loading, and nested deployment paths."
+  ],
+  "heroVisual": {
+    "kind": "comparison",
+    "title": "Development and production optimize for different jobs",
+    "caption": "Vite serves and transforms modules quickly during development, then creates optimized static production output for deployment.",
+    "nodes": [
+      {
+        "label": "Development",
+        "detail": "A dev server responds to browser module requests, transforms source on demand, manages dependencies, and sends HMR updates."
+      },
+      {
+        "label": "Production build",
+        "detail": "The build command follows the module graph and emits optimized deployable assets, including code-split chunks and rewritten asset URLs."
+      }
+    ]
+  },
+  "sections": [
+    {
+      "id": "why-build-tool",
+      "title": "1. A modern source tree is not automatically the same thing as deployable browser files",
+      "summary": "A build tool coordinates source transformation, dependency resolution, development feedback, and production optimization so application source can be organized for developers and still ship efficiently.",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "A small page can load one JavaScript file directly. A larger application may import hundreds of modules, TypeScript, CSS, images, framework transforms, and third-party packages. During development you want startup and edits to appear quickly. In production you want stable, cacheable, optimized assets with correct public URLs. Those are related but different workloads."
+        },
+        {
+          "type": "table",
+          "columns": [
+            "Concern",
+            "Development priority",
+            "Production priority"
+          ],
+          "rows": [
+            [
+              "Startup",
+              "Begin serving immediately.",
+              "Not relevant to visitors; output already exists."
+            ],
+            [
+              "Changes",
+              "Update the smallest affected module quickly.",
+              "Produce deterministic optimized assets."
+            ],
+            [
+              "Modules",
+              "Serve source modules on demand through ESM.",
+              "Bundle/chunk the dependency graph for efficient delivery."
+            ],
+            [
+              "Debugging",
+              "Preserve useful source mapping and fast feedback.",
+              "Optimize while keeping deploy-time observability appropriate."
+            ]
+          ],
+          "caption": "Vite has separate dev and build paths because the constraints are different"
+        }
+      ]
+    },
+    {
+      "id": "dev-server",
+      "title": "2. During development, Vite follows the browser’s ESM requests and updates the module graph",
+      "summary": "The dev server transforms source as requested instead of rebuilding one complete application bundle before every edit.",
+      "visual": {
+        "kind": "flow",
+        "title": "One module request through the dev server",
+        "caption": "The browser asks for a module; Vite resolves and transforms it; imports create more requests; HMR later invalidates only affected graph paths.",
+        "nodes": [
+          {
+            "label": "Browser requests /src/main.tsx",
+            "detail": "Native ESM import statements tell the browser which modules are needed."
+          },
+          {
+            "label": "Vite resolves + transforms",
+            "detail": "The dev server applies relevant transforms and resolves module specifiers."
+          },
+          {
+            "label": "Browser requests dependencies",
+            "detail": "Imports expand the active module graph."
+          },
+          {
+            "label": "Edit + HMR",
+            "detail": "Vite invalidates affected modules and sends a hot update when the framework/module boundary supports it."
+          }
+        ]
+      },
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "Hot Module Replacement, or HMR, updates modules in a running page without requiring a full reload when an integration can preserve the surrounding application state. HMR is a development feedback feature; it is not how production users receive code."
+        },
+        {
+          "type": "checkpoint",
+          "prompt": "When you edit one component in development, does Vite need to rebuild one giant production bundle before the browser can see the change?",
+          "answer": "No.",
+          "explanation": "The development path is module-oriented. Vite invalidates the affected part of the module graph and can deliver a targeted HMR update instead of running the full production-build workflow."
+        }
+      ]
+    },
+    {
+      "id": "transforms",
+      "title": "3. Vite transforms TypeScript, CSS, and assets, but transformation is not the same as validation",
+      "summary": "Different source types enter the module graph through built-in behavior or plugins, and each transformation has a distinct responsibility.",
+      "blocks": [
+        {
+          "type": "code",
+          "language": "TypeScript",
+          "code": "import \"./styles.css\";\nimport logoUrl from \"./logo.svg\";\n\nconst message: string = \"Ready\";\n\ndocument.querySelector(\"#app\")!.innerHTML = `\n  <img src=\"${logoUrl}\" alt=\"\">\n  <p>${message}</p>\n`;",
+          "explanation": "The TypeScript module imports CSS and an asset URL. Vite can transform the .ts syntax, process the CSS relationship, and make the imported asset resolvable in dev and production."
+        },
+        {
+          "type": "callout",
+          "tone": "warning",
+          "title": "Vite transpiles TypeScript; it does not type-check it",
+          "body": "A .ts file can be transformed quickly while still containing a TypeScript type error. Run tsc or another checker separately in development/CI when type correctness is part of your quality gate."
+        },
+        {
+          "type": "cards",
+          "items": [
+            {
+              "title": "Source transform",
+              "summary": "Converts syntax or file types into modules the browser/build pipeline can consume."
+            },
+            {
+              "title": "Type checking",
+              "summary": "Analyzes TypeScript type relationships for contradictions; this is a separate responsibility."
+            },
+            {
+              "title": "Asset handling",
+              "summary": "Turns imported files into URLs or inlined content according to asset rules and build thresholds."
+            },
+            {
+              "title": "CSS handling",
+              "summary": "Tracks CSS imported by modules and emits or injects appropriate styles for the current environment."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "config-and-plugins",
+      "title": "4. Configuration changes defaults; plugins extend how modules are resolved, loaded, or transformed",
+      "summary": "Keep configuration small and evidence-driven because every alias, plugin, transform, or special environment rule becomes part of the project’s build contract.",
+      "blocks": [
+        {
+          "type": "code",
+          "language": "TypeScript · vite.config.ts",
+          "code": "import { defineConfig } from \"vite\";\nimport react from \"@vitejs/plugin-react\";\n\nexport default defineConfig({\n  plugins: [react()],\n  base: \"/my-app/\",\n  resolve: {\n    alias: { \"@\": \"/src\" }\n  }\n});",
+          "explanation": "The React plugin adds framework-specific transforms and refresh behavior. base tells the production build that the app is served under /my-app/. An alias gives a module specifier a project-specific resolution rule."
+        },
+        {
+          "type": "paragraph",
+          "text": "A plugin participates in defined build-tool hooks such as resolving an import, loading a virtual or physical module, or transforming source. Plugins are powerful because they can affect the entire module graph; prefer official or well-understood plugins and remove ones that no longer solve a real requirement."
+        },
+        {
+          "type": "callout",
+          "tone": "tip",
+          "title": "Keep dev and build semantics aligned",
+          "body": "A plugin or alias that only works in one environment creates delayed failures. When configuration changes resolution or transformation, verify both the dev server and the production build."
+        }
+      ]
+    },
+    {
+      "id": "env",
+      "title": "5. Vite modes choose configuration context; client-exposed environment values become public build input",
+      "summary": "Vite loads mode-specific environment files and exposes selected values through import.meta.env, but client-exposed variables must never be treated as secrets.",
+      "blocks": [
+        {
+          "type": "code",
+          "language": "Environment + JavaScript",
+          "code": "# .env.production\nVITE_API_BASE=https://api.example.com\nSERVER_SECRET=do-not-expose\n\n// client source\nconst base = import.meta.env.VITE_API_BASE;",
+          "explanation": "VITE_API_BASE is deliberately exposed to client code and becomes part of the built application. SERVER_SECRET is not exposed by the default VITE_ prefix rule. A client-safe URL is configuration; a credential is not."
+        },
+        {
+          "type": "table",
+          "columns": [
+            "Value",
+            "Meaning"
+          ],
+          "rows": [
+            [
+              "import.meta.env.MODE",
+              "The active Vite mode name."
+            ],
+            [
+              "import.meta.env.DEV",
+              "Whether the current Vite environment is development."
+            ],
+            [
+              "import.meta.env.PROD",
+              "Whether the current Vite environment is production."
+            ],
+            [
+              "import.meta.env.BASE_URL",
+              "The public base path derived from Vite configuration."
+            ]
+          ],
+          "caption": "Built-in environment constants describe how Vite is running or building"
+        },
+        {
+          "type": "checkpoint",
+          "prompt": "Is VITE_PRIVATE_API_KEY a safe place for a secret just because the value came from an .env file?",
+          "answer": "No.",
+          "explanation": "The VITE_ prefix is specifically for values exposed to client-side source. Client bundles are delivered to users, so a secret must remain behind a trusted server or equivalent protected boundary."
+        }
+      ]
+    },
+    {
+      "id": "build",
+      "title": "6. The production build follows the module graph and emits optimized static assets",
+      "summary": "vite build creates deployable output, rewrites asset references, creates chunks, and respects the configured public base path.",
+      "blocks": [
+        {
+          "type": "steps",
+          "items": [
+            {
+              "title": "Start from the application entry",
+              "explanation": "For a normal app, index.html and its module references establish the build entry.",
+              "result": "The build knows where the application graph begins."
+            },
+            {
+              "title": "Resolve and transform the graph",
+              "explanation": "Imports, plugins, CSS, TypeScript transforms, and assets are processed for production.",
+              "result": "The complete reachable production graph is known."
+            },
+            {
+              "title": "Split and optimize output",
+              "explanation": "Shared and dynamically imported code can become separate chunks; production optimization and minification are applied.",
+              "result": "Deployable files are emitted into the output directory."
+            },
+            {
+              "title": "Rewrite public URLs",
+              "explanation": "Asset references account for the configured base path.",
+              "result": "Static hosting under the intended URL prefix can find its assets."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "JavaScript · dynamic import",
+          "code": "const settingsModule = await import(\"./settings.js\");\nsettingsModule.openSettings();",
+          "explanation": "A dynamic import introduces an asynchronous module boundary. In a production build it can become a separately loaded chunk instead of being required in the initial application chunk."
+        },
+        {
+          "type": "checkpoint",
+          "prompt": "Your app works at / during local development but is deployed at /my-app/ and all built assets 404. Which build setting should you inspect first?",
+          "answer": "The Vite base path and the actual hosting path.",
+          "explanation": "The production build rewrites asset URLs using base. A correct application can still fail when the generated URLs point at the wrong public root."
+        }
+      ]
+    },
+    {
+      "id": "deploy-and-debug",
+      "title": "7. Debug Vite by locating whether the failure is resolution, transformation, runtime behavior, or deployment",
+      "summary": "The fastest diagnosis starts by identifying the stage that first produced the wrong result instead of repeatedly clearing caches or changing configuration.",
+      "blocks": [
+        {
+          "type": "table",
+          "columns": [
+            "Symptom",
+            "First place to inspect",
+            "Typical evidence"
+          ],
+          "rows": [
+            [
+              "Import cannot be resolved",
+              "Specifier, alias, package exports, file path",
+              "Dev server/build resolution error."
+            ],
+            [
+              "Type error not caught by Vite",
+              "Separate TypeScript check",
+              "tsc fails while transformation succeeds."
+            ],
+            [
+              "Environment value is undefined",
+              "Mode, .env filename, prefix, process environment",
+              "import.meta.env lacks the expected key."
+            ],
+            [
+              "Production asset 404",
+              "base path and hosting location",
+              "HTML or JS points at the wrong public URL."
+            ],
+            [
+              "Lazy chunk fails after deployment",
+              "Deployed artifact completeness and cache/version behavior",
+              "Network panel shows missing or stale chunk URL."
+            ],
+            [
+              "HMR behaves oddly",
+              "Plugin/framework HMR boundary and module side effects",
+              "Full reload works but hot replacement cannot preserve the module safely."
+            ]
+          ],
+          "caption": "Locate the failing pipeline stage before changing build configuration"
+        },
+        {
+          "type": "checklist",
+          "items": [
+            "Run the production build in CI rather than assuming the dev server proves deployability.",
+            "Serve or preview the built output when diagnosing production-only behavior.",
+            "Keep client secrets out of VITE_-exposed variables.",
+            "Set base to the real deployment prefix for nested static hosting such as project GitHub Pages.",
+            "Keep type checking as a separate explicit gate for TypeScript projects.",
+            "Add plugins only for named transformation or integration requirements.",
+            "Measure bundle/chunk problems before adding manual chunking or complicated optimization rules."
+          ]
+        }
+      ]
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Build tool",
+      "definition": "Software that coordinates development serving, source transformation, dependency resolution, and production asset generation."
+    },
+    {
+      "term": "ES module",
+      "definition": "The standard JavaScript module format built around import and export."
+    },
+    {
+      "term": "Module graph",
+      "definition": "The network of modules connected by imports and other tracked resource relationships."
+    },
+    {
+      "term": "Dev server",
+      "definition": "A development-time HTTP server that serves and transforms source while providing fast feedback features."
+    },
+    {
+      "term": "HMR",
+      "definition": "Hot Module Replacement: updating affected modules in a running page without necessarily performing a full reload."
+    },
+    {
+      "term": "Transpilation",
+      "definition": "Transforming source syntax into another JavaScript form without necessarily performing semantic type checking."
+    },
+    {
+      "term": "Plugin",
+      "definition": "An extension that participates in Vite’s resolution, loading, transformation, or build pipeline through supported hooks."
+    },
+    {
+      "term": "Mode",
+      "definition": "A named Vite configuration context such as development, production, or a custom staging mode."
+    },
+    {
+      "term": "Base path",
+      "definition": "The public URL prefix Vite uses when generating or resolving built application asset URLs."
+    },
+    {
+      "term": "Chunk",
+      "definition": "A separately emitted JavaScript output unit produced from part of the module graph."
+    },
+    {
+      "term": "Code splitting",
+      "definition": "Dividing application code into separately loadable chunks instead of requiring all code in the initial payload."
+    },
+    {
+      "term": "Rolldown",
+      "definition": "The Rust-based bundler used by current Vite production builds."
+    }
+  ],
+  "related": [
+    "html-css-and-javascript",
+    "nodejs-and-package-management",
+    "typescript",
+    "react",
+    "git-and-github"
+  ],
+  "sources": [
+    {
+      "label": "Vite — Getting Started",
+      "url": "https://vite.dev/guide/",
+      "accessed": "2026-08-08"
+    },
+    {
+      "label": "Vite — Why Vite",
+      "url": "https://vite.dev/guide/why",
+      "accessed": "2026-08-08"
+    },
+    {
+      "label": "Vite — Features",
+      "url": "https://vite.dev/guide/features.html",
+      "accessed": "2026-08-08"
+    },
+    {
+      "label": "Vite — Env Variables and Modes",
+      "url": "https://vite.dev/guide/env-and-mode",
+      "accessed": "2026-08-08"
+    },
+    {
+      "label": "Vite — Building for Production",
+      "url": "https://vite.dev/guide/build",
+      "accessed": "2026-08-08"
+    },
+    {
+      "label": "Vite — Plugin API",
+      "url": "https://vite.dev/guide/api-plugin",
+      "accessed": "2026-08-08"
+    },
+    {
+      "label": "Vite — Deploying a Static Site",
+      "url": "https://vite.dev/guide/static-deploy",
+      "accessed": "2026-08-08"
+    }
+  ]
+}

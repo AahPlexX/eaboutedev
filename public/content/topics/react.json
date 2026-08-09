@@ -1,0 +1,393 @@
+{
+  "version": 1,
+  "slug": "react",
+  "title": "React",
+  "eyebrow": "UI state and composition · Describe what the interface should look like for the current data",
+  "summary": "Build one small interactive interface from components and props, then follow React’s actual model through events, state snapshots, render and commit, shared state, identity, effects, refs, external systems, performance decisions, accessibility, and production failure states.",
+  "category": "Frontend",
+  "level": "Intermediate",
+  "estimatedMinutes": 48,
+  "icon": "⚛",
+  "accent": "oklch(0.72 0.14 220)",
+  "aliases": [
+    "react js",
+    "react components",
+    "react hooks",
+    "usestate",
+    "useeffect",
+    "frontend framework"
+  ],
+  "keywords": [
+    "react",
+    "component",
+    "jsx",
+    "props",
+    "state",
+    "hook",
+    "useState",
+    "event handler",
+    "render",
+    "commit",
+    "key",
+    "lifting state",
+    "reducer",
+    "context",
+    "effect",
+    "useEffect",
+    "ref",
+    "useRef",
+    "purity",
+    "immutability",
+    "memoization",
+    "accessibility"
+  ],
+  "prerequisites": [
+    "HTML, CSS, and JavaScript should be understood first because React composes browser UI with JavaScript and HTML-like JSX.",
+    "TypeScript is helpful for typed React projects but is not required to understand React’s runtime model."
+  ],
+  "learningOutcomes": [
+    "Explain components, props, JSX, state, events, render/commit, and keys as parts of one UI update model.",
+    "Choose where state should live, when to derive values, when to use a reducer/context, and when an Effect is genuinely needed.",
+    "Build React components that preserve semantic HTML, handle loading/error/empty states, clean up external synchronization, and avoid premature memoization."
+  ],
+  "heroVisual": {
+    "kind": "flow",
+    "title": "React turns state and props into a UI description, then commits necessary changes",
+    "caption": "An event or external change can request state updates. React renders a new description and commits the necessary host-environment changes.",
+    "nodes": [
+      {
+        "label": "Props + state",
+        "detail": "The component receives inputs and remembers state owned by the current component tree."
+      },
+      {
+        "label": "Render",
+        "detail": "React calls components to calculate the UI description for the current snapshot."
+      },
+      {
+        "label": "Compare and commit",
+        "detail": "React determines what host changes are required and applies them to the DOM."
+      },
+      {
+        "label": "Browser paints and user interacts",
+        "detail": "The user sees the result; later events may request another state update."
+      }
+    ]
+  },
+  "sections": [
+    {
+      "id": "components",
+      "title": "1. Start by breaking one screen into reusable pieces of UI",
+      "summary": "A React component is a JavaScript function that describes part of the interface for the current inputs.",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "Imagine a product page with a heading, price, stock message, and Add to cart button. You can represent the whole page as one component, but smaller components become useful when a piece has a distinct responsibility, repeats, or needs to evolve independently. React does not require every div to become a component."
+        },
+        {
+          "type": "code",
+          "language": "JSX",
+          "code": "function ProductCard({ product }) {\n  return (\n    <article>\n      <h2>{product.name}</h2>\n      <p>${product.price}</p>\n      <button type=\"button\">Add to cart</button>\n    </article>\n  );\n}",
+          "explanation": "ProductCard is a component. product is a prop supplied by its parent. JSX lets JavaScript describe a tree of elements. The output still uses semantic browser elements: article, heading, paragraph, and button."
+        },
+        {
+          "type": "callout",
+          "tone": "definition",
+          "title": "Declarative UI",
+          "body": "Instead of issuing a sequence such as “find this element, disable it, change this text,” React components describe what the UI should be for the current data and state."
+        }
+      ]
+    },
+    {
+      "id": "props-jsx-purity",
+      "title": "2. Props configure components; JSX describes structure; render logic should stay pure",
+      "summary": "A component should calculate its output from current inputs without changing outside systems during render.",
+      "blocks": [
+        {
+          "type": "cards",
+          "items": [
+            {
+              "title": "Props",
+              "summary": "Inputs passed from a parent to configure a child component.",
+              "example": "<Avatar size={48} user={user} />"
+            },
+            {
+              "title": "JSX expressions",
+              "summary": "Curly braces insert JavaScript values or expressions into the UI description.",
+              "example": "<p>{user.name}</p>"
+            },
+            {
+              "title": "Conditional rendering",
+              "summary": "JavaScript conditions choose which UI description should be returned.",
+              "example": "isAdmin ? <AdminTools /> : null"
+            },
+            {
+              "title": "Keys",
+              "summary": "Stable identities for sibling elements created from collections so React can match them across renders.",
+              "example": "items.map(item => <Row key={item.id} />)"
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "JSX",
+          "code": "function ItemList({ items }) {\n  return (\n    <ul>\n      {items.map((item) => (\n        <li key={item.id}>{item.label}</li>\n      ))}\n    </ul>\n  );\n}",
+          "explanation": "map creates one list item per data item. item.id is a stable identity from the data, so React can associate the same logical item with the same rendered position across updates. The key is not displayed to the user."
+        },
+        {
+          "type": "callout",
+          "tone": "warning",
+          "title": "Do not cause side effects during render",
+          "body": "Rendering may happen more than once. Network calls, subscriptions, DOM mutations, and storage writes do not belong in the calculation phase merely because the component function can execute JavaScript."
+        }
+      ]
+    },
+    {
+      "id": "events-and-state",
+      "title": "3. Events request state changes; state is a snapshot for a particular render",
+      "summary": "A component remembers information with state, and setting state requests a future render rather than mutating the current render’s variables in place.",
+      "blocks": [
+        {
+          "type": "code",
+          "language": "React",
+          "code": "import { useState } from \"react\";\n\nfunction Counter() {\n  const [count, setCount] = useState(0);\n\n  return (\n    <button onClick={() => setCount((current) => current + 1)}>\n      Count: {count}\n    </button>\n  );\n}",
+          "explanation": "useState returns the state value for this render and a setter. The click handler asks React to calculate a later render with the next count. The updater function receives the latest queued value, which is safer when the next value depends on the previous one."
+        },
+        {
+          "type": "paragraph",
+          "text": "State behaves like a snapshot: an event handler closes over the values from the render that created that handler. Calling a setter does not rewrite the count variable already captured by the running handler. React queues an update and later renders again."
+        },
+        {
+          "type": "checkpoint",
+          "prompt": "After setCount(count + 1) runs, should code later in the same event handler assume the local count variable has already changed?",
+          "answer": "No.",
+          "explanation": "The handler is still executing with the state snapshot from its render. The setter requests a future render. When the next value depends on prior queued updates, use the functional updater form."
+        }
+      ]
+    },
+    {
+      "id": "state-design",
+      "title": "4. Good state design stores the minimum facts needed to derive the interface",
+      "summary": "Many React bugs come from duplicated or contradictory state rather than from the rendering library itself.",
+      "blocks": [
+        {
+          "type": "table",
+          "columns": [
+            "Situation",
+            "Prefer",
+            "Why"
+          ],
+          "rows": [
+            [
+              "A value can be calculated from existing props/state",
+              "Derive it during render",
+              "Avoids a second state value that can become stale."
+            ],
+            [
+              "Two siblings need the same changing value",
+              "Lift state to their nearest common owner",
+              "Creates one source of truth."
+            ],
+            [
+              "Many transitions update related state fields",
+              "useReducer",
+              "Centralizes transition logic and makes events explicit."
+            ],
+            [
+              "Distant descendants need stable shared context",
+              "Context, often with state/reducer",
+              "Avoids passing the same value through unrelated intermediate components."
+            ]
+          ],
+          "caption": "Choose state ownership from who needs to read and change the value"
+        },
+        {
+          "type": "code",
+          "language": "React · derived value",
+          "code": "const visibleItems = items.filter((item) =>\n  item.label.toLowerCase().includes(query.toLowerCase())\n);",
+          "explanation": "visibleItems is derived from items and query. Storing it as separate state would create another value that must be synchronized whenever either input changes."
+        },
+        {
+          "type": "callout",
+          "tone": "tip",
+          "title": "State should represent facts, not every visible detail",
+          "body": "Store the smallest facts needed to calculate the screen. Derived values, CSS states, and duplicated copies of props often do not need independent React state."
+        }
+      ]
+    },
+    {
+      "id": "identity",
+      "title": "5. Render and commit are separate, and component identity controls whether state is preserved",
+      "summary": "React calculates output during render, then applies necessary DOM changes during commit. Position and keys help determine whether a component instance is the same logical component as before.",
+      "blocks": [
+        {
+          "type": "steps",
+          "items": [
+            {
+              "title": "Trigger",
+              "explanation": "Initial rendering or a state update schedules work.",
+              "result": "React knows a tree needs to be reconsidered."
+            },
+            {
+              "title": "Render",
+              "explanation": "React calls components to calculate what their UI should be for the current snapshot.",
+              "result": "A new UI description exists."
+            },
+            {
+              "title": "Commit",
+              "explanation": "React applies the necessary host changes, such as DOM updates.",
+              "result": "The browser’s document matches the committed React tree."
+            },
+            {
+              "title": "Paint",
+              "explanation": "The browser renders the changed pixels to the screen.",
+              "result": "The user sees the update."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "State is associated with a component’s place and identity in the rendered tree. Changing a key can intentionally tell React that a component is a different instance and should reset its state. Unstable keys can accidentally reset or move state between list items."
+        }
+      ]
+    },
+    {
+      "id": "effects-and-refs",
+      "title": "6. Effects synchronize with systems outside React; refs hold mutable identity without causing renders",
+      "summary": "Effects are an escape hatch for external synchronization, not a general place to put calculations that could happen during render or event handling.",
+      "blocks": [
+        {
+          "type": "code",
+          "language": "React · Effect cleanup",
+          "code": "useEffect(() => {\n  const controller = new AbortController();\n\n  loadProfile(userId, { signal: controller.signal });\n\n  return () => controller.abort();\n}, [userId]);",
+          "explanation": "The Effect synchronizes a request with the current userId. When userId changes or the component stops owning this synchronization, cleanup aborts the previous work. The dependency list describes values from component scope used by the Effect."
+        },
+        {
+          "type": "code",
+          "language": "React · ref",
+          "code": "const inputRef = useRef(null);\n\nfunction focusSearch() {\n  inputRef.current?.focus();\n}\n\nreturn <input ref={inputRef} type=\"search\" />;",
+          "explanation": "The ref gives imperative access to the DOM input when focus must be moved. Updating ref.current does not request a render, so refs are not a replacement for visible UI state."
+        },
+        {
+          "type": "checkpoint",
+          "prompt": "You can compute filteredItems directly from items and query during render. Should you put an Effect in charge of copying that calculation into another state variable?",
+          "answer": "Normally, no.",
+          "explanation": "That creates duplicated state and a synchronization problem. Effects are for synchronizing with external systems; derive values during render when the calculation depends only on current React inputs."
+        }
+      ]
+    },
+    {
+      "id": "production",
+      "title": "7. Production React still depends on browser semantics, explicit failure states, and measured performance work",
+      "summary": "A component library does not replace accessibility, network-state design, error handling, profiling, or correct data boundaries.",
+      "blocks": [
+        {
+          "type": "checklist",
+          "items": [
+            "Use real semantic HTML controls and landmarks inside components instead of clickable generic elements.",
+            "Design loading, empty, error, permission-denied, disabled, optimistic, and success states where the workflow can enter them.",
+            "Keep network/server state distinct from local UI state when their lifecycles differ.",
+            "Clean up subscriptions, timers, observers, and in-flight work owned by an Effect.",
+            "Use stable data-derived keys for lists.",
+            "Profile before adding memoization; memo, useMemo, and useCallback are performance tools, not correctness requirements.",
+            "Keep state close to the components that need it, lifting or centralizing only when ownership pressure requires it.",
+            "Test keyboard behavior, focus movement, form semantics, reflow, and long/translated content in the rendered interface."
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "warning",
+          "title": "React does not make invalid external data valid",
+          "body": "Props may be typed, but network responses and storage still cross runtime boundaries. Validate external data before assuming it satisfies the shape your components expect."
+        }
+      ]
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Component",
+      "definition": "A reusable JavaScript function or component unit that describes part of the React UI for current inputs."
+    },
+    {
+      "term": "JSX",
+      "definition": "A syntax extension commonly used with React to describe element trees inside JavaScript."
+    },
+    {
+      "term": "Prop",
+      "definition": "An input supplied by a parent to configure a child component."
+    },
+    {
+      "term": "State",
+      "definition": "Information a component tree remembers across renders and can update to request a new UI calculation."
+    },
+    {
+      "term": "Hook",
+      "definition": "A React function such as useState or useEffect that lets components use React features under the Rules of Hooks."
+    },
+    {
+      "term": "Render",
+      "definition": "The phase where React calls components to calculate the UI description for the current snapshot."
+    },
+    {
+      "term": "Commit",
+      "definition": "The phase where React applies required changes to the host environment such as the browser DOM."
+    },
+    {
+      "term": "Key",
+      "definition": "A stable sibling identity used by React to match items across renders."
+    },
+    {
+      "term": "Effect",
+      "definition": "Logic that synchronizes a component with an external system after rendering and can provide cleanup."
+    },
+    {
+      "term": "Ref",
+      "definition": "A stable mutable container used for values or host references that do not themselves need to trigger rendering."
+    },
+    {
+      "term": "Reducer",
+      "definition": "A function that calculates next state from current state and an action, useful for related transitions."
+    },
+    {
+      "term": "Context",
+      "definition": "A React mechanism for making a value available to descendant components without passing it through every intermediate component."
+    }
+  ],
+  "related": [
+    "html-css-and-javascript",
+    "typescript",
+    "vite",
+    "apis-and-data-exchange"
+  ],
+  "sources": [
+    {
+      "label": "React — Describing the UI",
+      "url": "https://react.dev/learn/describing-the-ui",
+      "accessed": "2026-08-08"
+    },
+    {
+      "label": "React — Adding Interactivity",
+      "url": "https://react.dev/learn/adding-interactivity",
+      "accessed": "2026-08-08"
+    },
+    {
+      "label": "React — Managing State",
+      "url": "https://react.dev/learn/managing-state",
+      "accessed": "2026-08-08"
+    },
+    {
+      "label": "React — Render and Commit",
+      "url": "https://react.dev/learn/render-and-commit",
+      "accessed": "2026-08-08"
+    },
+    {
+      "label": "React — Synchronizing with Effects",
+      "url": "https://react.dev/learn/synchronizing-with-effects",
+      "accessed": "2026-08-08"
+    },
+    {
+      "label": "React — Escape Hatches",
+      "url": "https://react.dev/learn/escape-hatches",
+      "accessed": "2026-08-08"
+    }
+  ]
+}

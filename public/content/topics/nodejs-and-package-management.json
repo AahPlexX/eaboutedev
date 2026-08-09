@@ -1,0 +1,437 @@
+{
+  "version": 1,
+  "slug": "nodejs-and-package-management",
+  "title": "Node.js and Package Management",
+  "eyebrow": "JavaScript tooling foundation · Runtime, packages, scripts, and reproducible installs",
+  "summary": "Start with one JavaScript file that needs to run outside the browser, then learn how Node.js executes it, how package.json describes a project, how package managers resolve dependencies, why lockfiles matter, how ESM and CommonJS differ, and how to keep installs secure and reproducible.",
+  "category": "Tooling",
+  "level": "Foundational",
+  "estimatedMinutes": 42,
+  "icon": "⬡",
+  "accent": "oklch(0.69 0.16 145)",
+  "aliases": [
+    "node",
+    "node js",
+    "npm",
+    "pnpm",
+    "package manager",
+    "package json",
+    "node modules",
+    "javascript runtime"
+  ],
+  "keywords": [
+    "node.js",
+    "runtime",
+    "package.json",
+    "dependency",
+    "devdependency",
+    "peer dependency",
+    "registry",
+    "lockfile",
+    "pnpm-lock.yaml",
+    "package-lock.json",
+    "semver",
+    "scripts",
+    "esm",
+    "commonjs",
+    "process.env",
+    "node_modules",
+    "supply chain",
+    "workspace"
+  ],
+  "prerequisites": [
+    "HTML, CSS, and JavaScript is helpful because this guide assumes you recognize JavaScript syntax, but it explains the runtime and package concepts from the beginning."
+  ],
+  "learningOutcomes": [
+    "Explain the difference between JavaScript the language, Node.js the runtime, and a package manager such as npm or pnpm.",
+    "Read a package.json and determine what its scripts, dependency groups, module type, and version constraints mean for the project.",
+    "Diagnose common install, module-resolution, environment-variable, and lockfile failures without deleting files at random."
+  ],
+  "heroVisual": {
+    "kind": "layers",
+    "title": "A JavaScript project has several different layers",
+    "caption": "The runtime executes code, the manifest describes the project, the package manager resolves and installs packages, and the lockfile records the resolved dependency graph.",
+    "nodes": [
+      {
+        "label": "JavaScript source",
+        "detail": "Your .js, .mjs, .cjs, or generated JavaScript files contain the program."
+      },
+      {
+        "label": "Node.js runtime",
+        "detail": "Executes JavaScript outside the browser and supplies runtime APIs such as files, processes, networking, and environment access."
+      },
+      {
+        "label": "package.json",
+        "detail": "Describes the package, scripts, dependency requirements, module interpretation, and other project metadata."
+      },
+      {
+        "label": "Package manager + lockfile",
+        "detail": "Resolves package versions, installs the dependency graph, and records exact resolved artifacts for repeatable installs."
+      }
+    ]
+  },
+  "sections": [
+    {
+      "id": "runtime",
+      "title": "1. Start with the question: where will this JavaScript run?",
+      "summary": "JavaScript is the language. A runtime supplies the environment that actually executes it and determines which non-language APIs are available.",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "A browser and Node.js can both execute JavaScript, but they do not expose the same surrounding capabilities. A browser gives code a document, windows, navigation, and other web-platform APIs. Node.js gives server and command-line programs access to capabilities such as the file system, processes, streams, and network servers. The language syntax may look identical while the runtime environment is different."
+        },
+        {
+          "type": "table",
+          "columns": [
+            "Question",
+            "Browser example",
+            "Node.js example"
+          ],
+          "rows": [
+            [
+              "What user interface exists?",
+              "DOM elements rendered in a page.",
+              "Usually none unless the program creates a server or terminal interface."
+            ],
+            [
+              "How do I read a local file?",
+              "A normal page cannot freely read arbitrary disk files.",
+              "Use Node file-system APIs when the process has OS permission."
+            ],
+            [
+              "Where do environment values come from?",
+              "Build tooling may expose selected client-safe values.",
+              "The process can read its environment through process.env."
+            ]
+          ],
+          "caption": "The runtime determines the surrounding capabilities, not the JavaScript language itself"
+        },
+        {
+          "type": "code",
+          "language": "JavaScript · Node.js",
+          "code": "import { readFile } from \"node:fs/promises\";\n\nconst text = await readFile(\"./message.txt\", \"utf8\");\nconsole.log(text);",
+          "explanation": "The import uses a built-in Node module. readFile asks the operating system for a file through Node’s API. await pauses this module until the Promise settles, and console.log writes the result to the process output."
+        }
+      ]
+    },
+    {
+      "id": "manifest",
+      "title": "2. package.json is the project manifest, not the installed packages themselves",
+      "summary": "The manifest records what the project is, what commands it exposes, and which external packages it expects.",
+      "blocks": [
+        {
+          "type": "code",
+          "language": "JSON · package.json",
+          "code": "{\n  \"name\": \"learning-app\",\n  \"private\": true,\n  \"type\": \"module\",\n  \"scripts\": {\n    \"dev\": \"vite\",\n    \"check\": \"tsc -b\"\n  },\n  \"dependencies\": {\n    \"react\": \"19.2.8\"\n  },\n  \"devDependencies\": {\n    \"typescript\": \"7.0.2\"\n  }\n}",
+          "explanation": "name identifies the project, private prevents accidental registry publication in tools that honor it, type tells Node how to interpret .js files, scripts name repeatable commands, dependencies are needed by the shipped application, and devDependencies support development or build work."
+        },
+        {
+          "type": "cards",
+          "items": [
+            {
+              "title": "dependencies",
+              "summary": "Packages the application or library needs as part of normal use.",
+              "example": "react"
+            },
+            {
+              "title": "devDependencies",
+              "summary": "Tooling used to develop, test, type-check, document, or build the project.",
+              "example": "typescript"
+            },
+            {
+              "title": "peerDependencies",
+              "summary": "A compatibility contract saying the consumer should provide a compatible package, common in plugins and libraries.",
+              "example": "a React component library expecting React"
+            },
+            {
+              "title": "optionalDependencies",
+              "summary": "Packages whose installation may fail without making the entire package unusable.",
+              "example": "an optional platform-specific enhancement"
+            }
+          ]
+        },
+        {
+          "type": "checkpoint",
+          "prompt": "If package.json lists a dependency, does that mean the exact dependency files are permanently stored inside package.json?",
+          "answer": "No.",
+          "explanation": "package.json declares requirements. The package manager resolves those requirements, installs packages into its managed layout, and records the exact resolved graph in a lockfile."
+        }
+      ]
+    },
+    {
+      "id": "resolution",
+      "title": "3. Installing one package can create a whole dependency graph",
+      "summary": "A direct dependency can depend on other packages, so the package manager resolves a graph rather than copying one isolated folder.",
+      "visual": {
+        "kind": "map",
+        "title": "One direct dependency can introduce transitive dependencies",
+        "caption": "Your manifest names direct requirements; each installed package can bring its own requirements.",
+        "nodes": [
+          {
+            "label": "Your app",
+            "detail": "Declares direct dependencies in package.json."
+          },
+          {
+            "label": "Direct package",
+            "detail": "A package you intentionally requested."
+          },
+          {
+            "label": "Transitive package A",
+            "detail": "Required by the direct package."
+          },
+          {
+            "label": "Transitive package B",
+            "detail": "May be shared by several packages if the package manager can safely reuse it."
+          }
+        ]
+      },
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "A package manager must choose versions that satisfy declared constraints, download or reuse package archives, verify integrity information where supported, and make the resulting modules resolvable by the project. The installed layout is an implementation detail; your source code should depend on declared package names rather than assuming a particular physical node_modules shape."
+        },
+        {
+          "type": "code",
+          "language": "Shell · pnpm",
+          "code": "pnpm add react\npnpm add -D typescript\npnpm install --frozen-lockfile",
+          "explanation": "The first command saves a production dependency. -D saves a development dependency. A frozen install refuses to update an out-of-sync lockfile, which is useful in CI because it turns dependency drift into an explicit failure."
+        },
+        {
+          "type": "callout",
+          "tone": "warning",
+          "title": "Do not fix every install problem by deleting the lockfile",
+          "body": "A lockfile is evidence of the resolved dependency graph. Remove or regenerate it only when you intentionally want a new resolution. First read the package-manager error and determine whether the manifest, lockfile, registry, integrity data, runtime version, or platform constraint is actually wrong."
+        }
+      ]
+    },
+    {
+      "id": "lockfiles",
+      "title": "4. The manifest describes allowed requirements; the lockfile records one resolved graph",
+      "summary": "Reproducible installation depends on distinguishing human-authored dependency intent from the exact versions and artifacts chosen during resolution.",
+      "blocks": [
+        {
+          "type": "steps",
+          "items": [
+            {
+              "title": "Declare the dependency requirement",
+              "explanation": "The manifest records the package and allowed version rule.",
+              "result": "The project states what it is compatible with."
+            },
+            {
+              "title": "Resolve the graph",
+              "explanation": "The package manager chooses package versions and transitive dependencies that satisfy the graph.",
+              "result": "A concrete dependency graph exists."
+            },
+            {
+              "title": "Record the lockfile",
+              "explanation": "The resolved versions, sources, and integrity information are written into the manager’s lockfile.",
+              "result": "Later installs can reproduce the same resolution."
+            },
+            {
+              "title": "Use frozen installation in CI",
+              "explanation": "CI refuses to silently rewrite dependency resolution.",
+              "result": "A manifest/lockfile mismatch becomes visible before build or deployment."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Semantic version rules such as exact versions, ranges, and tags influence what the resolver may choose. The lockfile then captures the actual graph chosen for that project. Application repositories normally commit their lockfile so developers, CI, and deployments share the same resolved dependency state."
+        }
+      ]
+    },
+    {
+      "id": "modules",
+      "title": "5. ESM and CommonJS are module systems: they define how files expose and load code",
+      "summary": "Node.js supports the standard ECMAScript module system and its historical CommonJS system, and package metadata affects how .js files are interpreted.",
+      "blocks": [
+        {
+          "type": "table",
+          "columns": [
+            "Concern",
+            "ES modules",
+            "CommonJS"
+          ],
+          "rows": [
+            [
+              "Typical syntax",
+              "import / export",
+              "require() / module.exports"
+            ],
+            [
+              "Explicit extension",
+              ".mjs is always ESM",
+              ".cjs is always CommonJS"
+            ],
+            [
+              "package.json type",
+              "\"type\": \"module\" makes nearby .js files ESM",
+              "\"type\": \"commonjs\" makes nearby .js files CommonJS"
+            ],
+            [
+              "Loading model",
+              "Standard module graph with static import syntax and dynamic import()",
+              "Historical Node loader centered on require()"
+            ]
+          ],
+          "caption": "Choose module behavior deliberately instead of mixing syntax by accident"
+        },
+        {
+          "type": "code",
+          "language": "JavaScript · ESM",
+          "code": "export function total(a, b) {\n  return a + b;\n}\n\n// another file\nimport { total } from \"./math.js\";",
+          "explanation": "export makes total part of the module’s public surface. import names the binding the other module needs. In Node ESM, relative specifiers use explicit file extensions."
+        },
+        {
+          "type": "checkpoint",
+          "prompt": "Why can copying require() code into a project using \"type\": \"module\" fail even though both files contain JavaScript?",
+          "answer": "Because the module system is part of how Node interprets and loads the file.",
+          "explanation": "JavaScript syntax is only one layer. ESM and CommonJS have different loading rules and globals. Check package.json type, file extensions, and the package’s documented exports before changing syntax randomly."
+        }
+      ]
+    },
+    {
+      "id": "process-and-scripts",
+      "title": "6. Scripts and environment values connect the project to the machine running it",
+      "summary": "Repeatable project commands belong in scripts, while environment-specific configuration enters the process separately from source code.",
+      "blocks": [
+        {
+          "type": "code",
+          "language": "JSON + shell",
+          "code": "\"scripts\": {\n  \"dev\": \"vite\",\n  \"test\": \"node --test\",\n  \"check\": \"pnpm test && tsc -b\"\n}\n\n# run the named command\npnpm run check",
+          "explanation": "A script gives a shared name to a command sequence. Developers and CI can invoke the same task without memorizing its internal command line."
+        },
+        {
+          "type": "code",
+          "language": "JavaScript · Node.js",
+          "code": "const port = Number(process.env.PORT ?? 3000);\n\nif (!Number.isInteger(port)) {\n  throw new Error(\"PORT must be an integer\");\n}",
+          "explanation": "process.env exposes environment values as strings. The code converts PORT to a number and validates it before use. Environment input is external input, so it should not be trusted merely because it came from deployment configuration."
+        },
+        {
+          "type": "callout",
+          "tone": "warning",
+          "title": "Environment variables are not automatically secret",
+          "body": "Server-side process variables can hold secrets when the deployment environment protects them, but anything copied into browser code or a public build artifact is visible to the user. Keep secret-bearing configuration on a trusted server boundary."
+        }
+      ]
+    },
+    {
+      "id": "operate",
+      "title": "7. Treat package installation as executable supply-chain input",
+      "summary": "Dependencies can contain code and install scripts, so version control, review, lockfiles, integrity checks, and least privilege are part of package management.",
+      "blocks": [
+        {
+          "type": "checklist",
+          "items": [
+            "Commit the manifest and the project’s chosen lockfile together.",
+            "Use the package manager declared by the project instead of silently mixing npm, pnpm, and Yarn lockfiles.",
+            "Review dependency additions and major upgrades as code changes with operational and security impact.",
+            "Use frozen or equivalent lockfile enforcement in CI.",
+            "Investigate install scripts and native packages when they are unnecessary or unexpectedly privileged.",
+            "Keep runtime and package-manager versions explicit enough that CI and developer machines can reproduce the project."
+          ]
+        },
+        {
+          "type": "checkpoint",
+          "prompt": "A clean CI machine reports that the lockfile is out of sync with package.json. Should CI silently repair and continue?",
+          "answer": "Normally, no.",
+          "explanation": "A frozen CI install should fail because the repository contains two conflicting dependency descriptions. Resolve the mismatch intentionally, regenerate the lockfile with the project’s package manager, review the diff, and commit both states together."
+        }
+      ]
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Runtime",
+      "definition": "The environment that executes program code and supplies environment-specific APIs and behavior."
+    },
+    {
+      "term": "Package",
+      "definition": "A distributable unit of code and metadata described by a package manifest such as package.json."
+    },
+    {
+      "term": "Manifest",
+      "definition": "A project metadata file describing identity, commands, dependency requirements, and other package configuration."
+    },
+    {
+      "term": "Dependency",
+      "definition": "An external package a project requires."
+    },
+    {
+      "term": "Transitive dependency",
+      "definition": "A package required by one of your dependencies rather than declared directly by your project."
+    },
+    {
+      "term": "Registry",
+      "definition": "A service from which package metadata and package artifacts can be resolved and downloaded."
+    },
+    {
+      "term": "Lockfile",
+      "definition": "A generated record of the dependency graph actually resolved for a project so later installs can reproduce it."
+    },
+    {
+      "term": "Semantic versioning",
+      "definition": "A version-numbering convention and range language used by many package ecosystems to describe compatibility intent."
+    },
+    {
+      "term": "ES module",
+      "definition": "The standard JavaScript module format using import and export."
+    },
+    {
+      "term": "CommonJS",
+      "definition": "Node.js’s historical module system centered on require() and module.exports."
+    },
+    {
+      "term": "Environment variable",
+      "definition": "A named value supplied by the process environment and read by Node through process.env."
+    },
+    {
+      "term": "Workspace",
+      "definition": "A package-manager feature for managing multiple related packages from one repository-level project structure."
+    }
+  ],
+  "related": [
+    "html-css-and-javascript",
+    "git-and-github",
+    "typescript",
+    "vite",
+    "apis-and-data-exchange"
+  ],
+  "sources": [
+    {
+      "label": "Node.js — Modules: Packages",
+      "url": "https://nodejs.org/api/packages.html",
+      "accessed": "2026-08-08"
+    },
+    {
+      "label": "Node.js — ECMAScript modules",
+      "url": "https://nodejs.org/api/esm.html",
+      "accessed": "2026-08-08"
+    },
+    {
+      "label": "Node.js — Process API",
+      "url": "https://nodejs.org/api/process.html",
+      "accessed": "2026-08-08"
+    },
+    {
+      "label": "npm Docs — package.json",
+      "url": "https://docs.npmjs.com/cli/configuring-npm/package-json/",
+      "accessed": "2026-08-08"
+    },
+    {
+      "label": "npm Docs — Scripts",
+      "url": "https://docs.npmjs.com/cli/using-npm/scripts/",
+      "accessed": "2026-08-08"
+    },
+    {
+      "label": "pnpm — add",
+      "url": "https://pnpm.io/cli/add",
+      "accessed": "2026-08-08"
+    },
+    {
+      "label": "pnpm — install",
+      "url": "https://pnpm.io/cli/install",
+      "accessed": "2026-08-08"
+    }
+  ]
+}

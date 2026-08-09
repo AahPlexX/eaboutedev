@@ -205,3 +205,21 @@ Append-only project history. The highest recorded `turncount` is authoritative.
 - Desktop 1440×900 and mobile 390×844 both remained free of page-level horizontal overflow.
 - Relevant neural runtime/model traffic completed without failed HTTP responses, and the browser emitted zero console errors during the test.
 - Preserved the exact machine-readable result in `docs/turn9-live-qa-result.json` at commit `4b46c1ef3e3265c52b0aa97d3db615179ef513ed`, then removed the ephemeral QA workflow from `main`.
+
+## Turn 8 — 2026-08-09
+
+**turncount: 8**
+
+### Four-guide curriculum expansion
+
+- Added complete concrete-first guides for **Node.js and Package Management**, **TypeScript**, **React**, and **Vite**.
+- Preserved the shared teaching contract: recognizable problem → mental model → real terminology → interpreted code/data → checkpoints → failure diagnosis → production operation → glossary and official sources.
+- Extended related-topic navigation from the existing browser-language and Git/GitHub foundations into the new runtime, typed-language, framework, and build-tool material.
+- Added an explicit recommended curriculum order rather than relying on filename order.
+- Regenerated the bounded homepage bootstrap, lazy full catalog, serialized MiniSearch index, and topic registry for nine topics.
+- Verified the complete nine-topic tree with the permanent `pnpm check` contract before committing it.
+
+### Recovery evidence
+
+- The first staged Turn 8 run failed before content commit because its workflow double-escaped JavaScript newlines in a generated source replacement.
+- Added a regression test, reproduced that defect as RED, corrected the source mutation, and required the full project gate to pass before release.

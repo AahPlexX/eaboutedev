@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "lastVerified": "2026-08-07",
-  "topicCount": 5,
+  "lastVerified": "2026-08-08",
+  "topicCount": 9,
   "topics": [
     {
       "slug": "apis-and-data-exchange",
@@ -19,7 +19,7 @@
       "category": "Tooling",
       "level": "Foundational",
       "sourceFile": "public/content/topics/git-and-github.json",
-      "sha256": "8d0867f45ba079206be440afc4c561d2c36ca4b9fcb05e5e0ec64c46f215c72e",
+      "sha256": "9f3749192ca4735b28b16fb8d71e884f59c278a1869c3159359dbe71171830a4",
       "sectionCount": 8,
       "sourceCount": 6
     },
@@ -39,9 +39,29 @@
       "category": "Frontend",
       "level": "Foundational",
       "sourceFile": "public/content/topics/html-css-and-javascript.json",
-      "sha256": "462a921dbb11e78c0a4504e2a9de206e47e6d4459450b480a96cd2b533181c93",
+      "sha256": "350395eaac160a1722bf5e17438227babb9aadfbb050c62994fafc9a2cd076ee",
       "sectionCount": 7,
       "sourceCount": 5
+    },
+    {
+      "slug": "nodejs-and-package-management",
+      "title": "Node.js and Package Management",
+      "category": "Tooling",
+      "level": "Foundational",
+      "sourceFile": "public/content/topics/nodejs-and-package-management.json",
+      "sha256": "459be21681d5c0b1aeb354fd67e17494c0fa8e54cea7fc6b402fb5c0c86305f6",
+      "sectionCount": 7,
+      "sourceCount": 7
+    },
+    {
+      "slug": "react",
+      "title": "React",
+      "category": "Frontend",
+      "level": "Intermediate",
+      "sourceFile": "public/content/topics/react.json",
+      "sha256": "fd3681a9890bcb2ec036dc8d5ab09990a7851eff36bc7dd1dfdebe93b80b7502",
+      "sectionCount": 7,
+      "sourceCount": 6
     },
     {
       "slug": "the-seven-types-of-databases",
@@ -51,6 +71,26 @@
       "sourceFile": "public/content/topics/the-seven-types-of-databases.json",
       "sha256": "a137c78c313797b1c5e8067c37e588ba3b1d65f7cb750f6fe103a53d06531e40",
       "sectionCount": 8,
+      "sourceCount": 7
+    },
+    {
+      "slug": "typescript",
+      "title": "TypeScript",
+      "category": "Languages",
+      "level": "Foundational",
+      "sourceFile": "public/content/topics/typescript.json",
+      "sha256": "2f873a56d05f6dbe9767bc669ab5b778b9f11d25019f81590a56165ae86671f6",
+      "sectionCount": 7,
+      "sourceCount": 6
+    },
+    {
+      "slug": "vite",
+      "title": "Vite",
+      "category": "Tooling",
+      "level": "Intermediate",
+      "sourceFile": "public/content/topics/vite.json",
+      "sha256": "1decbc28af7d0f475e0990efcb4e541a6d2c1eda04617ea122932e583837fc0d",
+      "sectionCount": 7,
       "sourceCount": 7
     }
   ]

@@ -471,7 +471,10 @@
   ],
   "related": [
     "how-the-web-works",
-    "apis-and-data-exchange"
+    "apis-and-data-exchange",
+    "typescript",
+    "react",
+    "vite"
   ],
   "sources": [
     {

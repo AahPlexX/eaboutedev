@@ -224,3 +224,22 @@ This file is append-only. Add a new dated turn section; do not rewrite or remove
 - [x] Confirm jsDelivr and Hugging Face neural runtime/model requests complete with zero relevant failed responses and zero browser console errors.
 - [x] Commit auditable live-browser evidence at `docs/turn9-live-qa-result.json`.
 - [x] Remove the ephemeral live-QA workflow after evidence was captured.
+
+## Turn 8 — 2026-08-09
+
+**turncount: 8**
+
+### Completed
+
+- [x] Add Node.js and Package Management with runtime, manifest, dependency graph, lockfile, module-system, environment, and supply-chain depth.
+- [x] Add TypeScript with inference, unions/narrowing, objects, generics, modules/configuration, runtime-boundary, and production-checking depth.
+- [x] Add React with components/props, JSX/purity, state/events, state ownership, render/commit identity, Effects/refs, accessibility, and production-state depth.
+- [x] Add Vite with dev-server/HMR, module graph, transforms, plugins/configuration, environment modes, production build/base paths, and deployment diagnosis.
+- [x] Update related-topic links and explicit recommended curriculum order.
+- [x] Regenerate catalog, homepage bootstrap, serialized search index, and topic registry.
+- [x] Pass the complete GitHub-hosted project gate before committing the curriculum expansion.
+
+### Next curriculum expansion
+
+- [ ] Continue with another 2–5 dependency-ordered topics without weakening per-guide completeness.
+- [ ] Re-check search coverage, recommended order, related links, generated artifacts, narration inheritance, and internal docs in the same turn.

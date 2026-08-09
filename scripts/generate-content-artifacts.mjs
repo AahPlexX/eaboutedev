@@ -6,7 +6,9 @@ import { createCatalogEntry, createSearchDocument, digest, readTopics, rootDirec
 
 const checkOnly = process.argv.includes("--check");
 const topics = await readTopics();
-const catalog = topics.map(({ document }, order) => createCatalogEntry(document, order));
+const catalog = topics
+  .map(({ document }, order) => createCatalogEntry(document, order))
+  .toSorted((left, right) => left.order - right.order || left.title.localeCompare(right.title, "en"));
 const searchDocuments = topics.map(({ document }) => createSearchDocument(document));
 const search = new MiniSearch(SEARCH_OPTIONS);
 search.addAll(searchDocuments);

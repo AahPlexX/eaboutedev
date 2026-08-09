@@ -681,6 +681,65 @@
           "responsibility": "Append-only mapping of production verification evidence for the released narration architecture"
         }
       ]
+    },
+    {
+      "turncount": 8,
+      "date": "2026-08-09",
+      "summary": "Node TypeScript React and Vite curriculum expansion",
+      "areas": [
+        {
+          "path": "public/content/topics/nodejs-and-package-management.json",
+          "responsibility": "Node runtime, package manifests, dependency graphs, lockfiles, modules, scripts, environment input, and supply-chain operation guide"
+        },
+        {
+          "path": "public/content/topics/typescript.json",
+          "responsibility": "Static checking, inference, narrowing, object types, generics, module configuration, runtime boundaries, and production checking guide"
+        },
+        {
+          "path": "public/content/topics/react.json",
+          "responsibility": "Components, props, JSX, state/events, ownership, render/commit, effects, refs, accessibility, and production React guide"
+        },
+        {
+          "path": "public/content/topics/vite.json",
+          "responsibility": "Dev server, ESM/HMR, transforms, plugins/config, environments, production builds, base paths, code splitting, and deployment diagnosis guide"
+        },
+        {
+          "path": "scripts/content-utils.mjs",
+          "responsibility": "Explicit recommended curriculum ordering for generated discovery metadata"
+        },
+        {
+          "path": "scripts/generate-content-artifacts.mjs",
+          "responsibility": "Recommended-order catalog/bootstrap generation plus serialized search and registry generation"
+        },
+        {
+          "path": "public/catalog/topic-catalog.json",
+          "responsibility": "Generated nine-topic lazy catalog"
+        },
+        {
+          "path": "public/search/topic-search.minisearch.json",
+          "responsibility": "Generated nine-topic serialized MiniSearch index"
+        },
+        {
+          "path": "src/generated/topic-bootstrap.ts",
+          "responsibility": "Generated six-topic recommended homepage bootstrap for the nine-topic curriculum"
+        },
+        {
+          "path": "docs/topic-registry.json",
+          "responsibility": "Generated nine-topic inventory and content hashes"
+        },
+        {
+          "path": "changelog.md",
+          "responsibility": "Append-only Turn 8 implementation and recovery evidence"
+        },
+        {
+          "path": "todo.md",
+          "responsibility": "Append-only Turn 8 completion and next curriculum gate"
+        },
+        {
+          "path": "codemap.json",
+          "responsibility": "Append-only map of the expanded curriculum architecture"
+        }
+      ]
     }
   ]
 }

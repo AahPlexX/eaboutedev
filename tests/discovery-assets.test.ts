@@ -20,7 +20,10 @@ test("generation emits bounded catalog bootstrap and prebuilt search assets", as
   assert.match(generator, /topic-search\.minisearch\.json/);
   assert.match(generator, /featuredTopics: catalog\.slice\(0, 6\)/);
   assert.doesNotMatch(bootstrap, /sections|glossary/);
-  assert.ok(Array.isArray(JSON.parse(catalog)));
+  const catalogEntries = JSON.parse(catalog) as Array<{ slug: string; order: number }>;
+  assert.ok(Array.isArray(catalogEntries));
+  assert.equal(catalogEntries[0]?.slug, "how-the-web-works");
+  assert.deepEqual(catalogEntries.map(({ order }) => order), catalogEntries.map(({ order }) => order).toSorted((left, right) => left - right));
 });
 
 test("full catalog, topic routes, and search implementation are outside the eager home path", async () => {
@@ -45,7 +48,9 @@ test("serialized MiniSearch index restores and finds representative topics", asy
   const search = await MiniSearch.loadJSONAsync<TopicSearchIndexDocument>(serialized, SEARCH_OPTIONS);
   const dnsResults = search.search("dns") as Array<{ slug?: string }>;
   const graphResults = search.search("graph db", { combineWith: "OR", prefix: true, fuzzy: 0.2 }) as Array<{ slug?: string }>;
+  const reactResults = search.search("component state effect", { combineWith: "OR", prefix: true, fuzzy: 0.2 }) as Array<{ slug?: string }>;
 
   assert.ok(dnsResults.some((result) => result.slug === "how-the-web-works"));
   assert.ok(graphResults.some((result) => result.slug === "the-seven-types-of-databases"));
+  assert.ok(reactResults.some((result) => result.slug === "react"));
 });

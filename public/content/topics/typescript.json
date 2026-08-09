@@ -1,0 +1,404 @@
+{
+  "version": 1,
+  "slug": "typescript",
+  "title": "TypeScript",
+  "eyebrow": "Typed JavaScript · Make assumptions visible before the program runs",
+  "summary": "Begin with an ordinary JavaScript bug caused by an unexpected value, then learn how TypeScript describes possible values, infers types, narrows unions, models objects and functions, uses generics, resolves modules, and separates compile-time confidence from runtime validation.",
+  "category": "Languages",
+  "level": "Foundational",
+  "estimatedMinutes": 46,
+  "icon": "Tˢ",
+  "accent": "oklch(0.64 0.18 248)",
+  "aliases": [
+    "ts",
+    "typed javascript",
+    "typescript basics",
+    "static types",
+    "type checking"
+  ],
+  "keywords": [
+    "typescript",
+    "type inference",
+    "annotation",
+    "union",
+    "narrowing",
+    "type guard",
+    "discriminated union",
+    "never",
+    "interface",
+    "type alias",
+    "generic",
+    "constraint",
+    "unknown",
+    "any",
+    "assertion",
+    "module resolution",
+    "tsconfig",
+    "declaration file",
+    "strict"
+  ],
+  "prerequisites": [
+    "HTML, CSS, and JavaScript is helpful because TypeScript builds on JavaScript rather than replacing it.",
+    "Node.js and Package Management is helpful for understanding how TypeScript tooling and packages are installed and invoked."
+  ],
+  "learningOutcomes": [
+    "Explain what TypeScript checks before runtime and what it cannot guarantee after external data enters the program.",
+    "Model values with inference, unions, object types, generics, and narrowing instead of reaching for any or assertions by default.",
+    "Read a tsconfig and reason about strictness, module resolution, emitted JavaScript, and the boundary between a transpiler and a type checker."
+  ],
+  "heroVisual": {
+    "kind": "flow",
+    "title": "TypeScript adds a checking step before JavaScript executes",
+    "caption": "Types describe what the program expects. The checker analyzes those expectations, but the runtime still executes JavaScript and external data still needs runtime validation.",
+    "nodes": [
+      {
+        "label": "TypeScript source",
+        "detail": "JavaScript syntax plus type information describes intended values and relationships."
+      },
+      {
+        "label": "Type checker",
+        "detail": "Analyzes assignments, control flow, function calls, modules, and configuration for contradictions."
+      },
+      {
+        "label": "JavaScript output or transformed source",
+        "detail": "Type-only syntax is removed; another tool may perform the transformation."
+      },
+      {
+        "label": "Runtime",
+        "detail": "The browser or Node.js executes JavaScript. Runtime inputs are not made safe merely because TypeScript compiled."
+      }
+    ]
+  },
+  "sections": [
+    {
+      "id": "why-types",
+      "title": "1. Start with a JavaScript assumption that can be wrong",
+      "summary": "TypeScript is useful when the code assumes facts about values that would otherwise remain implicit until runtime.",
+      "blocks": [
+        {
+          "type": "code",
+          "language": "JavaScript",
+          "code": "function formatPrice(price) {\n  return price.toFixed(2);\n}\n\nformatPrice(\"19.99\");",
+          "explanation": "The function assumes price is a number, but JavaScript allows a string to reach the call. The failure appears only when toFixed is attempted at runtime."
+        },
+        {
+          "type": "code",
+          "language": "TypeScript",
+          "code": "function formatPrice(price: number): string {\n  return price.toFixed(2);\n}\n\nformatPrice(\"19.99\"); // type error",
+          "explanation": "The parameter annotation makes the assumption explicit. The checker can reject the string call before that code is shipped or executed."
+        },
+        {
+          "type": "callout",
+          "tone": "definition",
+          "title": "Static type checking",
+          "body": "Static checking analyzes program relationships before runtime. It can prove many contradictions in source code, but it does not inspect every future network response, user input, database row, or environment value at runtime."
+        }
+      ]
+    },
+    {
+      "id": "inference",
+      "title": "2. Let TypeScript infer obvious facts; annotate important boundaries",
+      "summary": "Good TypeScript is not code covered in type annotations. The checker can infer many local types from values and control flow.",
+      "blocks": [
+        {
+          "type": "code",
+          "language": "TypeScript",
+          "code": "const quantity = 3;          // number\nconst label = \"In stock\";    // string\n\nfunction total(price: number, count: number) {\n  return price * count;       // return type inferred as number\n}",
+          "explanation": "The initial values make quantity and label obvious. Function parameters are useful boundaries to annotate because callers need a clear contract. The return type is obvious from multiplication, so inference can carry it."
+        },
+        {
+          "type": "cards",
+          "items": [
+            {
+              "title": "Primitive types",
+              "summary": "string, number, boolean, bigint, symbol, null, and undefined describe basic JavaScript value categories."
+            },
+            {
+              "title": "Literal types",
+              "summary": "Specific values such as \"loading\" or 200 can be types, which is useful when only named states are valid."
+            },
+            {
+              "title": "Arrays and tuples",
+              "summary": "Arrays describe repeated element types; tuples describe a fixed positional shape."
+            },
+            {
+              "title": "Optional properties",
+              "summary": "A ? marks that a property may be absent, which means consumers must account for that possibility."
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "tip",
+          "title": "Strict null checking changes real reasoning",
+          "body": "When null and undefined are represented in the type system, code must prove a value exists before using it as though it were definitely present. That turns many production null-reference failures into earlier feedback."
+        }
+      ]
+    },
+    {
+      "id": "narrowing",
+      "title": "3. A union describes possibilities; narrowing proves which possibility you have now",
+      "summary": "TypeScript follows runtime checks and control flow so a broad type can become more specific inside the branch where the program proved something.",
+      "visual": {
+        "kind": "flow",
+        "title": "Control flow can reduce a set of possible types",
+        "caption": "The declared type is broad; a runtime check supplies evidence; the checker narrows the value only where that evidence holds.",
+        "nodes": [
+          {
+            "label": "string | number",
+            "detail": "The value may legally be either type."
+          },
+          {
+            "label": "typeof value === \"string\"",
+            "detail": "The running program checks which case it has."
+          },
+          {
+            "label": "string branch",
+            "detail": "Inside this branch, TypeScript allows string-specific operations."
+          },
+          {
+            "label": "remaining branch",
+            "detail": "After the string case is excluded, the remaining possibility is number."
+          }
+        ]
+      },
+      "blocks": [
+        {
+          "type": "code",
+          "language": "TypeScript",
+          "code": "function normalizeId(id: string | number) {\n  if (typeof id === \"string\") {\n    return id.trim();\n  }\n\n  return id.toString();\n}",
+          "explanation": "typeof is a runtime check and a type guard. The checker follows the two control-flow paths, so trim is legal only in the string branch and toString is used after the string possibility is excluded."
+        },
+        {
+          "type": "code",
+          "language": "TypeScript · discriminated union",
+          "code": "type RequestState =\n  | { status: \"loading\" }\n  | { status: \"success\"; data: string[] }\n  | { status: \"error\"; message: string };\n\nfunction render(state: RequestState) {\n  switch (state.status) {\n    case \"success\": return state.data.join(\", \");\n    case \"error\": return state.message;\n    case \"loading\": return \"Loading…\";\n  }\n}",
+          "explanation": "status is a discriminant: each literal value identifies one valid object shape. That prevents impossible combinations such as a loading state that is accidentally treated as though data definitely exists."
+        },
+        {
+          "type": "checkpoint",
+          "prompt": "Why is a union like string | number more useful than any when both values are actually allowed?",
+          "answer": "Because the union preserves the exact possibilities and forces code to prove which one it has before using type-specific behavior.",
+          "explanation": "any disables useful checking. A union keeps uncertainty visible and lets narrowing turn runtime evidence into safe operations."
+        }
+      ]
+    },
+    {
+      "id": "objects-and-generics",
+      "title": "4. Object types describe structure; generics preserve relationships between types",
+      "summary": "Interfaces and type aliases name shapes, while generics let reusable code carry type information from input to output instead of throwing it away.",
+      "blocks": [
+        {
+          "type": "code",
+          "language": "TypeScript",
+          "code": "interface User {\n  id: string;\n  displayName: string;\n  email?: string;\n}\n\nfunction greeting(user: User) {\n  return `Hello ${user.displayName}`;\n}",
+          "explanation": "User describes the required object structure. id and displayName must exist as strings. email may be absent, so code must check it before using it as a definite string."
+        },
+        {
+          "type": "code",
+          "language": "TypeScript · generic",
+          "code": "function first<T>(items: T[]): T | undefined {\n  return items[0];\n}\n\nconst name = first([\"Ada\", \"Grace\"]); // string | undefined",
+          "explanation": "T stands for the element type supplied by the caller. The function preserves that relationship instead of returning any. undefined remains because an array can be empty."
+        },
+        {
+          "type": "callout",
+          "tone": "warning",
+          "title": "A generic parameter should represent a real relationship",
+          "body": "Do not add <T> merely to make code look reusable. A useful type parameter connects two or more positions, constrains an operation, or preserves information the caller would otherwise lose."
+        }
+      ]
+    },
+    {
+      "id": "modules-and-config",
+      "title": "5. TypeScript must understand both your source modules and the runtime or bundler that will load them",
+      "summary": "Module syntax, module resolution, target environment, declarations, and compiler options must describe the environment the code will actually run in.",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "An import such as import { x } from \"pkg\" creates two related questions. TypeScript must find type information for that specifier so it can check the program, and the eventual runtime or bundler must know how to load the corresponding JavaScript. A configuration can type-check while still describing the wrong runtime if those two models are not aligned."
+        },
+        {
+          "type": "code",
+          "language": "JSON · tsconfig.json",
+          "code": "{\n  \"compilerOptions\": {\n    \"strict\": true,\n    \"target\": \"ES2022\",\n    \"module\": \"ESNext\",\n    \"moduleResolution\": \"bundler\",\n    \"noEmit\": true\n  },\n  \"include\": [\"src\"]\n}",
+          "explanation": "strict enables a family of stronger checks. target describes JavaScript language output assumptions. module and moduleResolution describe module semantics and lookup. noEmit makes tsc act only as a checker because another build tool is responsible for transformation."
+        },
+        {
+          "type": "cards",
+          "items": [
+            {
+              "title": ".d.ts declaration files",
+              "summary": "Describe types for JavaScript APIs without providing their runtime implementation."
+            },
+            {
+              "title": "Module resolution",
+              "summary": "The algorithm TypeScript uses to map import specifiers to source files or declaration information."
+            },
+            {
+              "title": "Project references",
+              "summary": "A way to connect multiple TypeScript projects with explicit boundaries and incremental build relationships."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "boundaries",
+      "title": "6. TypeScript cannot validate data that arrives after compilation",
+      "summary": "Network responses, storage, user input, environment variables, and parsed JSON cross runtime boundaries and must be checked as runtime values.",
+      "blocks": [
+        {
+          "type": "code",
+          "language": "TypeScript",
+          "code": "const value: unknown = JSON.parse(input);\n\nif (\n  typeof value === \"object\" &&\n  value !== null &&\n  \"name\" in value &&\n  typeof value.name === \"string\"\n) {\n  console.log(value.name);\n}",
+          "explanation": "unknown says the program does not yet know what the parsed value is. Runtime checks prove enough structure before the code treats name as a string. A schema-validation library can make larger boundary checks more maintainable, but the underlying requirement is the same."
+        },
+        {
+          "type": "table",
+          "columns": [
+            "Tool",
+            "What it means",
+            "Risk"
+          ],
+          "rows": [
+            [
+              "unknown",
+              "The value could be anything; prove facts before use.",
+              "Safe uncertainty that requires narrowing."
+            ],
+            [
+              "any",
+              "Skip type checking for operations involving this value.",
+              "Errors can flow through the program unnoticed."
+            ],
+            [
+              "Type assertion",
+              "Tell the checker to treat a value as a chosen type.",
+              "No runtime validation occurs; a wrong assertion can hide a real mismatch."
+            ]
+          ],
+          "caption": "Use the weakest escape hatch that still describes what you genuinely know"
+        },
+        {
+          "type": "checkpoint",
+          "prompt": "An API response was typed as User in source code. Does that guarantee the server actually returned a valid User object?",
+          "answer": "No.",
+          "explanation": "The annotation controls static checking of your program. The remote server executes separately. Treat untrusted runtime data as unknown until it is validated or otherwise proven."
+        }
+      ]
+    },
+    {
+      "id": "operate",
+      "title": "7. In production, type checking is one gate in a larger correctness system",
+      "summary": "A strong TypeScript workflow combines strict checking with tests, runtime validation, linting, build verification, and configuration that matches each execution environment.",
+      "blocks": [
+        {
+          "type": "checklist",
+          "items": [
+            "Keep strict checking enabled unless a documented interoperability constraint requires a narrower exception.",
+            "Prefer inference for obvious local values and explicit types at important public or external boundaries.",
+            "Use unknown rather than any for values that are genuinely not yet known.",
+            "Validate untrusted runtime inputs before relying on their shape.",
+            "Align moduleResolution and module settings with the actual runtime or bundler.",
+            "Run the type checker in CI even when the dev/build tool can transpile TypeScript without checking it.",
+            "Measure compile-time or editor-performance problems before weakening project structure or type precision."
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "tip",
+          "title": "TypeScript is most valuable when it preserves domain facts",
+          "body": "A type such as string is useful, but a union that represents the only valid workflow states or a generic that preserves an API relationship can prevent entire classes of impossible-state bugs."
+        }
+      ]
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Static type checking",
+      "definition": "Analysis performed before runtime to find contradictions between declared or inferred program types."
+    },
+    {
+      "term": "Type inference",
+      "definition": "The checker deriving a type from surrounding values and control flow without a written annotation."
+    },
+    {
+      "term": "Union type",
+      "definition": "A type describing a value that may be one of several named possibilities."
+    },
+    {
+      "term": "Narrowing",
+      "definition": "Using control-flow evidence to reduce a broad type to a more specific type in a particular program path."
+    },
+    {
+      "term": "Type guard",
+      "definition": "A runtime condition TypeScript understands as evidence about a value’s type."
+    },
+    {
+      "term": "Discriminated union",
+      "definition": "A union of object shapes distinguished by a shared literal-valued property."
+    },
+    {
+      "term": "Generic",
+      "definition": "A reusable type or function parameterized over one or more types so relationships can be preserved for each caller."
+    },
+    {
+      "term": "unknown",
+      "definition": "A safe top type for values whose shape is not yet known; operations require narrowing first."
+    },
+    {
+      "term": "any",
+      "definition": "An escape-hatch type that disables most useful checking for the value it touches."
+    },
+    {
+      "term": "Declaration file",
+      "definition": "A .d.ts file that describes TypeScript types for code whose runtime implementation exists elsewhere."
+    },
+    {
+      "term": "Module resolution",
+      "definition": "The process TypeScript uses to determine which source or declaration file an import specifier refers to."
+    },
+    {
+      "term": "tsconfig.json",
+      "definition": "A TypeScript project configuration file describing source inclusion and compiler/checker behavior."
+    }
+  ],
+  "related": [
+    "html-css-and-javascript",
+    "nodejs-and-package-management",
+    "react",
+    "vite"
+  ],
+  "sources": [
+    {
+      "label": "TypeScript Documentation",
+      "url": "https://www.typescriptlang.org/docs/",
+      "accessed": "2026-08-08"
+    },
+    {
+      "label": "TypeScript Handbook — Narrowing",
+      "url": "https://www.typescriptlang.org/docs/handbook/2/narrowing.html",
+      "accessed": "2026-08-08"
+    },
+    {
+      "label": "TypeScript Handbook — Generics",
+      "url": "https://www.typescriptlang.org/docs/handbook/2/generics.html",
+      "accessed": "2026-08-08"
+    },
+    {
+      "label": "TypeScript — Modules Introduction",
+      "url": "https://www.typescriptlang.org/docs/handbook/modules/introduction.html",
+      "accessed": "2026-08-08"
+    },
+    {
+      "label": "TypeScript — Choosing Compiler Options",
+      "url": "https://www.typescriptlang.org/docs/handbook/modules/guides/choosing-compiler-options.html",
+      "accessed": "2026-08-08"
+    },
+    {
+      "label": "TypeScript — Do’s and Don’ts",
+      "url": "https://www.typescriptlang.org/docs/handbook/declaration-files/do-s-and-don-ts.html",
+      "accessed": "2026-08-08"
+    }
+  ]
+}

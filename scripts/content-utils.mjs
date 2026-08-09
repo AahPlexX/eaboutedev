@@ -6,6 +6,18 @@ import { fileURLToPath } from "node:url";
 export const rootDirectory = fileURLToPath(new URL("..", import.meta.url));
 export const topicDirectory = path.join(rootDirectory, "public/content/topics");
 
+export const recommendedTopicOrder = new Map([
+  ["how-the-web-works", 0],
+  ["html-css-and-javascript", 1],
+  ["git-and-github", 2],
+  ["nodejs-and-package-management", 3],
+  ["typescript", 4],
+  ["react", 5],
+  ["vite", 6],
+  ["apis-and-data-exchange", 7],
+  ["the-seven-types-of-databases", 8],
+]);
+
 export async function readTopics() {
   const filenames = (await readdir(topicDirectory))
     .filter((filename) => filename.endsWith(".json"))
@@ -30,7 +42,7 @@ export function createCatalogEntry(topic, order = 0) {
     accent: topic.accent,
     aliases: topic.aliases,
     keywords: topic.keywords,
-    order,
+    order: recommendedTopicOrder.get(topic.slug) ?? recommendedTopicOrder.size + order,
   };
 }
 
