@@ -1,0 +1,67 @@
+name: Turn 8 production QA closeout
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - docs/turn8-closeout-trigger.txt
+
+permissions:
+  contents: write
+
+jobs:
+  closeout:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Append production verification records
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+
+          todo = Path('todo.md')
+          text = todo.read_text()
+          marker = '### Production verification — Turn 8, sequence 2'
+          if marker not in text:
+              text = text.rstrip() + '''\n\n### Production verification — Turn 8, sequence 2\n\n- [x] Wait for the public Pages deployment to serve the new Node.js topic asset and a nine-topic catalog before browser assertions.\n- [x] Verify Node.js and Package Management, TypeScript, React, and Vite routes render on the public GitHub Pages site.\n- [x] Verify all four new routes inherit the shared neural narration player.\n- [x] Verify all four routes have no page-level horizontal overflow at 1440×900 and 390×844.\n- [x] Verify the React guide starts real neural narration and supports Pause and Resume.\n- [x] Verify exactly one React transcript passage is current during playback.\n- [x] Verify zero browser console errors and zero relevant failed neural runtime/model responses in the successful deployment-aware run.\n- [x] Preserve machine-readable evidence in `docs/turn8-live-qa-result.json`.\n'''
+              todo.write_text(text + '\n')
+
+          changelog = Path('changelog.md')
+          text = changelog.read_text()
+          marker = '### Production verification — Turn 8, sequence 2'
+          if marker not in text:
+              text = text.rstrip() + '''\n\n### Production verification — Turn 8, sequence 2\n\n- The first live browser attempt correctly exposed a deployment race: rapid verification commits canceled in-progress Pages deployments because the permanent Pages workflow uses `cancel-in-progress: true`.\n- Replaced timing assumptions with a deployment-aware gate that first required the public Node.js topic JSON and nine-topic catalog to be available before browser checks began.\n- The successful Playwright 1.62.0 run rendered all four new guides, confirmed the shared narration player on each, and found no horizontal overflow at 1440×900 or 390×844.\n- The React guide generated real neural audio and passed Play/Pause/Resume with exactly one current transcript passage.\n- The successful run recorded zero browser console errors and zero relevant failed jsDelivr/Hugging Face neural runtime/model responses.\n- Preserved the machine-readable production result in `docs/turn8-live-qa-result.json`.\n'''
+              changelog.write_text(text + '\n')
+
+          codemap_path = Path('codemap.json')
+          codemap = json.loads(codemap_path.read_text())
+          if not any(entry.get('turncount') == 8 and entry.get('sequence') == 2 for entry in codemap['entries']):
+              codemap['entries'].append({
+                  'turncount': 8,
+                  'sequence': 2,
+                  'date': '2026-08-09',
+                  'summary': 'Nine-topic production deployment and live browser verification',
+                  'areas': [
+                      {'path': 'docs/turn8-live-qa-result.json', 'responsibility': 'Machine-readable proof that the public nine-topic deployment serves all four new routes, responsive layouts, inherited narration, and real React neural playback without browser/runtime network errors'},
+                      {'path': 'public/content/topics/nodejs-and-package-management.json', 'responsibility': 'Production-verified new Node.js and package-management guide'},
+                      {'path': 'public/content/topics/typescript.json', 'responsibility': 'Production-verified new TypeScript guide'},
+                      {'path': 'public/content/topics/react.json', 'responsibility': 'Production-verified new React guide including live neural narration'},
+                      {'path': 'public/content/topics/vite.json', 'responsibility': 'Production-verified new Vite guide'},
+                      {'path': 'changelog.md', 'responsibility': 'Append-only Turn 8 production verification and deployment-race diagnosis'},
+                      {'path': 'todo.md', 'responsibility': 'Append-only Turn 8 production QA completion checklist'},
+                      {'path': 'codemap.json', 'responsibility': 'Append-only production verification map for the nine-topic curriculum'}
+                  ]
+              })
+              codemap_path.write_text(json.dumps(codemap, indent=2) + '\n')
+          PY
+      - name: Remove helper and commit records
+        shell: bash
+        run: |
+          git rm .github/workflows/turn8-closeout.yml docs/turn8-closeout-trigger.txt
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add todo.md changelog.md codemap.json
+          git commit -m "docs: close Turn 8 production verification"
+          git push
