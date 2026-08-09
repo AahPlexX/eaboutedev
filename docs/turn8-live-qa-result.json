@@ -1,14 +1,48 @@
 {
-  "checkedAt": "2026-08-09T20:39:24.541Z",
+  "checkedAt": "2026-08-09T20:45:47.430Z",
   "playwright": "1.62.0",
-  "routes": [],
-  "reactNeuralStarted": false,
-  "reactPauseWorked": false,
-  "reactResumeWorked": false,
-  "consoleErrors": [
-    "Failed to load resource: the server responded with a status of 404 ()"
+  "deploymentAssetReady": true,
+  "catalogTopicCount": 9,
+  "routes": [
+    {
+      "slug": "nodejs-and-package-management",
+      "title": "Node.js and Package Management",
+      "rendered": true,
+      "narrationPlayer": true,
+      "desktopNoHorizontalOverflow": true,
+      "mobileNoHorizontalOverflow": true
+    },
+    {
+      "slug": "typescript",
+      "title": "TypeScript",
+      "rendered": true,
+      "narrationPlayer": true,
+      "desktopNoHorizontalOverflow": true,
+      "mobileNoHorizontalOverflow": true
+    },
+    {
+      "slug": "react",
+      "title": "React",
+      "rendered": true,
+      "narrationPlayer": true,
+      "desktopNoHorizontalOverflow": true,
+      "mobileNoHorizontalOverflow": true
+    },
+    {
+      "slug": "vite",
+      "title": "Vite",
+      "rendered": true,
+      "narrationPlayer": true,
+      "desktopNoHorizontalOverflow": true,
+      "mobileNoHorizontalOverflow": true
+    }
   ],
+  "reactNeuralStarted": true,
+  "reactPauseWorked": true,
+  "reactResumeWorked": true,
+  "reactTranscriptCurrentCount": 1,
+  "consoleErrors": [],
   "relevantFailedResponses": [],
-  "success": false,
-  "failure": "Deployed route did not render expected guide: nodejs-and-package-management"
+  "success": true,
+  "failure": null
 }
