@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { ArrowLeft, Clock3, ExternalLink } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
+import { TopicNarration } from "@/components/topics/topic-narration";
 import { TopicSectionView } from "@/components/topics/topic-section";
 import { TopicToc } from "@/components/topics/topic-toc";
 import { TopicVisualPanel } from "@/components/topics/topic-visual";
@@ -93,6 +94,10 @@ export function TopicPage() {
           </div>
         </div>
       </header>
+
+      <div className="shell">
+        <TopicNarration topic={topic} />
+      </div>
 
       <div className="shell topic-layout">
         <aside><TopicToc sections={topic.sections} /></aside>

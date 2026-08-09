@@ -168,3 +168,30 @@ Append-only project history. The highest recorded `turncount` is authoritative.
 - The success-only verifier then returned exit code 0 and committed exact generated artifacts at `e89fd173dd180b92c89626923f379e2306c87107`; all 25 tests, TypeScript, Oxlint with denied warnings, and the Vite production build passed.
 - Removed the temporary scalability verifier, resolved failure diagnostic, and verification trigger after success.
 - No database, CMS, backend search/pagination, infinite scroll, virtualization, Web Worker, service worker, state library, persistent browser cache, or configurable page size was added.
+
+## Turn 9 — 2026-08-09
+
+**turncount: 9**
+
+### Completely free neural topic narration
+
+- Researched the current browser speech and on-device neural TTS landscape against the Web Speech specification, current browser-platform documentation, Kokoro/Kokoro.js upstream sources, Hugging Face model artifacts, and current Oxlint documentation before selecting the implementation.
+- Rejected `window.speechSynthesis` as the quality-critical narrator because the standard leaves the available voice list to the user agent/device; the product therefore cannot guarantee a consistently natural voice through that API.
+- Selected exact `kokoro-js@1.2.1`, `onnx-community/Kokoro-82M-v1.0-ONNX`, `q8`, WebAssembly, and `af_heart` as the no-account/no-billing client-side baseline.
+- Added `docs/superpowers/specs/2026-08-09-free-neural-read-aloud-design.md` and `docs/superpowers/plans/2026-08-09-free-neural-read-aloud.md` before production implementation.
+- Added `src/lib/narration.ts` so every `TopicDocument` automatically projects into bounded spoken passages in the same educational order, including topic/section context, visuals, paragraphs, steps, cards, table semantics, callouts, checklists, checkpoints, glossary, and primary-source labels.
+- Kept literal source code and raw URLs visual rather than reading punctuation or links character-by-character, while retaining code explanations and human-readable source labels in narration.
+- Added `src/workers/narration.worker.ts` as the isolated neural synthesis boundary. The exact browser runtime is dynamically imported only after intentional narration activation; the q8 model executes through WASM and generated audio returns as Blob data.
+- Added `src/components/topics/topic-narration.tsx` and one shared `TopicPage` integration so all current and future topic documents inherit Play/Pause/Resume, Restart, topic-position seek, retry, model-download progress, current-passage context, and a clickable visible transcript.
+- Added session-scoped generated-audio reuse plus object-URL cleanup and next-passage prefetch so navigation remains deterministic without adding a persistent cache, backend, service worker, or stored generated-audio library.
+- Kept the normal topic path free of neural initialization/model downloads until user action and added clear first-use disclosure for the approximately 100 MB neural-model transfer.
+- Preserved no-autoplay behavior, 2.75rem controls, keyboard-operable native controls, polite status output, current transcript semantics, forced-colors visibility, mobile wrapping, and readable-topic availability after narration failures.
+- Added `tests/narration.test.ts` and `tests/narration-runtime.test.ts`; the local red/green focused suite reached 7/7 passing narration tests.
+- The first PR #8 verification passed frozen dependency installation, generated-artifact integrity, content/discovery validation, 32/32 tests, and TypeScript, then correctly failed on five `unicorn/require-post-message-target-origin` warnings. Current Oxlint documentation identifies this rule as capable of false positives for worker contexts.
+- Corrected worker messaging without disabling or weakening linting by using the standards-defined Worker/DedicatedWorkerGlobalScope options overload `{ transfer: [] }` on each `postMessage` call.
+- The rerun passed the complete GitHub-hosted `pnpm check`: five-topic validation, exact-version validation, generated/discovery validation, 32/32 tests, TypeScript 7, Oxlint with 0 warnings and 0 errors, and Vite 8 production build. Vite emitted the app-side narration worker as a separate 1.29 kB chunk; the external neural runtime/model remain user-initiated.
+- Updated README architecture documentation to match the current lazy catalog/bootstrap/serialized-search assets and document the narration runtime, privacy/cost boundary, playback behavior, accessibility contract, and failure behavior.
+
+### Release state
+
+- PR #8 remains the release gate until the append-only records and README changes pass the same permanent pull-request verification. After that, merge to authoritative `main`, verify the Pages deployment, and inspect the live player rather than treating CI alone as runtime proof.
