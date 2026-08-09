@@ -59,7 +59,7 @@ async function loadTts(requestId: string) {
         dtype: "q8",
         device: "wasm",
         progress_callback: (progress) => {
-          self.postMessage({ type: "progress", requestId, progress: normalizeProgress(progress) });
+          self.postMessage({ type: "progress", requestId, progress: normalizeProgress(progress) }, { transfer: [] });
         },
       });
     })().catch((error: unknown) => {
@@ -77,12 +77,12 @@ function messageFromError(error: unknown) {
 async function synthesize(request: SynthesizeRequest) {
   try {
     const tts = await loadTts(request.requestId);
-    self.postMessage({ type: "ready", requestId: request.requestId });
+    self.postMessage({ type: "ready", requestId: request.requestId }, { transfer: [] });
     const audio = await tts.generate(request.text, { voice: KOKORO_VOICE });
     const blob = audio.toBlob();
-    self.postMessage({ type: "audio", requestId: request.requestId, blob });
+    self.postMessage({ type: "audio", requestId: request.requestId, blob }, { transfer: [] });
   } catch (error) {
-    self.postMessage({ type: "error", requestId: request.requestId, message: messageFromError(error) });
+    self.postMessage({ type: "error", requestId: request.requestId, message: messageFromError(error) }, { transfer: [] });
   }
 }
 
