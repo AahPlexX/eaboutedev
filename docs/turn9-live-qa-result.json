@@ -1,0 +1,22 @@
+{
+  "checkedAt": "2026-08-09T20:11:50.305Z",
+  "url": "https://aahplexx.github.io/eaboutedev/#/topics/how-the-web-works",
+  "playwright": "1.62.0",
+  "deployedMarker": true,
+  "desktopNoHorizontalOverflow": true,
+  "mobileNoHorizontalOverflow": true,
+  "controlMinHeightPx": 47.61,
+  "transcriptCurrentCount": 1,
+  "neuralStarted": true,
+  "pauseWorked": true,
+  "resumeWorked": true,
+  "relevantNetworkHosts": [
+    "cdn.jsdelivr.net",
+    "huggingface.co",
+    "us.aws.cdn.hf.co"
+  ],
+  "relevantFailedResponses": [],
+  "consoleErrors": [],
+  "success": true,
+  "failure": null
+}
