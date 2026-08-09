@@ -1,0 +1,74 @@
+name: Turn 9 release records
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - docs/turn9-release-record-trigger.txt
+
+permissions:
+  contents: write
+
+jobs:
+  append:
+    name: Append release outcome records
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out main
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+
+      - name: Append Turn 9 release outcome
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFile, writeFile } from "node:fs/promises";
+
+          const todoMarker = "### Release outcome — Turn 9, sequence 2";
+          let todo = await readFile("todo.md", "utf8");
+          if (!todo.includes(todoMarker)) {
+            todo += `\n\n${todoMarker}\n\n- [x] Squash-merge PR #8 into authoritative \`main\` at commit \`e7199e67f0ad28c24e9eaa2b0f5d49aa30d10244\`.\n- [x] Preserve the successful permanent pull-request gate after README and append-only record updates.\n- [x] Confirm the public GitHub Pages topic exposes the Turn 9 narration player.\n- [x] Run exact Playwright 1.62.0 against the deployed How the Web Works topic and start real neural synthesis successfully.\n- [x] Confirm Play, Pause, and Resume behavior against generated audio.\n- [x] Confirm exactly one current transcript passage while audio is active.\n- [x] Confirm no page-level horizontal overflow at 1440×900 or 390×844.\n- [x] Confirm the primary narration control measures 47.61 CSS pixels high.\n- [x] Confirm jsDelivr and Hugging Face neural runtime/model requests complete with zero relevant failed responses and zero browser console errors.\n- [x] Commit auditable live-browser evidence at \`docs/turn9-live-qa-result.json\`.\n- [x] Remove the ephemeral live-QA workflow after evidence was captured.\n`;
+            await writeFile("todo.md", todo);
+          }
+
+          const changeMarker = "### Release and live-browser verification — Turn 9, sequence 2";
+          let changelog = await readFile("changelog.md", "utf8");
+          if (!changelog.includes(changeMarker)) {
+            changelog += `\n\n${changeMarker}\n\n- Squash-merged PR #8 into authoritative \`main\` at \`e7199e67f0ad28c24e9eaa2b0f5d49aa30d10244\` only after the permanent post-record pull-request gate passed.\n- The deployed Pages topic exposed the new narration player and successfully started real Kokoro neural synthesis in headless Chromium through the same public jsDelivr and Hugging Face network path used by visitors.\n- Live controls passed Play, Pause, and Resume; the synchronized transcript exposed exactly one current passage; the primary control measured 47.61 CSS pixels high.\n- Desktop 1440×900 and mobile 390×844 both remained free of page-level horizontal overflow.\n- Relevant neural runtime/model traffic completed without failed HTTP responses, and the browser emitted zero console errors during the test.\n- Preserved the exact machine-readable result in \`docs/turn9-live-qa-result.json\` at commit \`4b46c1ef3e3265c52b0aa97d3db615179ef513ed\`, then removed the ephemeral QA workflow from \`main\`.\n`;
+            await writeFile("changelog.md", changelog);
+          }
+
+          const codemap = JSON.parse(await readFile("codemap.json", "utf8"));
+          const hasReleaseEntry = codemap.entries.some((entry) => entry.turncount === 9 && entry.sequence === 2);
+          if (!hasReleaseEntry) {
+            codemap.entries.push({
+              turncount: 9,
+              sequence: 2,
+              date: "2026-08-09",
+              summary: "Neural narration release and deployed-browser verification",
+              areas: [
+                { path: "docs/turn9-live-qa-result.json", responsibility: "Machine-readable production proof for deployed marker presence, real neural playback, pause/resume, synchronized transcript current state, desktop/mobile reflow, control sizing, relevant network success, and console cleanliness" },
+                { path: "src/components/topics/topic-narration.tsx", responsibility: "Production-verified shared narration player now live on GitHub Pages" },
+                { path: "src/workers/narration.worker.ts", responsibility: "Production-verified browser Worker synthesis path through exact Kokoro browser runtime and Hugging Face model assets" },
+                { path: "changelog.md", responsibility: "Append-only Turn 9 sequence 2 merge, deployment, and live-browser verification outcome" },
+                { path: "todo.md", responsibility: "Append-only Turn 9 sequence 2 closure of merge and live deployment verification gates" },
+                { path: "codemap.json", responsibility: "Append-only mapping of production verification evidence for the released narration architecture" }
+              ]
+            });
+            await writeFile("codemap.json", `${JSON.stringify(codemap, null, 2)}\n`);
+          }
+          NODE
+
+      - name: Commit release records
+        shell: bash
+        run: |
+          if git diff --quiet -- todo.md changelog.md codemap.json; then
+            echo "Turn 9 release outcome already recorded."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add todo.md changelog.md codemap.json
+          git commit -m "docs: close Turn 9 narration release gates"
+          git push origin HEAD:main
