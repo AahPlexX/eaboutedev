@@ -1,0 +1,13 @@
+prepare=success author=failure anatomy=skipped content=skipped links=skipped knip=skipped check=skipped
+--- prepare ---
+--- author ---
+Traceback (most recent call last):
+  File "/tmp/turn12-author.py", line 177, in <module>
+    'heroVisual': visual('map', 'Accessibility is a set of user-system relationships', 'A page can be visually attractive and still fail if information or operation is available through only one sense or input method.', [('Perceive', 'Information has alternatives and sufficient presentation clarity.'), ('Operate', 'Controls work through supported input methods including keyboard.'), ('Understand', 'Language, labels, instructions, errors, and changes are predictable.'), ('Robust', 'Semantics can be interpreted reliably by browsers and assistive technologies.')]),
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: 'dict' object is not callable
+--- anatomy ---
+--- content ---
+--- links ---
+--- knip ---
+--- check ---
