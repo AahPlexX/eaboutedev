@@ -22,7 +22,7 @@ jobs:
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
-      - name: Generate planned topic set with collision-free checklist helper
+      - name: Generate planned topic set with collision-free helpers
         shell: bash
         run: |
           python <<'PY'
@@ -33,10 +33,12 @@ jobs:
           lines = text[start:end].splitlines()
           script = '\n'.join(line[10:] if line.startswith('          ') else line for line in lines) + '\n'
           anchor = "def checkpoint(prompt, answer, explanation): return {'type': 'checkpoint', 'prompt': prompt, 'answer': answer, 'explanation': explanation}\n"
-          helper = "def checklist_block(items): return {'type': 'checklist', 'items': items}\n"
           if anchor not in script:
-              raise SystemExit('checklist helper anchor not found')
-          script = script.replace(anchor, anchor + helper, 1).replace('checklist([', 'checklist_block([')
+              raise SystemExit('helper anchor not found')
+          script = script.replace(anchor, anchor + "def checklist_block(items): return {'type': 'checklist', 'items': items}\n", 1)
+          script = script.replace('def visual(', 'def make_visual(', 1)
+          script = script.replace('visual(', 'make_visual(')
+          script = script.replace('checklist([', 'checklist_block([')
           Path('/tmp/turn12-author.py').write_text(script)
           PY
           python -m py_compile /tmp/turn12-author.py
@@ -80,15 +82,18 @@ jobs:
             .github/workflows/turn12-recovery.yml \
             .github/workflows/turn12-recovery-diagnostic.yml \
             .github/workflows/turn12-final-recovery.yml \
+            .github/workflows/turn12-full-diagnostic.yml \
             docs/turn12-topic-expansion-trigger.txt \
             docs/turn12-diagnostic-trigger.txt \
             docs/turn12-author-diagnostic-trigger.txt \
             docs/turn12-recovery-trigger.txt \
             docs/turn12-recovery-diagnostic-trigger.txt \
             docs/turn12-final-recovery-trigger.txt \
+            docs/turn12-full-diagnostic-trigger.txt \
             docs/turn12-diagnostic.txt \
             docs/turn12-author-diagnostic.txt \
-            docs/turn12-recovery-diagnostic.txt
+            docs/turn12-recovery-diagnostic.txt \
+            docs/turn12-full-diagnostic.txt
       - name: Commit verified expansion
         shell: bash
         run: |
