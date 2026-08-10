@@ -37,7 +37,6 @@ jobs:
           anchor = "def checkpoint(prompt, answer, explanation): return {'type': 'checkpoint', 'prompt': prompt, 'answer': answer, 'explanation': explanation}\n"
           if anchor not in script: raise SystemExit('helper anchor absent')
           script = script.replace(anchor, anchor + "def checklist_block(items): return {'type': 'checklist', 'items': items}\n", 1)
-          script = script.replace('def visual(', 'def make_visual(', 1)
           script = script.replace('visual(', 'make_visual(')
           script = script.replace('checklist([', 'checklist_block([')
           Path('/tmp/turn12-author.py').write_text(script)
