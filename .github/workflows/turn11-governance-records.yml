@@ -1,0 +1,71 @@
+name: Turn 11 governance records
+
+on:
+  push:
+    branches: [governance/harden-agent-discovery]
+    paths:
+      - docs/turn11-governance-records-trigger.txt
+
+permissions:
+  contents: write
+
+jobs:
+  append:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: governance/harden-agent-discovery
+
+      - name: Append verified governance records
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFile, writeFile } from "node:fs/promises";
+
+          const todoMarker = "## Turn 11 — 2026-08-10";
+          let todo = await readFile("todo.md", "utf8");
+          if (!todo.includes(todoMarker)) {
+            todo += `\n\n${todoMarker}\n\n**turncount: 11**\n\n### Cross-agent governance hardening\n\n- [x] Re-verify current Codex, Claude Code, Gemini CLI, and GitHub Copilot repository-instruction mechanisms from official sources.\n- [x] Preserve \`NORTHSTAR.md\` as the single canonical educational-quality policy body.\n- [x] Change \`GEMINI.md\` from advisory file references to native \`@file\` imports of the shared governance and registry context.\n- [x] Add the official repository-wide \`.github/copilot-instructions.md\` discovery adapter without duplicating North Star policy.\n- [x] Keep \`AGENTS.md\` as the vendor-neutral short map into deeper governance rather than turning it into an encyclopedia.\n- [x] Add \`tests/governance-discovery.test.ts\` to enforce canonical North Star presence, thin vendor adapters, required imports, and core repository safeguards.\n- [x] Prove the new regression contract RED before adapter fixes.\n- [x] Diagnose and correct the test-only Markdown backtick false failure without weakening readable governance text.\n- [x] Pass the complete permanent pull-request verification gate after the final governance-discovery implementation.\n- [x] Preserve client-facing topic content, topic JSON, generated discovery assets, narration behavior, dependencies, and application runtime unchanged.\n`;
+            await writeFile("todo.md", todo);
+          }
+
+          const changeMarker = "## Turn 11 — 2026-08-10";
+          let changelog = await readFile("changelog.md", "utf8");
+          if (!changelog.includes(changeMarker)) {
+            changelog += `\n\n${changeMarker}\n\n**turncount: 11**\n\n### Cross-agent governance discovery hardening\n\n- Audited the current repository-instruction mechanisms for OpenAI Codex, Anthropic Claude Code, Google Gemini CLI, and GitHub Copilot against their official documentation.\n- Kept \`AGENTS.md\` as the vendor-neutral short map into \`NORTHSTAR.md\`, matching current Codex guidance to keep agent entry files concise and point into deeper repository documentation.\n- Changed \`GEMINI.md\` to use Gemini CLI's native \`@file\` imports for \`AGENTS.md\`, \`NORTHSTAR.md\`, the content-authoring contract, and topic registry.\n- Added \`.github/copilot-instructions.md\` as GitHub Copilot's official repository-wide adapter, using repository-relative \`@\` imports instead of a second policy body.\n- Added a permanent governance-discovery regression suite. It verifies the canonical North Star, prevents vendor adapters from becoming duplicate governance documents, verifies required imports, and protects repository integration rules.\n- The first permanent PR run failed as expected before the missing Copilot adapter and Gemini imports were added, proving the new test contract RED.\n- A later run exposed a test-only Markdown backtick mismatch; CI showed the required \`main\` rule was present, so the test was corrected to normalize Markdown ticks rather than weakening \`AGENTS.md\`.\n- The complete permanent PR gate then passed with frozen dependency installation, generated-artifact integrity, all tests, TypeScript, Oxlint, and production build.\n- No client-facing lesson, topic JSON, generated discovery artifact, runtime feature, dependency, or narration behavior changed.\n`;
+            await writeFile("changelog.md", changelog);
+          }
+
+          const codemap = JSON.parse(await readFile("codemap.json", "utf8"));
+          if (!codemap.entries.some((entry) => entry.turncount === 11)) {
+            codemap.entries.push({
+              turncount: 11,
+              date: "2026-08-10",
+              summary: "Cross-agent governance discovery hardening",
+              areas: [
+                { path: "NORTHSTAR.md", responsibility: "Preserved single canonical educational-quality constitution and policy source for all model families" },
+                { path: "AGENTS.md", responsibility: "Vendor-neutral short agent map into canonical governance, authoring rules, registry, and verification flow" },
+                { path: "CLAUDE.md", responsibility: "Claude Code native project adapter importing shared governance without policy duplication" },
+                { path: "GEMINI.md", responsibility: "Gemini CLI native @file imports for shared governance, authoring contract, and registry context" },
+                { path: ".github/copilot-instructions.md", responsibility: "GitHub Copilot repository-wide adapter importing the same canonical governance sources" },
+                { path: "tests/governance-discovery.test.ts", responsibility: "Permanent regression contract for North Star presence, thin adapters, cross-agent imports, and repository safeguards" },
+                { path: "README.md", responsibility: "Human-facing list of supported governance discovery entry points" },
+                { path: "changelog.md", responsibility: "Append-only Turn 11 governance hardening and verification evidence" },
+                { path: "todo.md", responsibility: "Append-only Turn 11 completion checklist" },
+                { path: "codemap.json", responsibility: "Append-only map of cross-agent governance discovery surfaces" }
+              ]
+            });
+            await writeFile("codemap.json", `${JSON.stringify(codemap, null, 2)}\n`);
+          }
+          NODE
+
+      - name: Remove helper and commit records
+        shell: bash
+        run: |
+          rm -f .github/workflows/turn11-governance-records.yml docs/turn11-governance-records-trigger.txt
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "docs: record Turn 11 governance hardening"
+          git push origin HEAD:governance/harden-agent-discovery
