@@ -16,6 +16,8 @@ const northStarRequiredHeadings = [
   "The final standard",
 ];
 
+const escapeRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
 test("North Star remains the single canonical educational quality standard", async () => {
   const [northStar, agents, authoring, readme] = await Promise.all([
     read("NORTHSTAR.md"),
@@ -25,7 +27,7 @@ test("North Star remains the single canonical educational quality standard", asy
   ]);
 
   for (const heading of northStarRequiredHeadings) {
-    assert.match(northStar, new RegExp(heading.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i"), `NORTHSTAR.md is missing ${heading}`);
+    assert.match(northStar, new RegExp(escapeRegExp(heading), "i"), `NORTHSTAR.md is missing ${heading}`);
   }
 
   assert.match(northStar, /not a topic template/i);
@@ -59,7 +61,7 @@ test("vendor adapters import or route to the shared governance instead of copyin
 });
 
 test("agent entry point preserves repository integration safeguards", async () => {
-  const agents = await read("AGENTS.md");
+  const agents = (await read("AGENTS.md")).replaceAll("`", "");
   const required = [
     "main is the authoritative branch",
     "Use pnpm only",
@@ -71,6 +73,6 @@ test("agent entry point preserves repository integration safeguards", async () =
   ];
 
   for (const rule of required) {
-    assert.match(agents, new RegExp(rule.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i"), `AGENTS.md is missing: ${rule}`);
+    assert.match(agents, new RegExp(escapeRegExp(rule), "i"), `AGENTS.md is missing: ${rule}`);
   }
 });
