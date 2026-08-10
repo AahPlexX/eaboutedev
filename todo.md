@@ -271,3 +271,21 @@ This file is append-only. Add a new dated turn section; do not rewrite or remove
 - [x] Update `docs/content-authoring.md` so it is explicitly subordinate to the North Star on educational quality and does not imply identical topic outlines.
 - [x] Update `README.md` so human contributors encounter the same governance hierarchy.
 - [x] Preserve topic JSON, generated discovery artifacts, application runtime, dependencies, and client-facing content unchanged.
+
+
+## Turn 11 — 2026-08-10
+
+**turncount: 11**
+
+### Cross-agent governance hardening
+
+- [x] Re-verify current Codex, Claude Code, Gemini CLI, and GitHub Copilot repository-instruction mechanisms from official sources.
+- [x] Preserve `NORTHSTAR.md` as the single canonical educational-quality policy body.
+- [x] Change `GEMINI.md` from advisory file references to native `@file` imports of the shared governance and registry context.
+- [x] Add the official repository-wide `.github/copilot-instructions.md` discovery adapter without duplicating North Star policy.
+- [x] Keep `AGENTS.md` as the vendor-neutral short map into deeper governance rather than turning it into an encyclopedia.
+- [x] Add `tests/governance-discovery.test.ts` to enforce canonical North Star presence, thin vendor adapters, required imports, and core repository safeguards.
+- [x] Prove the new regression contract RED before adapter fixes.
+- [x] Diagnose and correct the test-only Markdown backtick false failure without weakening readable governance text.
+- [x] Pass the complete permanent pull-request verification gate after the final governance-discovery implementation.
+- [x] Preserve client-facing topic content, topic JSON, generated discovery assets, narration behavior, dependencies, and application runtime unchanged.
