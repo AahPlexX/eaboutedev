@@ -823,6 +823,53 @@
           "responsibility": "Append-only map of the model-agnostic topic-governance surfaces"
         }
       ]
+    },
+    {
+      "turncount": 11,
+      "date": "2026-08-10",
+      "summary": "Cross-agent governance discovery hardening",
+      "areas": [
+        {
+          "path": "NORTHSTAR.md",
+          "responsibility": "Preserved single canonical educational-quality constitution and policy source for all model families"
+        },
+        {
+          "path": "AGENTS.md",
+          "responsibility": "Vendor-neutral short agent map into canonical governance, authoring rules, registry, and verification flow"
+        },
+        {
+          "path": "CLAUDE.md",
+          "responsibility": "Claude Code native project adapter importing shared governance without policy duplication"
+        },
+        {
+          "path": "GEMINI.md",
+          "responsibility": "Gemini CLI native @file imports for shared governance, authoring contract, and registry context"
+        },
+        {
+          "path": ".github/copilot-instructions.md",
+          "responsibility": "GitHub Copilot repository-wide adapter importing the same canonical governance sources"
+        },
+        {
+          "path": "tests/governance-discovery.test.ts",
+          "responsibility": "Permanent regression contract for North Star presence, thin adapters, cross-agent imports, and repository safeguards"
+        },
+        {
+          "path": "README.md",
+          "responsibility": "Human-facing list of supported governance discovery entry points"
+        },
+        {
+          "path": "changelog.md",
+          "responsibility": "Append-only Turn 11 governance hardening and verification evidence"
+        },
+        {
+          "path": "todo.md",
+          "responsibility": "Append-only Turn 11 completion checklist"
+        },
+        {
+          "path": "codemap.json",
+          "responsibility": "Append-only map of cross-agent governance discovery surfaces"
+        }
+      ]
     }
   ]
 }

@@ -246,3 +246,20 @@ Append-only project history. The highest recorded `turncount` is authoritative.
 - Updated `docs/content-authoring.md` to clarify that its sequence is a dependency/encoding contract rather than a mandatory heading template and that North Star quality remains the publication gate.
 - Updated `README.md` with the governance hierarchy for human contributors.
 - No topic source, generated discovery artifact, application code, dependency, narration behavior, or client-facing lesson content changed in this governance turn.
+
+
+## Turn 11 — 2026-08-10
+
+**turncount: 11**
+
+### Cross-agent governance discovery hardening
+
+- Audited the current repository-instruction mechanisms for OpenAI Codex, Anthropic Claude Code, Google Gemini CLI, and GitHub Copilot against their official documentation.
+- Kept `AGENTS.md` as the vendor-neutral short map into `NORTHSTAR.md`, matching current Codex guidance to keep agent entry files concise and point into deeper repository documentation.
+- Changed `GEMINI.md` to use Gemini CLI's native `@file` imports for `AGENTS.md`, `NORTHSTAR.md`, the content-authoring contract, and topic registry.
+- Added `.github/copilot-instructions.md` as GitHub Copilot's official repository-wide adapter, using repository-relative `@` imports instead of a second policy body.
+- Added a permanent governance-discovery regression suite. It verifies the canonical North Star, prevents vendor adapters from becoming duplicate governance documents, verifies required imports, and protects repository integration rules.
+- The first permanent PR run failed as expected before the missing Copilot adapter and Gemini imports were added, proving the new test contract RED.
+- A later run exposed a test-only Markdown backtick mismatch; CI showed the required `main` rule was present, so the test was corrected to normalize Markdown ticks rather than weakening `AGENTS.md`.
+- The complete permanent PR gate then passed with frozen dependency installation, generated-artifact integrity, all tests, TypeScript, Oxlint, and production build.
+- No client-facing lesson, topic JSON, generated discovery artifact, runtime feature, dependency, or narration behavior changed.
