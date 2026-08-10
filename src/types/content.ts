@@ -52,6 +52,18 @@ export interface CodeBlock {
   explanation: string;
 }
 
+export interface AnatomyBlock {
+  type: "anatomy";
+  title: string;
+  language: string;
+  caption: string;
+  segments: Array<{
+    code: string;
+    label: string;
+    explanation: string;
+  }>;
+}
+
 export interface TableBlock {
   type: "table";
   columns: string[];
@@ -83,6 +95,7 @@ export type ContentBlock =
   | StepsBlock
   | CardsBlock
   | CodeBlock
+  | AnatomyBlock
   | TableBlock
   | CalloutBlock
   | ChecklistBlock
