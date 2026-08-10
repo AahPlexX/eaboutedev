@@ -38,6 +38,34 @@ export function ContentBlockView({ block }: { block: ContentBlock }) {
           <pre tabIndex={0}><code>{block.code}</code></pre>
         </figure>
       );
+    case "anatomy":
+      return (
+        <figure className="syntax-anatomy">
+          <figcaption>
+            <span>{block.language} · Syntax anatomy</span>
+            <h4>{block.title}</h4>
+            <p>{block.caption}</p>
+          </figcaption>
+          <pre className="syntax-anatomy-code" tabIndex={0} aria-label={`${block.title} syntax`}><code>{block.segments.map((segment, index) => (
+            <span className="syntax-anatomy-segment" key={`${segment.label}-${index}`}>
+              <span aria-hidden="true" className="syntax-anatomy-marker">{index + 1}</span>
+              {segment.code}
+            </span>
+          ))}</code></pre>
+          <ol className="syntax-anatomy-map">
+            {block.segments.map((segment, index) => (
+              <li key={`${segment.label}-detail-${index}`}>
+                <span className="syntax-anatomy-index" aria-hidden="true">{index + 1}</span>
+                <div>
+                  <strong>{segment.label}</strong>
+                  <code>{segment.code}</code>
+                  <p>{segment.explanation}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </figure>
+      );
     case "table":
       return (
         <div className="table-scroll" tabIndex={0} role="region" aria-label={block.caption}>
