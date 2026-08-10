@@ -5,7 +5,7 @@ const failures = [];
 const slugs = new Set();
 const allowedLevels = new Set(["Foundational", "Intermediate", "Advanced"]);
 const allowedKinds = new Set(["flow", "layers", "comparison", "cycle", "map"]);
-const allowedBlocks = new Set(["paragraph", "steps", "cards", "code", "table", "callout", "checklist", "checkpoint"]);
+const allowedBlocks = new Set(["paragraph", "steps", "cards", "code", "anatomy", "table", "callout", "checklist", "checkpoint"]);
 const isNonEmptyString = (value) => typeof value === "string" && value.trim().length > 0;
 
 for (const { filename, document: topic } of topics) {
@@ -35,6 +35,17 @@ for (const { filename, document: topic } of topics) {
     for (const block of section.blocks ?? []) {
       if (!allowedBlocks.has(block.type)) fail(`section ${section.id} contains unsupported block type: ${block.type ?? "missing"}`);
       if (block.type === "table" && block.rows.some((row) => row.length !== block.columns.length)) fail(`section ${section.id} table row width differs from columns`);
+      if (block.type === "anatomy") {
+        for (const field of ["title", "language", "caption"]) {
+          if (!isNonEmptyString(block[field])) fail(`section ${section.id} anatomy ${field} must be a non-empty string`);
+        }
+        if (!Array.isArray(block.segments) || block.segments.length < 2) fail(`section ${section.id} anatomy segments must contain at least two items`);
+        for (const [index, segment] of (block.segments ?? []).entries()) {
+          for (const field of ["code", "label", "explanation"]) {
+            if (!isNonEmptyString(segment[field])) fail(`section ${section.id} anatomy segment ${index + 1} ${field} must be a non-empty string`);
+          }
+        }
+      }
       if (block.type === "checkpoint") {
         checkpointCount += 1;
         if (!isNonEmptyString(block.prompt)) fail(`section ${section.id} checkpoint prompt must be a non-empty string`);
