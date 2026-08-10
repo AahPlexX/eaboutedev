@@ -15,7 +15,7 @@ A visual, plain-language, deeply sourced reference for understanding web develop
 
 `NORTHSTAR.md` is the canonical, model-agnostic quality standard for every topic addition, rewrite, and curriculum expansion. It defines the qualities a publishable guide must preserve—truthfulness, zero-gap learning continuity, mechanistic depth, real-world applicability, source discipline, accessibility, curriculum coherence, and repository integration—without forcing unrelated subjects into one rigid outline.
 
-Agent-specific entry files (`AGENTS.md`, `CLAUDE.md`, and `GEMINI.md`) intentionally stay small and route different coding-agent ecosystems back to the same North Star so the standard does not drift by model/vendor.
+Agent-specific entry files intentionally stay small and route different coding-agent ecosystems back to the same North Star so the standard does not drift by model or vendor. The current discovery layer includes `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, and `.github/copilot-instructions.md`.
 
 For topic work, read in this order:
 
