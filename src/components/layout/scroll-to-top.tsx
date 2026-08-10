@@ -11,11 +11,9 @@ export function ScrollToTop() {
   }, []);
 
   useEffect(() => {
+    // "instant" avoids html { scroll-behavior: smooth } delaying the reset mid-navigation.
     const scrollToTop = () => {
-      // "instant" avoids html { scroll-behavior: smooth } delaying the reset mid-navigation.
       globalThis.scrollTo({ top: 0, left: 0, behavior: "instant" });
-      globalThis.document.documentElement.scrollTop = 0;
-      globalThis.document.body.scrollTop = 0;
     };
 
     scrollToTop();
