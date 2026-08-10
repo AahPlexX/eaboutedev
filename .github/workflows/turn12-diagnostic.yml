@@ -1,0 +1,114 @@
+name: Turn 12 diagnostic
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - docs/turn12-diagnostic-trigger.txt
+
+permissions:
+  contents: write
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+        with:
+          run_install: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - name: Extract and run the exact authoring script
+        id: author
+        continue-on-error: true
+        shell: bash
+        run: |
+          python <<'PY'
+          from pathlib import Path
+          text = Path('.github/workflows/turn12-topic-expansion.yml').read_text()
+          start = text.index("          python <<'PY'\n") + len("          python <<'PY'\n")
+          end = text.index("\n          PY\n", start)
+          lines = text[start:end].splitlines()
+          script = '\n'.join(line[10:] if line.startswith('          ') else line for line in lines) + '\n'
+          Path('/tmp/turn12-author.py').write_text(script)
+          PY
+          python -m py_compile /tmp/turn12-author.py
+          python /tmp/turn12-author.py
+      - name: Anatomy test
+        id: anatomy
+        if: always() && steps.author.outcome == 'success'
+        continue-on-error: true
+        run: node --test --experimental-strip-types tests/anatomy-block.test.ts
+      - name: Generate and content validate
+        id: content
+        if: always() && steps.author.outcome == 'success'
+        continue-on-error: true
+        run: pnpm run generate && pnpm run validate:content
+      - name: Source URL audit
+        id: links
+        if: always() && steps.author.outcome == 'success'
+        continue-on-error: true
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFile, writeFile } from 'node:fs/promises';
+          const names = ['browser-devtools-and-systematic-debugging.json','testing-web-applications.json','web-accessibility.json','web-security-foundations.json'];
+          const urls = [];
+          for (const name of names) for (const source of JSON.parse(await readFile(`public/content/topics/${name}`, 'utf8')).sources) urls.push(source.url);
+          await writeFile('/tmp/source-urls.txt', [...new Set(urls)].join('\n'));
+          NODE
+          while IFS= read -r url; do echo "Checking $url"; curl --fail --location --silent --show-error --max-time 30 --output /dev/null "$url"; done < /tmp/source-urls.txt
+      - name: Knip audit
+        id: knip
+        if: always() && steps.author.outcome == 'success'
+        continue-on-error: true
+        shell: bash
+        run: |
+          cat > knip.json <<'JSON'
+          {"$schema":"https://unpkg.com/knip@6/schema.json","entry":["src/main.tsx","vite.config.ts","scripts/*.mjs","tests/**/*.test.ts"],"project":["src/**/*.{ts,tsx}","scripts/**/*.mjs","tests/**/*.ts"],"ignore":["src/generated/**"],"includeEntryExports":true}
+          JSON
+          pnpm dlx knip@6.14.2 2>&1 | tee /tmp/knip.txt
+          status=${PIPESTATUS[0]}
+          rm knip.json
+          exit $status
+      - name: Full project gate
+        id: check
+        if: always() && steps.author.outcome == 'success'
+        continue-on-error: true
+        run: pnpm run check
+      - name: Commit diagnostic evidence only
+        if: always()
+        env:
+          AUTHOR: ${{ steps.author.outcome }}
+          ANATOMY: ${{ steps.anatomy.outcome }}
+          CONTENT: ${{ steps.content.outcome }}
+          LINKS: ${{ steps.links.outcome }}
+          KNIP: ${{ steps.knip.outcome }}
+          CHECK: ${{ steps.check.outcome }}
+        shell: bash
+        run: |
+          {
+            echo "Turn 12 diagnostic"
+            echo "author=$AUTHOR"
+            echo "anatomy=$ANATOMY"
+            echo "content=$CONTENT"
+            echo "links=$LINKS"
+            echo "knip=$KNIP"
+            echo "check=$CHECK"
+            echo
+            echo "Knip output:"
+            cat /tmp/knip.txt 2>/dev/null || true
+          } > docs/turn12-diagnostic.txt
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/turn12-diagnostic.txt
+          git commit -m "test: record Turn 12 integration diagnostics" || true
+          git push origin HEAD:main
