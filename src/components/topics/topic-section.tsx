@@ -5,7 +5,7 @@ import type { TopicSection } from "@/types/content";
 export function TopicSectionView({ section, accent }: { section: TopicSection; accent: string }) {
   return (
     <section id={section.id} className="topic-section scroll-mt-28">
-      <header>
+      <header className="topic-reading-column">
         <p className="eyebrow">Section</p>
         <h2>{section.title}</h2>
         <p>{section.summary}</p>
