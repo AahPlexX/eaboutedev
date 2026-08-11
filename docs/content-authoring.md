@@ -25,7 +25,7 @@ The following is a dependency sequence, not a mandatory heading template. Severa
 2. **Show something concrete:** establish the first mental model with a familiar scenario, small example, visible outcome, or real question.
 3. **Decompose:** proceed in dependency order; a later section may rely only on ideas already introduced.
 4. **Name the real terms:** introduce formal vocabulary at the point where it gives a useful name to an idea the reader can already understand.
-5. **Make visible:** use flows for order, layers for dependency/containment, comparisons for peer differences, cycles for repetition, and maps for relationships when a visual materially improves understanding.
+5. **Make visible:** use flows for order, layers for dependency/containment, comparisons for peer differences, cycles for repetition, maps for relationships, and syntax anatomy when the structure of a code or configuration example is itself part of what the learner must understand.
 6. **Apply:** include interpreted steps, code/data examples, decision tables, scenarios, or checklists that turn explanation into action where the subject benefits from them.
 7. **Check:** add a lightweight checkpoint after at least two important mental-model transitions.
 8. **Protect:** explain common mistakes, failure modes, boundaries, and how to identify the earliest failing stage where applicable.
@@ -39,10 +39,40 @@ The following is a dependency sequence, not a mandatory heading template. Severa
 - `steps`
 - `cards`
 - `code`
+- `anatomy`
 - `table`
 - `callout`
 - `checklist`
 - `checkpoint`
+
+### Syntax anatomy
+
+Use a syntax anatomy block when the learner benefits from seeing a code, command, header, query, selector, or configuration expression split into meaningful parts. It is a Code Dissection Map: the complete expression stays visible, and each important segment receives a short label and an explanation of what that part controls or means.
+
+Do not add syntax anatomy merely for visual variety. Use it when token boundaries, nesting, argument positions, operators, attributes, options, or protocol fields carry meaning that a plain code listing would make the learner infer.
+
+```json
+{
+  "type": "anatomy",
+  "title": "A fetch request has independent parts",
+  "language": "JavaScript",
+  "caption": "Each labeled segment changes a different part of the request.",
+  "segments": [
+    {
+      "code": "fetch(",
+      "label": "Request API",
+      "explanation": "Starts a browser fetch operation."
+    },
+    {
+      "code": "\"/api/profile\"",
+      "label": "Target",
+      "explanation": "Identifies the resource the browser will request."
+    }
+  ]
+}
+```
+
+Keep segment order identical to the visible expression. Explain meaning rather than punctuation. The narration system reads the title, caption, labels, and explanations; it does not read literal source punctuation character by character.
 
 A checkpoint has this shape:
 
