@@ -1,14 +1,14 @@
 export type TopicLevel = "Foundational" | "Intermediate" | "Advanced";
-export type VisualKind = "flow" | "layers" | "comparison" | "cycle" | "map";
-export type BlockTone = "note" | "tip" | "warning" | "definition";
+type VisualKind = "flow" | "layers" | "comparison" | "cycle" | "map";
+type BlockTone = "note" | "tip" | "warning" | "definition";
 
-export interface SourceReference {
+interface SourceReference {
   label: string;
   url: string;
   accessed: string;
 }
 
-export interface VisualNode {
+interface VisualNode {
   label: string;
   detail: string;
 }
@@ -20,86 +20,17 @@ export interface TopicVisual {
   nodes: VisualNode[];
 }
 
-export interface ParagraphBlock {
-  type: "paragraph";
-  text: string;
-}
+interface ParagraphBlock { type: "paragraph"; text: string; }
+interface StepsBlock { type: "steps"; items: Array<{ title: string; explanation: string; result?: string }>; }
+interface CardsBlock { type: "cards"; items: Array<{ title: string; summary: string; whenToUse?: string; avoidWhen?: string; example?: string }>; }
+interface CodeBlock { type: "code"; language: string; code: string; explanation: string; }
+interface AnatomyBlock { type: "anatomy"; title: string; language: string; caption: string; segments: Array<{ code: string; label: string; explanation: string }>; }
+interface TableBlock { type: "table"; columns: string[]; rows: string[][]; caption: string; }
+interface CalloutBlock { type: "callout"; tone: BlockTone; title: string; body: string; }
+interface ChecklistBlock { type: "checklist"; items: string[]; }
+interface CheckpointBlock { type: "checkpoint"; prompt: string; answer: string; explanation: string; }
 
-export interface StepsBlock {
-  type: "steps";
-  items: Array<{
-    title: string;
-    explanation: string;
-    result?: string;
-  }>;
-}
-
-export interface CardsBlock {
-  type: "cards";
-  items: Array<{
-    title: string;
-    summary: string;
-    whenToUse?: string;
-    avoidWhen?: string;
-    example?: string;
-  }>;
-}
-
-export interface CodeBlock {
-  type: "code";
-  language: string;
-  code: string;
-  explanation: string;
-}
-
-export interface AnatomyBlock {
-  type: "anatomy";
-  title: string;
-  language: string;
-  caption: string;
-  segments: Array<{
-    code: string;
-    label: string;
-    explanation: string;
-  }>;
-}
-
-export interface TableBlock {
-  type: "table";
-  columns: string[];
-  rows: string[][];
-  caption: string;
-}
-
-export interface CalloutBlock {
-  type: "callout";
-  tone: BlockTone;
-  title: string;
-  body: string;
-}
-
-export interface ChecklistBlock {
-  type: "checklist";
-  items: string[];
-}
-
-export interface CheckpointBlock {
-  type: "checkpoint";
-  prompt: string;
-  answer: string;
-  explanation: string;
-}
-
-export type ContentBlock =
-  | ParagraphBlock
-  | StepsBlock
-  | CardsBlock
-  | CodeBlock
-  | AnatomyBlock
-  | TableBlock
-  | CalloutBlock
-  | ChecklistBlock
-  | CheckpointBlock;
+export type ContentBlock = ParagraphBlock | StepsBlock | CardsBlock | CodeBlock | AnatomyBlock | TableBlock | CalloutBlock | ChecklistBlock | CheckpointBlock;
 
 export interface TopicSection {
   id: string;
@@ -109,10 +40,7 @@ export interface TopicSection {
   blocks: ContentBlock[];
 }
 
-export interface GlossaryEntry {
-  term: string;
-  definition: string;
-}
+interface GlossaryEntry { term: string; definition: string; }
 
 export interface TopicDocument {
   version: 1;
