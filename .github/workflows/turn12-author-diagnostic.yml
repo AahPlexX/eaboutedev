@@ -1,0 +1,35 @@
+name: Turn 12 author diagnostic
+on:
+  push:
+    branches: [main]
+    paths: [docs/turn12-author-diagnostic-trigger.txt]
+permissions:
+  contents: write
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+      - name: Extract and execute stored author script
+        shell: bash
+        run: |
+          set +e
+          python <<'PY'
+          from pathlib import Path
+          text = Path('.github/workflows/turn12-topic-expansion.yml').read_text()
+          start = text.index("          python <<'PY'\n") + len("          python <<'PY'\n")
+          end = text.index("\n          PY\n", start)
+          lines = text[start:end].splitlines()
+          Path('/tmp/turn12-author.py').write_text('\n'.join(line[10:] if line.startswith('          ') else line for line in lines) + '\n')
+          PY
+          { python -m py_compile /tmp/turn12-author.py && python /tmp/turn12-author.py; } > /tmp/author-output.txt 2>&1
+          status=$?
+          echo "exit=$status" > docs/turn12-author-diagnostic.txt
+          cat /tmp/author-output.txt >> docs/turn12-author-diagnostic.txt
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/turn12-author-diagnostic.txt
+          git commit -m "test: capture Turn 12 authoring failure" || true
+          git push origin HEAD:main

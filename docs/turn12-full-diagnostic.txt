@@ -1,0 +1,163 @@
+prepare=success author=success anatomy=success content=success links=failure knip=failure check=success
+--- prepare ---
+--- author ---
+--- anatomy ---
+✔ syntax anatomy is typed, rendered, validated, narrated, and documented (6.778446ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 103.911478
+--- content ---
+$ node scripts/validate-content.mjs
+validated 13 topic documents
+--- links ---
+200 https://developer.chrome.com/docs/devtools/
+200 https://developer.chrome.com/docs/devtools/sources/
+200 https://developer.chrome.com/docs/devtools/network/
+200 https://developer.chrome.com/docs/devtools/console/
+200 https://developer.chrome.com/docs/devtools/developer-resources/
+200 https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Testing
+200 https://nodejs.org/api/test.html
+404 https://playwright.dev/docs/test-intro
+200 https://playwright.dev/docs/test-assertions
+200 https://playwright.dev/docs/locators
+200 https://playwright.dev/docs/browser-contexts
+200 https://www.w3.org/TR/WCAG22/
+200 https://www.w3.org/WAI/standards-guidelines/wcag/
+200 https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA
+200 https://developer.mozilla.org/en-US/docs/Glossary/Accessible_name
+200 https://developer.mozilla.org/en-US/docs/Web/Accessibility/Guides/Understanding_WCAG/Keyboard
+200 https://developer.mozilla.org/en-US/docs/Web/Security/Defenses/Same-origin_policy
+200 https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CORS
+200 https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Set-Cookie
+200 https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Security-Policy
+200 https://owasp.org/www-project-web-security-testing-guide/latest/
+200 https://owasp.org/www-community/attacks/xss/
+--- knip ---
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +21
++++++++++++++++++++++
+Progress: resolved 67, reused 5, downloaded 24, added 21, done
+Unused exports (8)
+topicDirectory                     scripts/content-utils.mjs:7:14    
+recommendedTopicOrder              scripts/content-utils.mjs:9:14    
+buttonVariants                     src/components/ui/button.tsx:42:10
+CardDescription          function  src/components/ui/card.tsx:13:17  
+DialogTrigger                      src/components/ui/dialog.tsx:7:14 
+DialogClose                        src/components/ui/dialog.tsx:8:14 
+HOME_TOPIC_PREVIEW_SIZE            src/lib/catalog.ts:5:14           
+resetSearchCache         function  src/lib/search.ts:48:17           
+Unused exported types (14)
+VisualKind       type       src/types/content.ts:2:13  
+BlockTone        type       src/types/content.ts:3:13  
+SourceReference  interface  src/types/content.ts:5:18  
+VisualNode       interface  src/types/content.ts:11:18 
+ParagraphBlock   interface  src/types/content.ts:23:18 
+StepsBlock       interface  src/types/content.ts:28:18 
+CardsBlock       interface  src/types/content.ts:37:18 
+CodeBlock        interface  src/types/content.ts:48:18 
+AnatomyBlock     interface  src/types/content.ts:55:18 
+TableBlock       interface  src/types/content.ts:67:18 
+CalloutBlock     interface  src/types/content.ts:74:18 
+ChecklistBlock   interface  src/types/content.ts:81:18 
+CheckpointBlock  interface  src/types/content.ts:86:18 
+GlossaryEntry    interface  src/types/content.ts:112:18
+Configuration hints (3)
+src/generated/**    knip.json  Remove from ignore            
+src/main.tsx        knip.json  Remove redundant entry pattern
+vite.config.ts      knip.json  Remove redundant entry pattern
+--- check ---
+$ pnpm run generate && pnpm run validate:content && pnpm run validate:versions && pnpm run check:generated && pnpm run validate:discovery && pnpm run test && pnpm run typecheck && pnpm run lint && pnpm run build
+$ node scripts/generate-content-artifacts.mjs
+generated src/generated/topic-bootstrap.ts
+generated public/catalog/topic-catalog.json
+generated public/search/topic-search.minisearch.json
+generated docs/topic-registry.json
+$ node scripts/validate-content.mjs
+validated 13 topic documents
+$ node scripts/validate-exact-versions.mjs
+all dependencies and package manager versions are exact
+$ node scripts/generate-content-artifacts.mjs --check
+$ node scripts/validate-discovery-assets.mjs
+validated discovery assets for 13 topics
+$ node --test --experimental-strip-types tests/**/*.test.ts
+✔ syntax anatomy is typed, rendered, validated, narrated, and documented (9.740541ms)
+✔ catalog loader deduplicates successful requests (40.621304ms)
+✔ catalog loader clears a failed request so retry can succeed (1.128969ms)
+✔ catalog URL state parses supported values and normalizes invalid input (2.165116ms)
+✔ catalog URL serialization omits defaults and empty values (0.36982ms)
+✔ catalog filtering uses aliases, keywords, and category without the deep search corpus (2.513396ms)
+✔ catalog sorting is deterministic for every supported mode (7.966236ms)
+✔ pagination clamps invalid pages and returns at most 24 topics (0.320709ms)
+✔ catalog scale shape remains bounded at 100, 500, and 1000 topics (2.394343ms)
+✔ compact pagination keeps first, last, and nearby pages without hundreds of controls (0.438068ms)
+✔ checkpoint is typed, rendered with native disclosure, and validated (8.029564ms)
+✔ every guide includes at least two immediate comprehension checkpoints (12.193314ms)
+✔ authoring contract requires concrete-first dependency ordering (1.665121ms)
+✔ generation emits bounded catalog bootstrap and prebuilt search assets (10.153545ms)
+✔ full catalog, topic routes, and search implementation are outside the eager home path (3.081087ms)
+✔ serialized MiniSearch index restores and finds representative topics (27.756325ms)
+✔ topic titles extend the browser title without mutating guide content (0.97416ms)
+✔ the base site title is used when no topic is active (0.158366ms)
+✔ North Star remains the single canonical educational quality standard (10.314744ms)
+✔ vendor adapters import or route to the shared governance instead of copying it (3.580751ms)
+✔ agent entry point preserves repository integration safeguards (3.514999ms)
+✔ discovery pages speak to learners instead of describing implementation internals (10.292773ms)
+✔ neural narration worker uses the exact free local-inference contract (6.082345ms)
+✔ topic narration is user initiated, seekable, retryable, and transcript synced (3.969647ms)
+✔ narration controls preserve responsive and forced-color accessibility contracts (2.844605ms)
+✔ narration projects the complete educational topic in reading order (1.993896ms)
+✔ narration leaves literal code and URLs on screen instead of speaking them (0.645326ms)
+✔ narration passages are deterministic, bounded, and addressable (1.477921ms)
+✔ long prose is split without losing words (1.638611ms)
+✔ removes low-value words while retaining meaningful development terms (3.271693ms)
+✔ expands common abbreviations and concept aliases (0.603708ms)
+✔ builds a search string containing normalized and expanded terms (0.615069ms)
+✔ infers comparison and troubleshooting intent (0.622153ms)
+✔ topic loader deduplicates successful requests and keeps 404 semantics (26.735517ms)
+✔ topic loader retries non-404 failures and rejects invalid slugs without fetching (0.933073ms)
+✔ visual renderer preserves relationship semantics by visual kind (4.819596ms)
+ℹ tests 36
+ℹ suites 0
+ℹ pass 36
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 705.730753
+$ tsc -b
+$ oxlint . --deny-warnings
+Found 0 warnings and 0 errors.
+Finished in 18ms on 57 files with 162 rules using 4 threads.
+$ pnpm run generate && pnpm run validate:content && pnpm run validate:versions && pnpm run check:generated && pnpm run validate:discovery && tsc -b && vite build
+$ node scripts/generate-content-artifacts.mjs
+generated docs/topic-registry.json
+generated src/generated/topic-bootstrap.ts
+generated public/catalog/topic-catalog.json
+generated public/search/topic-search.minisearch.json
+$ node scripts/validate-content.mjs
+validated 13 topic documents
+$ node scripts/validate-exact-versions.mjs
+all dependencies and package manager versions are exact
+$ node scripts/generate-content-artifacts.mjs --check
+$ node scripts/validate-discovery-assets.mjs
+validated discovery assets for 13 topics
+[36mvite v8.2.0 [32mbuilding client environment for production...[36m[39m
+[2Ktransforming...✓ 1882 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                0.70 kB │ gzip:   0.38 kB
+dist/assets/narration.worker-DWnawtPP.js       1.29 kB
+dist/assets/index-CG68R9vd.css                55.83 kB │ gzip:  11.53 kB
+dist/assets/catalog-loader-BZIIlXrq.js         0.39 kB │ gzip:   0.28 kB │ map:     1.41 kB
+dist/assets/query-normalization-CjzrwIcx.js    1.82 kB │ gzip:   0.98 kB │ map:     4.80 kB
+dist/assets/topics-page-D5-77c7Y.js            7.35 kB │ gzip:   3.08 kB │ map:    22.60 kB
+dist/assets/search-TmyYpAs4.js                18.38 kB │ gzip:   6.14 kB │ map:   105.59 kB
+dist/assets/topic-page-D5FYa9t-.js            24.27 kB │ gzip:   7.66 kB │ map:    75.21 kB
+dist/assets/index-BSa2QJau.js                376.62 kB │ gzip: 120.82 kB │ map: 1,763.86 kB
+
+[32m✓ built in 625ms[39m
