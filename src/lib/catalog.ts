@@ -2,7 +2,6 @@ import { tokenizeNaturalLanguage } from "./query-normalization.ts";
 import type { TopicCatalogEntry, TopicLevel } from "../types/content.ts";
 
 export const CATALOG_PAGE_SIZE = 24;
-export const HOME_TOPIC_PREVIEW_SIZE = 6;
 
 export type CatalogSort = "recommended" | "az" | "shortest" | "longest" | "level";
 
@@ -15,33 +14,14 @@ export interface CatalogPage {
   items: TopicCatalogEntry[];
 }
 
-const levelRank: Record<TopicLevel, number> = {
-  Foundational: 0,
-  Intermediate: 1,
-  Advanced: 2,
-};
+const levelRank: Record<TopicLevel, number> = { Foundational: 0, Intermediate: 1, Advanced: 2 };
 
-export function filterCatalogTopics(
-  topics: TopicCatalogEntry[],
-  query: string,
-  category: string,
-): TopicCatalogEntry[] {
+export function filterCatalogTopics(topics: TopicCatalogEntry[], query: string, category: string): TopicCatalogEntry[] {
   const terms = tokenizeNaturalLanguage(query);
-
   return topics.filter((topic) => {
     if (category !== "All" && topic.category !== category) return false;
     if (terms.length === 0) return true;
-
-    const haystack = [
-      topic.title,
-      topic.eyebrow,
-      topic.summary,
-      topic.category,
-      topic.level,
-      ...topic.aliases,
-      ...topic.keywords,
-    ].join(" ").toLocaleLowerCase("en");
-
+    const haystack = [topic.title, topic.eyebrow, topic.summary, topic.category, topic.level, ...topic.aliases, ...topic.keywords].join(" ").toLocaleLowerCase("en");
     return terms.some((term) => haystack.includes(term));
   });
 }
@@ -50,18 +30,12 @@ export function sortCatalogTopics(topics: TopicCatalogEntry[], sort: CatalogSort
   return topics.toSorted((left, right) => {
     const orderDifference = left.order - right.order;
     const titleDifference = left.title.localeCompare(right.title, "en");
-
     switch (sort) {
-      case "az":
-        return titleDifference || orderDifference;
-      case "shortest":
-        return left.estimatedMinutes - right.estimatedMinutes || orderDifference || titleDifference;
-      case "longest":
-        return right.estimatedMinutes - left.estimatedMinutes || orderDifference || titleDifference;
-      case "level":
-        return levelRank[left.level] - levelRank[right.level] || orderDifference || titleDifference;
-      default:
-        return orderDifference || titleDifference;
+      case "az": return titleDifference || orderDifference;
+      case "shortest": return left.estimatedMinutes - right.estimatedMinutes || orderDifference || titleDifference;
+      case "longest": return right.estimatedMinutes - left.estimatedMinutes || orderDifference || titleDifference;
+      case "level": return levelRank[left.level] - levelRank[right.level] || orderDifference || titleDifference;
+      default: return orderDifference || titleDifference;
     }
   });
 }
@@ -73,32 +47,19 @@ export function paginateCatalogTopics(topics: TopicCatalogEntry[], requestedPage
   const page = Math.min(pageCount, Math.max(1, normalizedRequest));
   const offset = (page - 1) * CATALOG_PAGE_SIZE;
   const items = topics.slice(offset, offset + CATALOG_PAGE_SIZE);
-
-  return {
-    page,
-    pageCount,
-    start: total === 0 ? 0 : offset + 1,
-    end: total === 0 ? 0 : offset + items.length,
-    total,
-    items,
-  };
+  return { page, pageCount, start: total === 0 ? 0 : offset + 1, end: total === 0 ? 0 : offset + items.length, total, items };
 }
 
 export function getPaginationItems(page: number, pageCount: number): Array<number | "ellipsis"> {
   if (pageCount <= 7) return Array.from({ length: Math.max(0, pageCount) }, (_, index) => index + 1);
-
   const visiblePages = new Set([1, pageCount, page - 1, page, page + 1]);
-  const pages = [...visiblePages]
-    .filter((item) => item >= 1 && item <= pageCount)
-    .toSorted((left, right) => left - right);
+  const pages = [...visiblePages].filter((item) => item >= 1 && item <= pageCount).toSorted((left, right) => left - right);
   const items: Array<number | "ellipsis"> = [];
   let previousPage: number | undefined;
-
   for (const current of pages) {
     if (previousPage !== undefined && current - previousPage > 1) items.push("ellipsis");
     items.push(current);
     previousPage = current;
   }
-
   return items;
 }
