@@ -23,19 +23,10 @@ interface PassageRequestOptions {
   seekFraction: number;
 }
 
-interface LoadPassageOptions {
-  play: boolean;
-  seekFraction?: number;
-}
-
-const PLAY_LABEL = "Play narration";
-const PAUSE_LABEL = "Pause";
-const RESTART_LABEL = "Restart";
-
 export function TopicNarration({ topic }: { topic: TopicDocument }) {
   const passages = useMemo(() => buildTopicNarration(topic), [topic]);
   const [status, setStatus] = useState<PlayerStatus>("idle");
-  const [statusMessage, setStatusMessage] = useState("Ready when you are.");
+  const [statusMessage, setStatusMessage] = useState("Ready to listen.");
   const [loadProgress, setLoadProgress] = useState<number | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentFraction, setCurrentFraction] = useState(0);
@@ -64,20 +55,21 @@ export function TopicNarration({ topic }: { topic: TopicDocument }) {
     setStatusMessage(message);
   }, []);
 
-  const loadCachedPassage = useCallback((index: number, url: string, { play, seekFraction = 0 }: LoadPassageOptions) => {
+  const loadCachedPassage = useCallback((index: number, url: string, play: boolean, seekFraction = 0) => {
     const audio = audioRef.current;
     if (!audio) return;
 
     const token = ++playbackTokenRef.current;
     audio.pause();
     audio.src = url;
-    audio.dataset.passageIndex = String(index);
     audio.load();
 
     const finishLoad = () => {
       if (token !== playbackTokenRef.current) return;
       const duration = Number.isFinite(audio.duration) ? audio.duration : 0;
-      if (duration > 0 && seekFraction > 0) audio.currentTime = Math.min(duration * seekFraction, Math.max(0, duration - 0.01));
+      if (duration > 0 && seekFraction > 0) {
+        audio.currentTime = Math.min(duration * seekFraction, Math.max(0, duration - 0.01));
+      }
       if (!play || !desiredPlayingRef.current) {
         setStatus("paused");
         setStatusMessage(`Paused at passage ${index + 1} of ${passages.length}.`);
@@ -101,9 +93,10 @@ export function TopicNarration({ topic }: { topic: TopicDocument }) {
 
   const requestPassage = useCallback((index: number, options: PassageRequestOptions) => {
     if (index < 0 || index >= passages.length) return;
+
     const cached = audioUrlsRef.current.get(index);
     if (cached) {
-      if (index === currentIndexRef.current) loadCachedPassage(index, cached, { play: options.playWhenReady, seekFraction: options.seekFraction });
+      if (index === currentIndexRef.current) loadCachedPassage(index, cached, options.playWhenReady, options.seekFraction);
       return;
     }
 
@@ -162,7 +155,7 @@ export function TopicNarration({ topic }: { topic: TopicDocument }) {
     audioUrlsRef.current.set(pending.index, url);
 
     if (pending.index === currentIndexRef.current) {
-      loadCachedPassage(pending.index, url, { play: pending.playWhenReady && desiredPlayingRef.current, seekFraction: pending.seekFraction });
+      loadCachedPassage(pending.index, url, pending.playWhenReady && desiredPlayingRef.current, pending.seekFraction);
       if (pending.playWhenReady && desiredPlayingRef.current) prefetch(pending.index);
     }
   }, [failPlayback, loadCachedPassage, prefetch]);
@@ -172,10 +165,7 @@ export function TopicNarration({ topic }: { topic: TopicDocument }) {
 
   const playCurrentPassage = useCallback(() => {
     desiredPlayingRef.current = true;
-    requestPassage(currentIndexRef.current, {
-      playWhenReady: true,
-      seekFraction: currentFraction,
-    });
+    requestPassage(currentIndexRef.current, { playWhenReady: true, seekFraction: currentFraction });
   }, [currentFraction, requestPassage]);
 
   const togglePlayback = useCallback(() => {
@@ -269,41 +259,37 @@ export function TopicNarration({ topic }: { topic: TopicDocument }) {
 
   const activePassage = passages[currentIndex];
   const isActivelyRequested = status === "playing" || (status === "loading" && desiredPlayingRef.current);
-  const primaryLabel = isActivelyRequested ? PAUSE_LABEL : status === "paused" ? "Resume" : status === "complete" ? "Replay" : PLAY_LABEL;
+  const primaryLabel = isActivelyRequested ? "Pause" : status === "paused" ? "Resume" : status === "complete" ? "Replay" : "Play narration";
   const rangeValue = Math.min(passages.length, currentIndex + currentFraction);
 
   return (
-    <section className="topic-narration" aria-labelledby="topic-narration-title">
-      <header className="narration-header">
-        <span className="narration-icon" aria-hidden="true"><Volume2 /></span>
-        <div>
-          <p className="eyebrow">Free neural read-aloud</p>
-          <h2 id="topic-narration-title">Listen to this topic</h2>
-          <p>Natural on-device narration, with a transcript you can follow or jump through.</p>
+    <section className="topic-narration narration-compact" aria-labelledby="topic-narration-title">
+      <div className="narration-compact-row">
+        <div className="narration-identity">
+          <span className="narration-icon" aria-hidden="true"><Volume2 /></span>
+          <div>
+            <h2 id="topic-narration-title">Listen</h2>
+            <p>{activePassage?.label ?? "Topic narration"}</p>
+          </div>
         </div>
-      </header>
 
-      <p className="narration-disclosure">
-        First use downloads about 100 MB of neural voice data. After those files arrive, your topic text stays in your browser for narration—there is no paid speech API, account, or billing step.
-      </p>
-
-      <div className="narration-controls" aria-label="Narration controls">
         <div className="narration-actions">
-          <Button className="narration-control" type="button" onClick={togglePlayback}>
+          <Button className="narration-control" type="button" size="sm" onClick={togglePlayback}>
             {isActivelyRequested ? <Pause aria-hidden="true" /> : <Play aria-hidden="true" />}
             {primaryLabel}
           </Button>
-          <Button className="narration-control" type="button" variant="outline" onClick={restart}>
-            <RotateCcw aria-hidden="true" /> {RESTART_LABEL}
+          <Button className="narration-control narration-restart" type="button" size="icon-sm" variant="ghost" onClick={restart} aria-label="Restart narration">
+            <RotateCcw aria-hidden="true" />
           </Button>
           {status === "error" && (
-            <Button className="narration-control" type="button" variant="secondary" onClick={playCurrentPassage}>
-              <RefreshCw aria-hidden="true" /> Retry narration
+            <Button className="narration-control" type="button" size="sm" variant="secondary" onClick={playCurrentPassage}>
+              <RefreshCw aria-hidden="true" /> Retry
             </Button>
           )}
         </div>
+
         <div className="narration-position">
-          <label htmlFor={`narration-position-${topic.slug}`}>Topic position</label>
+          <label className="sr-only" htmlFor={`narration-position-${topic.slug}`}>Topic narration position</label>
           <input
             id={`narration-position-${topic.slug}`}
             aria-label="Topic narration position"
@@ -314,7 +300,7 @@ export function TopicNarration({ topic }: { topic: TopicDocument }) {
             value={rangeValue}
             onChange={(event) => handleRangeChange(event.currentTarget.value)}
           />
-          <span>{passages.length === 0 ? "0 of 0" : `${currentIndex + 1} of ${passages.length}`}</span>
+          <span>{passages.length === 0 ? "0 / 0" : `${currentIndex + 1} / ${passages.length}`}</span>
         </div>
       </div>
 
@@ -322,6 +308,43 @@ export function TopicNarration({ topic }: { topic: TopicDocument }) {
         <span>{statusMessage}</span>
         {loadProgress !== null && <progress max="100" value={loadProgress} aria-label="Neural voice download progress" />}
       </div>
+
+      <details className="narration-details">
+        <summary>Transcript and voice details</summary>
+        <div className="narration-detail-body">
+          <p className="narration-disclosure">
+            First use downloads about 100 MB of neural voice data. After those files arrive, your topic text stays in your browser for narration—there is no paid speech API, account, or billing step.
+          </p>
+
+          <div className="narration-now">
+            <span>Current passage</span>
+            <strong>{activePassage?.label ?? "Topic"}</strong>
+            <p>{activePassage?.text ?? "This topic has no narratable text."}</p>
+          </div>
+
+          <ol className="narration-transcript" aria-label="Narration transcript">
+            {passages.map((passage, index) => {
+              const isCurrent = index === currentIndex;
+              return (
+                <li key={passage.id} className={isCurrent ? "is-current" : undefined}>
+                  <button
+                    type="button"
+                    className="narration-transcript-entry"
+                    aria-current={isCurrent ? "true" : undefined}
+                    onClick={() => seekTo(index, 0)}
+                  >
+                    <span className="narration-transcript-index" aria-hidden="true">{index + 1}</span>
+                    <span>
+                      <strong>{passage.label}</strong>
+                      <span>{passage.text}</span>
+                    </span>
+                  </button>
+                </li>
+              );
+            })}
+          </ol>
+        </div>
+      </details>
 
       <audio
         ref={audioRef}
@@ -335,36 +358,8 @@ export function TopicNarration({ topic }: { topic: TopicDocument }) {
         }}
         onEnded={handleEnded}
         onTimeUpdate={handleTimeUpdate}
-        onError={() => failPlayback("The generated audio could not be played. Choose Retry narration to try this passage again.")}
+        onError={() => failPlayback("The generated audio could not be played. Choose Retry to try this passage again.")}
       />
-
-      <div className="narration-now">
-        <span>Now reading</span>
-        <strong>{activePassage?.label ?? "Topic"}</strong>
-        <p>{activePassage?.text ?? "This topic has no narratable text."}</p>
-      </div>
-
-      <ol className="narration-transcript" aria-label="Narration transcript">
-        {passages.map((passage, index) => {
-          const isCurrent = index === currentIndex;
-          return (
-            <li key={passage.id} className={isCurrent ? "is-current" : undefined}>
-              <button
-                type="button"
-                className="narration-transcript-entry"
-                aria-current={isCurrent ? "true" : undefined}
-                onClick={() => seekTo(index, 0)}
-              >
-                <span className="narration-transcript-index" aria-hidden="true">{index + 1}</span>
-                <span>
-                  <strong>{passage.label}</strong>
-                  <span>{passage.text}</span>
-                </span>
-              </button>
-            </li>
-          );
-        })}
-      </ol>
     </section>
   );
 }
