@@ -59,9 +59,8 @@ function splitSpeechText(text: string) {
 
   for (const sentence of sentences.flatMap(splitOversizedSentence)) {
     const candidate = current ? `${current} ${sentence}` : sentence;
-    if (candidate.length <= MAX_NARRATION_PASSAGE_CHARS) {
-      current = candidate;
-    } else {
+    if (candidate.length <= MAX_NARRATION_PASSAGE_CHARS) current = candidate;
+    else {
       if (current) chunks.push(current);
       current = sentence;
     }
@@ -76,10 +75,7 @@ function visualDrafts(visual: TopicVisual, label: string, sectionId?: string): P
     { label, text: visual.title, ...(sectionId ? { sectionId } : {}) },
     { label, text: visual.caption, ...(sectionId ? { sectionId } : {}) },
   ];
-
-  for (const node of visual.nodes) {
-    drafts.push({ label, text: `${node.label}. ${node.detail}`, ...(sectionId ? { sectionId } : {}) });
-  }
+  for (const node of visual.nodes) drafts.push({ label, text: `${node.label}. ${node.detail}`, ...(sectionId ? { sectionId } : {}) });
   return drafts;
 }
 
@@ -88,37 +84,24 @@ function blockDrafts(block: ContentBlock, sectionId: string): PassageDraft[] {
     case "paragraph":
       return [{ label: "Paragraph", text: block.text, sectionId }];
     case "steps":
-      return block.items.map((item, index) => ({
-        label: `Step ${index + 1}`,
-        text: [item.title, item.explanation, item.result].filter(Boolean).join(". "),
-        sectionId,
-      }));
+      return block.items.map((item, index) => ({ label: `Step ${index + 1}`, text: [item.title, item.explanation, item.result].filter(Boolean).join(". "), sectionId }));
     case "cards":
       return block.items.map((item) => ({
         label: item.title,
-        text: [
-          item.title,
-          item.summary,
-          item.whenToUse ? `Use when: ${item.whenToUse}` : undefined,
-          item.avoidWhen ? `Avoid when: ${item.avoidWhen}` : undefined,
-          item.example ? `Example: ${item.example}` : undefined,
-        ].filter(Boolean).join(". "),
+        text: [item.title, item.summary, item.whenToUse ? `Use when: ${item.whenToUse}` : undefined, item.avoidWhen ? `Avoid when: ${item.avoidWhen}` : undefined, item.example ? `Example: ${item.example}` : undefined].filter(Boolean).join(". "),
         sectionId,
       }));
     case "code":
-      return [{
-        label: "Code explanation",
-        text: `Code example in ${block.language}. The source code remains visible on screen. ${block.explanation}`,
-        sectionId,
-      }];
+      return [{ label: "Code explanation", text: `Code example in ${block.language}. The source code remains visible on screen. ${block.explanation}`, sectionId }];
+    case "anatomy":
+      return [
+        { label: "Syntax anatomy", text: `${block.title}. ${block.caption}`, sectionId },
+        ...block.segments.map((segment, index) => ({ label: `Syntax part ${index + 1}: ${segment.label}`, text: `${segment.label}. ${segment.explanation}`, sectionId })),
+      ];
     case "table":
       return [
         { label: "Table", text: block.caption, sectionId },
-        ...block.rows.map((row, rowIndex) => ({
-          label: `Table row ${rowIndex + 1}`,
-          text: block.columns.map((column, columnIndex) => `${column}: ${row[columnIndex] ?? ""}.`).join(" "),
-          sectionId,
-        })),
+        ...block.rows.map((row, rowIndex) => ({ label: `Table row ${rowIndex + 1}`, text: block.columns.map((column, columnIndex) => `${column}: ${row[columnIndex] ?? ""}.`).join(" "), sectionId })),
       ];
     case "callout":
       return [{ label: block.title, text: `${block.title}. ${block.body}`, sectionId }];
@@ -139,34 +122,20 @@ export function buildTopicNarration(topic: TopicDocument): NarrationPassage[] {
   ];
 
   for (const section of topic.sections) {
-    drafts.push(
-      { label: "Section", text: section.title, sectionId: section.id },
-      { label: "Section summary", text: section.summary, sectionId: section.id },
-    );
+    drafts.push({ label: "Section", text: section.title, sectionId: section.id }, { label: "Section summary", text: section.summary, sectionId: section.id });
     if (section.visual) drafts.push(...visualDrafts(section.visual, "Section visual", section.id));
     for (const block of section.blocks) drafts.push(...blockDrafts(block, section.id));
   }
 
-  for (const entry of topic.glossary) {
-    drafts.push({ label: `Glossary: ${entry.term}`, text: `${entry.term}. ${entry.definition}`, sectionId: "glossary" });
-  }
-
-  for (const source of topic.sources) {
-    drafts.push({ label: "Primary reference", text: `Primary reference: ${source.label}.`, sectionId: "sources" });
-  }
+  for (const entry of topic.glossary) drafts.push({ label: `Glossary: ${entry.term}`, text: `${entry.term}. ${entry.definition}`, sectionId: "glossary" });
+  for (const source of topic.sources) drafts.push({ label: "Primary reference", text: `Primary reference: ${source.label}.`, sectionId: "sources" });
 
   const passages: NarrationPassage[] = [];
   for (const draft of drafts) {
     for (const text of splitSpeechText(draft.text)) {
       const index = passages.length + 1;
-      passages.push({
-        id: `${topic.slug}-narration-${index}`,
-        label: draft.label,
-        text,
-        ...(draft.sectionId ? { sectionId: draft.sectionId } : {}),
-      });
+      passages.push({ id: `${topic.slug}-narration-${index}`, label: draft.label, text, ...(draft.sectionId ? { sectionId: draft.sectionId } : {}) });
     }
   }
-
   return passages;
 }
