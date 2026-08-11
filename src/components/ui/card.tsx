@@ -10,9 +10,6 @@ export function CardHeader({ className, ...props }: React.HTMLAttributes<HTMLDiv
 export function CardTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
   return <h3 className={cn("text-[clamp(1.05rem,3.5cqi,1.3rem)] font-bold leading-tight", className)} {...props} />;
 }
-export function CardDescription({ className, ...props }: React.HTMLAttributes<HTMLParagraphElement>) {
-  return <p className={cn("text-sm leading-relaxed text-muted-foreground", className)} {...props} />;
-}
 export function CardContent({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return <div className={cn("p-[clamp(1rem,3cqi,1.5rem)] pt-0", className)} {...props} />;
 }
