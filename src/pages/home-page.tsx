@@ -99,7 +99,7 @@ function HeroMap() {
                 <small className="text-xs leading-snug text-muted-foreground">{node.detail}</small>
               </div>
             </div>
-            {index < nodes.length - 1 && <i aria-hidden="true" />}
+            {<i aria-hidden="true" />}
           </div>
         ))}
       </div>
