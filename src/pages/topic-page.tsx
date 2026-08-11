@@ -67,58 +67,75 @@ export function TopicPage() {
   if (status !== "ready" || !topic) return <TopicSkeleton />;
 
   return (
-    <article style={{ "--topic-accent": topic.accent } as React.CSSProperties}>
-      <header className="topic-hero">
+    <article className="topic-page" style={{ "--topic-accent": topic.accent } as React.CSSProperties}>
+      <header className="topic-orientation" aria-label="Topic overview">
         <div className="shell">
-          <Link to="/topics" className="text-link inline-flex items-center gap-2 text-sm"><ArrowLeft aria-hidden="true" /> All topics</Link>
-          <div className="topic-hero-grid">
-            <div>
-              <div className="flex flex-wrap gap-2">
+          <Link to="/topics" className="topic-back-link"><ArrowLeft aria-hidden="true" /> All topics</Link>
+
+          <div className="topic-orientation-grid">
+            <div className="topic-orientation-copy">
+              <div className="topic-meta" aria-label="Topic metadata">
                 <Badge>{topic.category}</Badge>
                 <Badge variant="outline">{topic.level}</Badge>
                 <Badge variant="outline"><Clock3 className="me-1 size-3" aria-hidden="true" /> {topic.estimatedMinutes} min</Badge>
               </div>
-              <p className="eyebrow mt-6">{topic.eyebrow}</p>
+              <p className="topic-kicker">{topic.eyebrow}</p>
               <h1>{topic.title}</h1>
               <p className="topic-summary">{topic.summary}</p>
-              <div className="topic-outcomes">
-                <p>By the end, you will be able to:</p>
-                <ul>{topic.learningOutcomes.map((outcome) => <li key={outcome}>{outcome}</li>)}</ul>
-              </div>
-              <div className="topic-prerequisites">
-                <p>Helpful before this guide</p>
-                <ul>{topic.prerequisites.map((prerequisite) => <li key={prerequisite}>{prerequisite}</li>)}</ul>
+
+              <div className="topic-learning-map">
+                <section aria-labelledby="topic-outcomes-title">
+                  <h2 id="topic-outcomes-title">You will be able to</h2>
+                  <ul>{topic.learningOutcomes.map((outcome) => <li key={outcome}>{outcome}</li>)}</ul>
+                </section>
+                <section aria-labelledby="topic-prerequisites-title">
+                  <h2 id="topic-prerequisites-title">Helpful before you start</h2>
+                  <ul>{topic.prerequisites.map((prerequisite) => <li key={prerequisite}>{prerequisite}</li>)}</ul>
+                </section>
               </div>
             </div>
-            <TopicVisualPanel visual={topic.heroVisual} accent={topic.accent} />
+
+            <div className="topic-orientation-visual">
+              <TopicVisualPanel visual={topic.heroVisual} accent={topic.accent} />
+            </div>
           </div>
         </div>
       </header>
 
-      <div className="shell">
-        <TopicNarration topic={topic} />
-      </div>
+      <div className="shell topic-workspace">
+        <aside className="topic-workspace-rail">
+          <TopicToc sections={topic.sections} />
+        </aside>
 
-      <div className="shell topic-layout">
-        <aside><TopicToc sections={topic.sections} /></aside>
-        <div className="topic-content">
-          {topic.sections.map((section) => <TopicSectionView section={section} accent={topic.accent} key={section.id} />)}
-          <Glossary topic={topic} />
-          <Sources topic={topic} />
-          {relatedTopics.length > 0 && (
-            <section className="topic-section">
-              <header><p className="eyebrow">Continue learning</p><h2>Related topics</h2></header>
-              <div className="concept-grid">
-                {relatedTopics.map((related) => (
-                  <Card className="p-5" key={related.slug}>
-                    <h3 className="font-bold"><Link className="text-link" to={`/topics/${related.slug}`}>{related.title}</Link></h3>
-                    <p className="mt-2 text-sm text-muted-foreground">{related.summary}</p>
-                  </Card>
-                ))}
-              </div>
-            </section>
-          )}
-        </div>
+        <main className="topic-content" id="topic-content">
+          <div className="topic-mobile-map"><TopicToc sections={topic.sections} /></div>
+          <TopicNarration topic={topic} />
+
+          <div className="topic-learning-sequence">
+            {topic.sections.map((section) => <TopicSectionView section={section} accent={topic.accent} key={section.id} />)}
+          </div>
+
+          <div className="topic-reference-zone" aria-label="Topic references and next steps">
+            <Glossary topic={topic} />
+            <Sources topic={topic} />
+            {relatedTopics.length > 0 && (
+              <section className="topic-section topic-related-section">
+                <header className="topic-reading-column">
+                  <p className="eyebrow">Continue learning</p>
+                  <h2>Related topics</h2>
+                </header>
+                <div className="concept-grid topic-related-grid">
+                  {relatedTopics.map((related) => (
+                    <Card className="p-5" key={related.slug}>
+                      <h3 className="font-bold"><Link className="text-link" to={`/topics/${related.slug}`}>{related.title}</Link></h3>
+                      <p className="mt-2 text-sm text-muted-foreground">{related.summary}</p>
+                    </Card>
+                  ))}
+                </div>
+              </section>
+            )}
+          </div>
+        </main>
       </div>
     </article>
   );
@@ -127,7 +144,7 @@ export function TopicPage() {
 function Glossary({ topic }: { topic: TopicDocument }) {
   return (
     <section className="topic-section" id="glossary">
-      <header><p className="eyebrow">Plain-language glossary</p><h2>Words you have already met in this guide</h2><p>Use this as a quick reminder. The guide introduces these terms in context before they appear here.</p></header>
+      <header className="topic-reading-column"><p className="eyebrow">Plain-language glossary</p><h2>Words you have already met in this guide</h2><p>Use this as a quick reminder. The guide introduces these terms in context before they appear here.</p></header>
       <dl className="glossary-grid">
         {topic.glossary.map((entry) => <div key={entry.term}><dt>{entry.term}</dt><dd>{entry.definition}</dd></div>)}
       </dl>
@@ -138,7 +155,7 @@ function Glossary({ topic }: { topic: TopicDocument }) {
 function Sources({ topic }: { topic: TopicDocument }) {
   return (
     <section className="topic-section" id="sources">
-      <header><p className="eyebrow">Primary references</p><h2>Verify and go deeper</h2><p>These links point to standards bodies, official project documentation, or official platform documentation.</p></header>
+      <header className="topic-reading-column"><p className="eyebrow">Primary references</p><h2>Verify and go deeper</h2><p>These links point to standards bodies, official project documentation, or official platform documentation.</p></header>
       <ul className="source-list">
         {topic.sources.map((source) => (
           <li key={source.url}>
