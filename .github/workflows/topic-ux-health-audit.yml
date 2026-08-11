@@ -1,0 +1,233 @@
+name: Topic UX health audit
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - docs/topic-ux-health-trigger.txt
+
+permissions:
+  contents: write
+
+concurrency:
+  group: topic-ux-health-audit
+  cancel-in-progress: true
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Check out main
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+        with:
+          run_install: false
+
+      - name: Install Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install project
+        run: pnpm install --frozen-lockfile
+
+      - name: Run project gate
+        run: pnpm run check
+
+      - name: Audit dead files, exports, types, and dependencies with exact Knip
+        id: knip
+        continue-on-error: true
+        shell: bash
+        run: |
+          cat > /tmp/knip.json <<'JSON'
+          {
+            "$schema": "https://unpkg.com/knip@6/schema.json",
+            "entry": ["src/main.tsx", "vite.config.ts", "scripts/*.mjs", "tests/**/*.test.ts"],
+            "project": ["src/**/*.{ts,tsx}", "scripts/**/*.mjs", "tests/**/*.ts", "!src/generated/**"],
+            "includeEntryExports": true
+          }
+          JSON
+          pnpm dlx knip@6.29.0 --config /tmp/knip.json --include files,dependencies,unlisted,unresolved,exports,types 2>&1 | tee /tmp/knip-output.txt
+          exit ${PIPESTATUS[0]}
+
+      - name: Audit all topic source links
+        id: links
+        continue-on-error: true
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import { readdir, readFile, writeFile } from 'node:fs/promises';
+          const dir = 'public/content/topics';
+          const urls = new Set();
+          for (const name of await readdir(dir)) {
+            if (!name.endsWith('.json')) continue;
+            const topic = JSON.parse(await readFile(`${dir}/${name}`, 'utf8'));
+            for (const source of topic.sources ?? []) urls.add(source.url);
+          }
+          await writeFile('/tmp/topic-source-urls.txt', [...urls].sort().join('\n'));
+          NODE
+          : > /tmp/link-output.txt
+          failed=0
+          while IFS= read -r url; do
+            code=$(curl -L -A 'Mozilla/5.0 (compatible; eaboutedev-link-audit/1.0)' -sS -o /dev/null --max-time 30 -w '%{http_code}' "$url" || true)
+            echo "$code $url" | tee -a /tmp/link-output.txt
+            case "$code" in 2*|3*) ;; *) failed=1 ;; esac
+          done < /tmp/topic-source-urls.txt
+          exit $failed
+
+      - name: Install exact Playwright outside project graph
+        shell: bash
+        run: |
+          mkdir -p /tmp/topic-ux-qa
+          cd /tmp/topic-ux-qa
+          npm init -y >/dev/null
+          npm install --save-exact playwright@1.62.0 >/dev/null
+          npx playwright install --with-deps chromium >/dev/null
+
+      - name: Exercise deployed topic UX and neural narration
+        id: browser
+        continue-on-error: true
+        shell: bash
+        run: |
+          cat > /tmp/topic-ux-qa/audit.mjs <<'NODE'
+          import { chromium } from 'playwright';
+          import { writeFile } from 'node:fs/promises';
+
+          const url = 'https://aahplexx.github.io/eaboutedev/#/topics/how-the-web-works';
+          const result = {
+            checkedAt: new Date().toISOString(),
+            url,
+            playwright: '1.62.0',
+            heading: false,
+            ttsDefaultHeightPx: null,
+            transcriptCollapsedByDefault: false,
+            transcriptOpens: false,
+            desktopTocVisible: false,
+            desktopNoHorizontalOverflow: false,
+            mobileTocVisible: false,
+            mobileDesktopTocHidden: false,
+            mobileNarrationPosition: null,
+            mobileNoHorizontalOverflow: false,
+            neuralStarted: false,
+            pauseWorked: false,
+            resumeWorked: false,
+            currentTranscriptCount: null,
+            consoleErrors: [],
+            failedRuntimeResponses: [],
+            success: false,
+            failure: null
+          };
+          const consoleErrors = [];
+          const failedRuntimeResponses = [];
+          const browser = await chromium.launch({ headless: true });
+          try {
+            const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+            const page = await context.newPage();
+            page.on('console', m => { if (m.type() === 'error') consoleErrors.push(m.text()); });
+            page.on('response', r => {
+              const host = new URL(r.url()).hostname;
+              if ((host.includes('jsdelivr.net') || host.includes('huggingface.co') || host.includes('hf.co')) && r.status() >= 400) failedRuntimeResponses.push({ url: r.url(), status: r.status() });
+            });
+            await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 });
+            await page.getByRole('heading', { name: 'How the Web Works', level: 1 }).waitFor({ timeout: 15000 });
+            result.heading = true;
+            result.desktopNoHorizontalOverflow = await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1);
+            result.desktopTocVisible = await page.locator('.topic-toc-desktop').isVisible();
+            result.ttsDefaultHeightPx = Math.round((await page.locator('.topic-narration').boundingBox()).height * 100) / 100;
+            result.transcriptCollapsedByDefault = !(await page.locator('.narration-transcript').isVisible());
+            await page.locator('.narration-details > summary').click();
+            result.transcriptOpens = await page.locator('.narration-transcript').isVisible();
+            await page.locator('.narration-details > summary').click();
+
+            await page.getByRole('button', { name: 'Play narration' }).click();
+            const outcome = await Promise.race([
+              page.waitForFunction(() => { const a = document.querySelector('audio'); return Boolean(a && !a.paused && Number.isFinite(a.duration) && a.duration > 0); }, { timeout: 240000 }).then(() => 'playing'),
+              page.locator('.narration-status').filter({ hasText: /unavailable|could not start|could not be played/i }).waitFor({ state: 'visible', timeout: 240000 }).then(() => 'error')
+            ]);
+            if (outcome !== 'playing') throw new Error(await page.locator('.narration-status').innerText());
+            result.neuralStarted = true;
+            await page.getByRole('button', { name: 'Pause' }).click();
+            result.pauseWorked = await page.evaluate(() => Boolean(document.querySelector('audio')?.paused));
+            await page.getByRole('button', { name: 'Resume' }).click();
+            await page.waitForFunction(() => Boolean(document.querySelector('audio') && !document.querySelector('audio').paused), { timeout: 10000 });
+            result.resumeWorked = true;
+            await page.locator('.narration-details > summary').click();
+            result.currentTranscriptCount = await page.locator('[aria-label="Narration transcript"] [aria-current="true"]').count();
+            await context.close();
+
+            const mobile = await browser.newContext({ viewport: { width: 390, height: 844 } });
+            const mobilePage = await mobile.newPage();
+            await mobilePage.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 });
+            await mobilePage.getByRole('heading', { name: 'How the Web Works', level: 1 }).waitFor({ timeout: 15000 });
+            result.mobileNoHorizontalOverflow = await mobilePage.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1);
+            result.mobileTocVisible = await mobilePage.locator('.topic-toc-mobile').first().isVisible();
+            result.mobileDesktopTocHidden = !(await mobilePage.locator('.topic-toc-desktop').first().isVisible());
+            result.mobileNarrationPosition = await mobilePage.locator('.topic-narration').evaluate(el => getComputedStyle(el).position);
+            await mobile.close();
+
+            result.consoleErrors = consoleErrors;
+            result.failedRuntimeResponses = failedRuntimeResponses;
+            result.success = Boolean(
+              result.heading && result.ttsDefaultHeightPx <= 180 && result.transcriptCollapsedByDefault && result.transcriptOpens &&
+              result.desktopTocVisible && result.desktopNoHorizontalOverflow && result.mobileTocVisible && result.mobileDesktopTocHidden &&
+              result.mobileNarrationPosition === 'static' && result.mobileNoHorizontalOverflow && result.neuralStarted && result.pauseWorked &&
+              result.resumeWorked && result.currentTranscriptCount === 1 && consoleErrors.length === 0 && failedRuntimeResponses.length === 0
+            );
+          } catch (error) {
+            result.failure = error instanceof Error ? error.message : String(error);
+            result.consoleErrors = consoleErrors;
+            result.failedRuntimeResponses = failedRuntimeResponses;
+          } finally {
+            await browser.close();
+            await writeFile(`${process.env.GITHUB_WORKSPACE}/docs/topic-ux-health-result.json`, `${JSON.stringify(result, null, 2)}\n`);
+          }
+          if (!result.success) process.exitCode = 1;
+          NODE
+          cd /tmp/topic-ux-qa
+          node audit.mjs
+
+      - name: Record audit outcomes
+        if: always()
+        env:
+          KNIP_OUTCOME: ${{ steps.knip.outcome }}
+          LINKS_OUTCOME: ${{ steps.links.outcome }}
+          BROWSER_OUTCOME: ${{ steps.browser.outcome }}
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFile, writeFile } from 'node:fs/promises';
+          const path = 'docs/topic-ux-health-result.json';
+          let result = {};
+          try { result = JSON.parse(await readFile(path, 'utf8')); } catch {}
+          result.knipOutcome = process.env.KNIP_OUTCOME;
+          result.linkOutcome = process.env.LINKS_OUTCOME;
+          result.browserOutcome = process.env.BROWSER_OUTCOME;
+          result.knipOutput = await readFile('/tmp/knip-output.txt', 'utf8').catch(() => '');
+          result.linkOutput = await readFile('/tmp/link-output.txt', 'utf8').catch(() => '');
+          await writeFile(path, `${JSON.stringify(result, null, 2)}\n`);
+          NODE
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/topic-ux-health-result.json
+          git commit -m "test: record topic UX health audit" || true
+          git push origin HEAD:main
+
+      - name: Enforce audits
+        if: always()
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFile } from 'node:fs/promises';
+          const result = JSON.parse(await readFile('docs/topic-ux-health-result.json', 'utf8'));
+          if (result.knipOutcome !== 'success' || result.linkOutcome !== 'success' || result.browserOutcome !== 'success' || result.success !== true) {
+            console.error(JSON.stringify(result, null, 2));
+            process.exit(1);
+          }
+          NODE
