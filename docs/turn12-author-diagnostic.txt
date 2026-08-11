@@ -1,6 +1,0 @@
-exit=1
-Traceback (most recent call last):
-  File "/tmp/turn12-author.py", line 110, in <module>
-    checklist(['Record the environment and deployed version before comparing behavior.', 'Confirm source-map availability rather than assuming stack frames map directly to source.', 'Use sanitized reproductions when production data is sensitive.', 'Verify network, cache, feature-flag, and authentication differences between environments.', 'Remove temporary debugging instrumentation that exposes data or changes timing before release.'])
-    ^^^^^^^^^
-NameError: name 'checklist' is not defined. Did you mean: 'checkpoint'?
