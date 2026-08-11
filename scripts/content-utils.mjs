@@ -4,9 +4,9 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 export const rootDirectory = fileURLToPath(new URL("..", import.meta.url));
-export const topicDirectory = path.join(rootDirectory, "public/content/topics");
+const topicDirectory = path.join(rootDirectory, "public/content/topics");
 
-export const recommendedTopicOrder = new Map([
+const recommendedTopicOrder = new Map([
   ["how-the-web-works", 0],
   ["html-css-and-javascript", 1],
   ["git-and-github", 2],
