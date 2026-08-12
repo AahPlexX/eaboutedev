@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { flattenRichText } from "../src/lib/rich-text.ts";
 
 export const rootDirectory = fileURLToPath(new URL("..", import.meta.url));
 const topicDirectory = path.join(rootDirectory, "public/content/topics");
@@ -34,7 +35,7 @@ export function createCatalogEntry(topic, order = 0) {
     slug: topic.slug,
     title: topic.title,
     eyebrow: topic.eyebrow,
-    summary: topic.summary,
+    summary: flattenRichText(topic.summary),
     category: topic.category,
     level: topic.level,
     estimatedMinutes: topic.estimatedMinutes,
@@ -50,14 +51,14 @@ export function createSearchDocument(topic) {
   return {
     slug: topic.slug,
     title: topic.title,
-    summary: topic.summary,
+    summary: flattenRichText(topic.summary),
     category: topic.category,
     level: topic.level,
     estimatedMinutes: topic.estimatedMinutes,
     aliases: topic.aliases.join(" "),
     keywords: topic.keywords.join(" "),
     sectionTitles: topic.sections.map((section) => section.title).join(" "),
-    glossaryText: topic.glossary.flatMap((entry) => [entry.term, entry.definition]).join(" "),
+    glossaryText: topic.glossary.flatMap((entry) => [entry.term, flattenRichText(entry.definition)]).join(" "),
   };
 }
 
