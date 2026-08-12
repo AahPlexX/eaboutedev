@@ -4,6 +4,7 @@ on:
   push:
     branches: [main]
     paths:
+      - .github/workflows/semantic-inline-tdd.yml
       - tests/rich-text.test.ts
       - src/lib/rich-text.ts
       - src/components/topics/inline-content.tsx
