@@ -1,0 +1,106 @@
+name: Semantic inline recovery
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/semantic-inline-recovery.yml
+
+permissions:
+  contents: write
+
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+        with:
+          run_install: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+
+      - name: Prepare corrected curated migration
+        shell: bash
+        run: |
+          python <<'PY'
+          from pathlib import Path
+          text = Path('.github/workflows/semantic-inline-content-migration.yml').read_text()
+          marker = "          node --input-type=module <<'NODE'\n"
+          start = text.index(marker) + len(marker)
+          end = text.index("\n          NODE", start)
+          lines = text[start:end].splitlines()
+          script = '\n'.join(line[10:] if line.startswith('          ') else line for line in lines) + '\n'
+          replacements = {
+            'dfn("Uniform Resource Locator", abbr("Uniform Resource Locator", "URL"))': 'dfn("Uniform Resource Locator", [abbr("Uniform Resource Locator", "URL")])',
+            'dfn("Hot Module Replacement", abbr("Hot Module Replacement", "HMR"))': 'dfn("Hot Module Replacement", [abbr("Hot Module Replacement", "HMR")])',
+            'dfn("Application Programming Interface", abbr("Application Programming Interface", "API"))': 'dfn("Application Programming Interface", [abbr("Application Programming Interface", "API")])',
+          }
+          for before, after in replacements.items():
+            if before not in script:
+              raise SystemExit(f'missing migration expression: {before}')
+            script = script.replace(before, after, 1)
+          Path('/tmp/semantic-migrate.mjs').write_text(script)
+          PY
+          node /tmp/semantic-migrate.mjs
+
+      - name: Run complete repository gate
+        id: gate
+        continue-on-error: true
+        shell: bash
+        run: |
+          set +e
+          pnpm run generate > /tmp/semantic-recovery-gate.txt 2>&1
+          status=$?
+          if [ "$status" -eq 0 ]; then
+            pnpm run check >> /tmp/semantic-recovery-gate.txt 2>&1
+            status=$?
+          fi
+          cat /tmp/semantic-recovery-gate.txt
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Persist failure evidence only
+        if: steps.gate.outputs.status != '0'
+        shell: bash
+        run: |
+          git restore --worktree --staged public/content/topics src/generated public/catalog public/search docs/topic-registry.json 2>/dev/null || true
+          cp /tmp/semantic-recovery-gate.txt docs/semantic-inline-recovery-diagnostic.txt
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/semantic-inline-recovery-diagnostic.txt
+          git commit -m "test: record semantic inline recovery failure" || true
+          git push origin HEAD:main
+
+      - name: Remove temporary semantic workflows and diagnostics
+        if: steps.gate.outputs.status == '0'
+        shell: bash
+        run: |
+          rm -f \
+            .github/workflows/semantic-inline-tdd.yml \
+            .github/workflows/semantic-inline-content-migration.yml \
+            .github/workflows/semantic-inline-migration-diagnostic.yml \
+            .github/workflows/semantic-inline-recovery.yml \
+            docs/semantic-inline-tdd-diagnostic.txt \
+            docs/semantic-inline-migration-diagnostic.txt \
+            docs/semantic-inline-recovery-diagnostic.txt
+
+      - name: Commit verified semantic content
+        if: steps.gate.outputs.status == '0'
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "feat: add first-definition semantic content"
+          git push origin HEAD:main
+
+      - name: Enforce recovery result
+        if: steps.gate.outputs.status != '0'
+        run: exit 1
