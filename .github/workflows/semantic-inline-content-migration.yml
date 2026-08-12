@@ -1,0 +1,220 @@
+name: Curated semantic inline content migration
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/semantic-inline-content-migration.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: semantic-inline-content-migration
+  cancel-in-progress: true
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+        with:
+          run_install: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+
+      - name: Apply semantic markup only to verified defining passages
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFile, writeFile } from "node:fs/promises";
+
+          const root = "public/content/topics";
+          const load = async (slug) => JSON.parse(await readFile(`${root}/${slug}.json`, "utf8"));
+          const save = async (topic) => writeFile(`${root}/${topic.slug}.json`, `${JSON.stringify(topic, null, 2)}\n`);
+          const expect = (actual, expected, label) => {
+            if (actual !== expected) throw new Error(`${label} changed; refusing semantic migration`);
+          };
+          const dfn = (term, children) => ({ type: "dfn", term, children });
+          const abbr = (title, children) => ({ type: "abbr", title, children });
+          const code = (children) => ({ type: "code", children });
+          const kbd = (children) => ({ type: "kbd", children });
+          const samp = (children) => ({ type: "samp", children });
+          const variable = (children) => ({ type: "var", children });
+          const strong = (children) => ({ type: "strong", children });
+          const em = (children) => ({ type: "em", children });
+          const link = (href, children) => ({ type: "a", href, children });
+
+          {
+            const topic = await load("how-the-web-works");
+            expect(topic.sections[0].blocks[0].text,
+              "Imagine entering https://example.com/products/42 and pressing Enter. Your browser cannot simply display a page that lives somewhere else. It first has to identify the destination, reach software at that destination, describe what it wants, receive the result, and then interpret the returned files. That request-and-response conversation is the backbone of ordinary web browsing.",
+              "How the Web Works opening example");
+            topic.sections[0].blocks[0].text = [
+              "Imagine entering ", code("https://example.com/products/42"), " and pressing ", kbd("Enter"),
+              ". Your browser cannot simply display a page that lives somewhere else. It first has to identify the destination, reach software at that destination, describe what it wants, receive the result, and then interpret the returned files. That request-and-response conversation is the backbone of ordinary web browsing."
+            ];
+            expect(topic.sections[0].blocks[1].items[3].example, "200 OK plus HTML", "HTTP response example");
+            topic.sections[0].blocks[1].items[3].example = [samp("200 OK"), " plus HTML"];
+            expect(topic.sections[1].blocks[0].text,
+              "The technical name for a complete web address is a URL, short for Uniform Resource Locator. In https://example.com/products/42?currency=USD#reviews, the browser can separate the communication scheme, the site name, the resource path, optional query input, and an optional location inside the returned document.",
+              "URL definition");
+            topic.sections[1].blocks[0].text = [
+              "The technical name for a complete web address is a ",
+              dfn("Uniform Resource Locator", abbr("Uniform Resource Locator", "URL")),
+              " (Uniform Resource Locator). In ", code("https://example.com/products/42?currency=USD#reviews"),
+              ", the browser can separate the communication scheme, the site name, the resource path, optional query input, and an optional location inside the returned document."
+            ];
+            await save(topic);
+          }
+
+          {
+            const topic = await load("html-css-and-javascript");
+            expect(topic.sections[1].summary,
+              "HTML is markup: elements and attributes describe content, relationships, controls, and document structure so browsers and assistive technology can understand them.",
+              "HTML definition");
+            topic.sections[1].summary = [
+              dfn("HyperText Markup Language", abbr("HyperText Markup Language", "HTML")),
+              " (HyperText Markup Language) is ", strong("markup"),
+              ": elements and attributes describe content, relationships, controls, and document structure so browsers and assistive technology can understand them."
+            ];
+            expect(topic.sections[1].blocks[0].text,
+              "An HTML element usually has a defined purpose and behavior. Choosing <button> for an action or <a href> for navigation is more than a naming preference: the browser already knows how those controls should participate in keyboard navigation, activation, accessibility APIs, and other platform behavior. Semantic HTML means choosing elements for what the content or control is, not simply for how you want it to look.",
+              "HTML element semantics paragraph");
+            topic.sections[1].blocks[0].text = [
+              "An HTML element usually has a defined purpose and behavior. Choosing ", code("<button>"), " for an action or ", code("<a href>"),
+              " for navigation is more than a naming preference: the browser already knows how those controls should participate in keyboard navigation, activation, accessibility APIs, and other platform behavior. Semantic HTML means choosing elements for what the content or control is, not simply for how you want it to look."
+            ];
+            await save(topic);
+          }
+
+          {
+            const topic = await load("git-and-github");
+            expect(topic.sections[0].blocks[0].text,
+              "Imagine a small site that works on Monday, gains search on Tuesday, and breaks while you are changing navigation on Wednesday. Three folders named final, final-2, and final-really-final cannot reliably explain which changes belong together or how Wednesday relates to Tuesday. Git is a distributed version-control system: it records project history as identifiable commits so you can compare states, create parallel lines of work, exchange history with other repositories, and recover with evidence instead of guesswork.",
+              "Git definition");
+            topic.sections[0].blocks[0].text = [
+              "Imagine a small site that works on Monday, gains search on Tuesday, and breaks while you are changing navigation on Wednesday. Three folders named ", code("final"), ", ", code("final-2"), ", and ", code("final-really-final"),
+              " cannot reliably explain which changes belong together or how Wednesday relates to Tuesday. ",
+              dfn("Git", "Git"), " is a distributed version-control system: it records project history as identifiable commits so you can compare states, create parallel lines of work, exchange history with other repositories, and recover with evidence instead of guesswork."
+            ];
+            await save(topic);
+          }
+
+          {
+            const topic = await load("nodejs-and-package-management");
+            expect(topic.prerequisites[0],
+              "HTML, CSS, and JavaScript is helpful because this guide assumes you recognize JavaScript syntax, but it explains the runtime and package concepts from the beginning.",
+              "Node prerequisite");
+            topic.prerequisites[0] = [
+              link("#/topics/html-css-and-javascript", "HTML, CSS, and JavaScript"),
+              " is helpful because this guide assumes you recognize JavaScript syntax, but it explains the runtime and package concepts from the beginning."
+            ];
+            expect(topic.sections[0].summary,
+              "JavaScript is the language. A runtime supplies the environment that actually executes it and determines which non-language APIs are available.",
+              "runtime definition");
+            topic.sections[0].summary = [
+              "JavaScript is the language. A ", dfn("runtime", "runtime"), " supplies the environment that ",
+              strong("actually executes it"), " and determines which non-language APIs are available."
+            ];
+            await save(topic);
+          }
+
+          {
+            const topic = await load("typescript");
+            expect(topic.sections[0].blocks[0].explanation,
+              "The function assumes price is a number, but JavaScript allows a string to reach the call. The failure appears only when toFixed is attempted at runtime.",
+              "TypeScript variable explanation");
+            topic.sections[0].blocks[0].explanation = [
+              "The function assumes ", variable("price"), " is a number, but JavaScript allows a string to reach the call. The failure appears only when ", code("toFixed"), " is attempted at runtime."
+            ];
+            expect(topic.sections[0].blocks[2].title, "Static type checking", "static type checking definition");
+            topic.sections[0].blocks[2].title = dfn("Static type checking", "Static type checking").children;
+            topic.sections[0].blocks[2].title = [dfn("Static type checking", "Static type checking")];
+            await save(topic);
+          }
+
+          {
+            const topic = await load("react");
+            expect(topic.sections[0].summary,
+              "A React component is a JavaScript function that describes part of the interface for the current inputs.",
+              "React component definition");
+            topic.sections[0].summary = [
+              "A ", dfn("React component", "React component"), " is a JavaScript function that describes part of the interface for the current inputs."
+            ];
+            expect(topic.sections[0].blocks[1].explanation,
+              "ProductCard is a component. product is a prop supplied by its parent. JSX lets JavaScript describe a tree of elements. The output still uses semantic browser elements: article, heading, paragraph, and button.",
+              "React code explanation");
+            topic.sections[0].blocks[1].explanation = [
+              code("ProductCard"), " is a component. ", code("product"), " is a prop supplied by its parent. ", code("JSX"),
+              " lets JavaScript describe a tree of elements. The output still uses semantic browser elements: article, heading, paragraph, and button."
+            ];
+            await save(topic);
+          }
+
+          {
+            const topic = await load("vite");
+            expect(topic.sections[1].blocks[0].text,
+              "Hot Module Replacement, or HMR, updates modules in a running page without requiring a full reload when an integration can preserve the surrounding application state. HMR is a development feedback feature; it is not how production users receive code.",
+              "HMR definition");
+            topic.sections[1].blocks[0].text = [
+              "Hot Module Replacement (", dfn("Hot Module Replacement", abbr("Hot Module Replacement", "HMR")),
+              ") updates modules in a running page without requiring a full reload when an integration can preserve the surrounding application state. HMR is a development feedback feature; it is not how production users receive code."
+            ];
+            await save(topic);
+          }
+
+          {
+            const topic = await load("apis-and-data-exchange");
+            expect(topic.sections[0].blocks[0].text,
+              "Suppose a checkout application needs an invoice service to create an invoice. The checkout side must be able to say 'create an invoice for this customer in USD.' The invoice side must know which operation is being requested, what fields are required, what values are valid, what success returns, and what failure looks like. That agreed interface is an API, an Application Programming Interface. An API can exist inside one process or across a network; a web API commonly uses HTTP to carry the messages.",
+              "API definition");
+            topic.sections[0].blocks[0].text = [
+              "Suppose a checkout application needs an invoice service to create an invoice. The checkout side must be able to say 'create an invoice for this customer in USD.' The invoice side must know which operation is being requested, what fields are required, what values are valid, what success returns, and what failure looks like. That agreed interface is an ",
+              dfn("Application Programming Interface", abbr("Application Programming Interface", "API")),
+              " (Application Programming Interface). An API can exist ", em("inside one process or across a network"), "; a web API commonly uses HTTP to carry the messages."
+            ];
+            await save(topic);
+          }
+
+          {
+            const topic = await load("the-seven-types-of-databases");
+            expect(topic.sections[0].blocks[2].text,
+              "Developers often call a recurring way the application reads or writes data an access pattern. Before choosing a database, write down the important access patterns in ordinary language: what must be saved, what must be looked up, what gets changed together, how much data exists, and how quickly the result is needed. Then add the correctness rules: which states must never occur, which operations must succeed or fail as one unit, and how much temporary inconsistency the product can tolerate.",
+              "access pattern definition");
+            topic.sections[0].blocks[2].text = [
+              "Developers often call a recurring way the application reads or writes data an ", dfn("access pattern", "access pattern"),
+              ". Before choosing a database, write down the important access patterns in ordinary language: what must be saved, what must be looked up, what gets changed together, how much data exists, and how quickly the result is needed. Then add the correctness rules: which states must never occur, which operations must succeed or fail as one unit, and how much temporary inconsistency the product can tolerate."
+            ];
+            await save(topic);
+          }
+          NODE
+
+      - name: Regenerate and verify complete repository
+        run: |
+          pnpm run generate
+          pnpm run check
+
+      - name: Remove temporary semantic TDD and migration scaffolding
+        shell: bash
+        run: |
+          rm -f \
+            .github/workflows/semantic-inline-tdd.yml \
+            .github/workflows/semantic-inline-content-migration.yml \
+            docs/semantic-inline-tdd-diagnostic.txt
+
+      - name: Commit verified semantic topic content
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "feat: add first-definition semantic content"
+          git push origin HEAD:main
