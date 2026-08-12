@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { App } from "@/app";
 import "@/index.css";
 import "@/learning.css";
+import "@/semantic-content.css";
 
 const root = document.getElementById("root");
 if (!root) throw new Error("Application root is missing.");
