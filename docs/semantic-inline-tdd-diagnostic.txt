@@ -1,0 +1,193 @@
+✔ rich text flattens plain strings and nested semantic nodes in source order (0.658ms)
+✔ rich text link validation permits only explicit safe destinations (0.171355ms)
+✔ inline renderer uses only the approved semantic element set and no raw HTML escape hatch (4.386504ms)
+✔ validator enforces fixed semantic nodes, safe links, and one canonical definition per topic (0.844818ms)
+✔ all learner prose consumers render or flatten rich text instead of assuming strings (1.316401ms)
+✖ authoring contract requires first-definition-only semantics and explains nested abbreviation definitions (1.632231ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 5
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 82.814276
+
+✖ failing tests:
+
+test at tests/rich-text.test.ts:79:1
+✖ authoring contract requires first-definition-only semantics and explains nested abbreviation definitions (1.632231ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /first defin/i. Input:
+  
+  '# Topic authoring contract\n' +
+    '\n' +
+    '> **Read `NORTHSTAR.md` first.** The North Star is the canonical definition of educational quality and project intent. This file defines the current topic encoding and practical authoring contract. Structural compliance with this file does not make a topic publishable if it fails the North Star quality standard.\n' +
+    '\n' +
+    'Each topic is one UTF-8 JSON document in `public/content/topics`. The filename and `slug` must match. A topic is publishable only when a reader can enter without knowing the topic vocabulary, form a correct mental model quickly, and continue into the real technical details, trade-offs, failure modes, and production decisions without hidden knowledge gaps.\n' +
+    '\n' +
+    'The sequence and quality rules below describe outcomes that the current content system must support; they are **not a demand that unrelated topics share identical headings, section counts, examples, or visual patterns**. Let the subject determine its natural teaching shape while preserving the North Star invariants.\n' +
+    '\n' +
+    '## Teaching rules\n' +
+    '\n' +
+    '1. **Concrete before abstract.** Begin an important idea with a recognizable situation, object, question, visible result, or small example before asking the reader to hold an abstraction in memory.\n' +
+    '2. **Meaning before vocabulary.** Introduce a specialist term only after, or beside, a plain-language explanation that makes the term useful. The glossary reinforces meaning; it must never be the first place a reader can discover what an earlier sentence meant.\n' +
+    '3. **Cause before rule.** Explain why a mechanism exists or why an outcome happens before presenting a rule to remember.\n' +
+    '4. **One dependency at a time.** A sentence or section may rely only on ideas already introduced in the guide or explained beside the new material.\n' +
+    '5. **Do not remove depth to create simplicity.** Reorder difficult ideas and explain them. Keep the real terminology, edge cases, trade-offs, debugging, security, performance, and operating concerns.\n' +
+    '6. **Interpret examples.** Code, commands, requests, schemas, and data examples must explain the important pieces and what the system does with them. A listing is not self-explanatory.\n' +
+    '7. **Use plain language by default.** Prefer common words, active voice, short sentences, short blocks, literal wording, and explicit relationships. Use jargon when it is the correct term, then define it immediately.\n' +
+    '8. **Check understanding without turning the guide into homework.** Each substantial guide must include at least two `checkpoint` blocks after meaningful conceptual transitions. The answer and explanation must be immediately revealable.\n' +
+    '\n' +
+    '## Required sequence\n' +
+    '\n' +
+    'The following is a dependency sequence, not a mandatory heading template. Several stages may share a section when that is clearer, and a complex subject may need multiple sections within one stage.\n' +
+    '\n' +
+    '1. **Orient:** answer what this is, why it exists, where it sits in a real system, what the reader will be able to do, and what prior knowledge is merely helpful rather than mandatory.\n' +
+    '2. **Show something concrete:** establish the first mental model with a familiar scenario, small example, visible outcome, or real question.\n' +
+    '3. **Decompose:** proceed in dependency order; a later section may rely only on ideas already introduced.\n' +
+    '4. **Name the real terms:** introduce formal vocabulary at the point where it gives a useful name to an idea the reader can already understand.\n' +
+    '5. **Make visible:** use flows for order, layers for dependency/containment, comparisons for peer differences, cycles for repetition, maps for relationships, and syntax anatomy when the structure of a code or configuration example is itself part of what the learner must understand.\n' +
+    '6. **Apply:** include interpreted steps, code/data examples, decision tables, scenarios, or checklists that turn explanation into action where the subject benefits from them.\n' +
+    '7. **Check:** add a lightweight checkpoint after at least two important mental-model transitions.\n' +
+    '8. **Protect:** explain common mistakes, failure modes, boundaries, and how to identify the earliest failing stage where applicable.\n' +
+    '9. **Operate:** continue naturally into real-world performance, security, maintainability, deployment, scaling, and recovery considerations that materially belong to the subject.\n' +
+    '10. **Verify:** define a reinforcing glossary and link to standards bodies or official project/platform documentation.\n' +
+    '11. **Continue:** add only related slugs that exist in the registry.\n' +
+    '\n' +
+    '## Semantic inline content\n' +
+    '\n' +
+    'Learner-facing prose may remain a plain JSON string. Use structured rich text only when the inline HTML meaning materially helps the reader. A rich-text value is an ordered array of normal text fragments and approved semantic nodes. The renderer does not accept raw HTML.\n' +
+    '\n' +
+    '### The first-definition rule\n' +
+    '\n' +
+    'Use `dfn` only for the passage that actually defines a term. A canonical term may have **only once per topic** as a `dfn` node. Later mentions stay normal text unless another semantic element is independently correct, such as `code` for an API identifier.\n' +
+    '\n' +
+    'Do not mechanically style the first textual appearance. The defining instance is the sentence that establishes the meaning. The validator normalizes the `term` value and rejects a second defining instance for the same term anywhere in the topic.\n' +
+    '\n' +
+    'For an abbreviation or acronym, write its full expansion in the prose at first use. When the abbreviation itself is the term being defined, nest `abbr` inside `dfn`:\n' +
+    '\n' +
+    '```json\n' +
+    '[\n' +
+    '  "The ",\n' +
+    '  {\n' +
+    '    "type": "dfn",\n' +
+    '    "term": "Document Object Model",\n' +
+    '    "children": [\n' +
+    '      {\n' +
+    '        "type": "abbr",\n' +
+    '        "title": "Document Object Model",\n' +
+    '        "children": "DOM"\n' +
+    '      }\n' +
+    '    ]\n' +
+    '  },\n' +
+    `  " (Document Object Model) is the browser's object representation of the document."\n` +
+    ']\n' +
+    '```\n' +
+    '\n' +
+    '### Approved semantic nodes\n' +
+    '\n' +
+    '- `dfn`: the single defining instance of a canonical term. Requires `term` and `children`.\n' +
+    '- `abbr`: an abbreviation or acronym. Requires the full expansion in `title` and visible `children`.\n' +
+    '- `code`: inline computer-recognizable text such as an element, attribute, API name, command, filename, property, or value.\n' +
+    '- `strong`: genuine importance, seriousness, or urgency. Do not use it as a generic bold style.\n' +
+    '- `em`: genuine stress emphasis. Do not use it as a generic italic style.\n' +
+    '- `a`: a real hyperlink. External destinations must use HTTPS. Internal `/`, `#`, `./`, and `../` destinations are allowed.\n' +
+    '- `kbd`: user input, including a keyboard key or literal command the person enters.\n' +
+    '- `samp`: literal program, terminal, or system output.\n' +
+    '- `var`: a variable or placeholder whose value changes.\n' +
+    '\n' +
+    'Every semantic node requires `children`. Do not add `b`, `i`, arbitrary tag names, raw HTML, `className`, inline styles, event handlers, `target`, `rel`, or arbitrary attributes. If the content model does not expose an attribute, topic JSON cannot author it.\n' +
+    '\n' +
+    'Example with several independent semantics:\n' +
+    '\n' +
+    '```json\n' +
+    '[\n' +
+    '  "Press ",\n' +
+    '  { "type": "kbd", "children": "Enter" },\n' +
+    '  " after running ",\n' +
+    '  { "type": "code", "children": "pnpm check" },\n' +
+    '  ". A successful run may print ",\n' +
+    '  { "type": "samp", "children": "Found 0 warnings and 0 errors." },\n' +
+    '  " The placeholder ",\n' +
+    '  { "type": "var", "children": "PORT" },\n' +
+    '  " represents the port number."\n' +
+    ']\n' +
+    '```\n' +
+    '\n' +
+    'Semantic markup must preserve emphasis scarcity. Do not wrap every technical noun in `code`, every important-looking phrase in `strong`, or every sentence in `em`. Use each element only when its HTML meaning is true at that exact location.\n' +
+    '\n' +
+    'Narration and search flatten rich text back to visible plain language. Semantic node syntax is never spoken or indexed.\n' +
+    '\n' +
+    '## Supported content blocks\n' +
+    '\n' +
+    '- `paragraph`\n' +
+    '- `steps`\n' +
+    '- `cards`\n' +
+    '- `code`\n' +
+    '- `anatomy`\n' +
+    '- `table`\n' +
+    '- `callout`\n' +
+    '- `checklist`\n' +
+    '- `checkpoint`\n' +
+    '\n' +
+    '### Syntax anatomy\n' +
+    '\n' +
+    'Use a syntax anatomy block when the learner benefits from seeing a code, command, header, query, selector, or configuration expression split into meaningful parts. It is a Code Dissection Map: the complete expression stays visible, and each important segment receives a short label and an explanation of what that part controls or means.\n' +
+    '\n' +
+    'Do not add syntax anatomy merely for visual variety. Use it when token boundaries, nesting, argument positions, operators, attributes, options, or protocol fields carry meaning that a plain code listing would make the learner infer.\n' +
+    '\n' +
+    '```json\n' +
+    '{\n' +
+    '  "type": "anatomy",\n' +
+    '  "title": "A fetch request has independent parts",\n' +
+    '  "language": "JavaScript",\n' +
+    '  "caption": "Each labeled segment changes a different part of the request.",\n' +
+    '  "segments": [\n' +
+    '    {\n' +
+    '      "code": "fetch(",\n' +
+    '      "label": "Request API",\n' +
+    '      "explanation": "Starts a browser fetch operation."\n' +
+    '    },\n' +
+    '    {\n' +
+    '      "code": "\\"/api/profile\\"",\n' +
+    '      "label": "Target",\n' +
+    '      "explanation": "Identifies the resource the browser will request."\n' +
+    '    }\n' +
+    '  ]\n' +
+    '}\n' +
+    '```\n' +
+    '\n' +
+    'Keep segment order identical to the visible expression. Explain meaning rather than punctuation. The narration system reads the title, caption, labels, and explanations; it does not read literal source punctuation character by character.\n' +
+    '\n' +
+    'A checkpoint has this shape:\n' +
+    '\n' +
+    '```json\n' +
+    '{\n' +
+    '  "type": "checkpoint",\n' +
+    '  "prompt": "If this earlier stage fails, can the later stage have returned a result?",\n' +
+    '  "answer": "No.",\n' +
+    '  "explanation": "The later stage depends on the earlier stage completing far enough for communication to continue."\n' +
+    '}\n' +
+    '```\n' +
+    '\n' +
+    'Supported visual kinds are `flow`, `layers`, `comparison`, `cycle`, and `map`. Select the kind from the relationship being taught rather than visual variety. A topic does not need a visual merely to match another topic.\n' +
+    '\n' +
+    '## Quality floor\n' +
+    '\n' +
+    'These checks supplement rather than replace the fuller quality dimensions in `NORTHSTAR.md`.\n' +
+    '\n' +
+    '- No section may open with unexplained specialist vocabulary.\n' +
+    '- Define every major technical term at first meaningful use in the body.\n' +
+    '- Explain what problem a mechanism solves before detailing how it works.\n' +
+    '- Include enough concrete examples or scenarios to establish the mental model before the guide '... 824 more characters
+  
+      at TestContext.<anonymous> (file:///home/runner/work/eaboutedev/eaboutedev/tests/rich-text.test.ts:81:10)
+      at async Test.run (node:internal/test_runner/test:1332:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '# Topic authoring contract\n\n> **Read `NORTHSTAR.md` first.** The North Star is the canonical definition of educational quality and project intent. This file defines the current topic encoding and practical authoring contract. Structural compliance with this file does not make a topic publishable if it fails the North Star quality standard.\n\nEach topic is one UTF-8 JSON document in `public/content/topics`. The filename and `slug` must match. A topic is publishable only when a reader can enter without knowing the topic vocabulary, form a correct mental model quickly, and continue into the real technical details, trade-offs, failure modes, and production decisions without hidden knowledge gaps.\n\nThe sequence and quality rules below describe outcomes that the current content system must support; they are **not a demand that unrelated topics share identical headings, section counts, examples, or visual patterns**. Let the subject determine its natural teaching shape while preserving the North Star invariants.\n\n## Teaching rules\n\n1. **Concrete before abstract.** Begin an important idea with a recognizable situation, object, question, visible result, or small example before asking the reader to hold an abstraction in memory.\n2. **Meaning before vocabulary.** Introduce a specialist term only after, or beside, a plain-language explanation that makes the term useful. The glossary reinforces meaning; it must never be the first place a reader can discover what an earlier sentence meant.\n3. **Cause before rule.** Explain why a mechanism exists or why an outcome happens before presenting a rule to remember.\n4. **One dependency at a time.** A sentence or section may rely only on ideas already introduced in the guide or explained beside the new material.\n5. **Do not remove depth to create simplicity.** Reorder difficult ideas and explain them. Keep the real terminology, edge cases, trade-offs, debugging, security, performance, and operating concerns.\n6. **Interpret examples.** Code, commands, requests, schemas, and data examples must explain the important pieces and what the system does with them. A listing is not self-explanatory.\n7. **Use plain language by default.** Prefer common words, active voice, short sentences, short blocks, literal wording, and explicit relationships. Use jargon when it is the correct term, then define it immediately.\n8. **Check understanding without turning the guide into homework.** Each substantial guide must include at least two `checkpoint` blocks after meaningful conceptual transitions. The answer and explanation must be immediately revealable.\n\n## Required sequence\n\nThe following is a dependency sequence, not a mandatory heading template. Several stages may share a section when that is clearer, and a complex subject may need multiple sections within one stage.\n\n1. **Orient:** answer what this is, why it exists, where it sits in a real system, what the reader will be able to do, and what prior knowledge is merely helpful rather than mandatory.\n2. **Show something concrete:** establish the first mental model with a familiar scenario, small example, visible outcome, or real question.\n3. **Decompose:** proceed in dependency order; a later section may rely only on ideas already introduced.\n4. **Name the real terms:** introduce formal vocabulary at the point where it gives a useful name to an idea the reader can already understand.\n5. **Make visible:** use flows for order, layers for dependency/containment, comparisons for peer differences, cycles for repetition, maps for relationships, and syntax anatomy when the structure of a code or configuration example is itself part of what the learner must understand.\n6. **Apply:** include interpreted steps, code/data examples, decision tables, scenarios, or checklists that turn explanation into action where the subject benefits from them.\n7. **Check:** add a lightweight checkpoint after at least two important mental-model transitions.\n8. **Protect:** explain common mistakes, failure modes, boundaries, and how to identify the earliest failing stage where applicable.\n9. **Operate:** continue naturally into real-world performance, security, maintainability, deployment, scaling, and recovery considerations that materially belong to the subject.\n10. **Verify:** define a reinforcing glossary and link to standards bodies or official project/platform documentation.\n11. **Continue:** add only related slugs that exist in the registry.\n\n## Semantic inline content\n\nLearner-facing prose may remain a plain JSON string. Use structured rich text only when the inline HTML meaning materially helps the reader. A rich-text value is an ordered array of normal text fragments and approved semantic nodes. The renderer does not accept raw HTML.\n\n### The first-definition rule\n\nUse `dfn` only for the passage that actually defines a term. A canonical term may have **only once per topic** as a `dfn` node. Later mentions stay normal text unless another semantic element is independently correct, such as `code` for an API identifier.\n\nDo not mechanically style the first textual appearance. The defining instance is the sentence that establishes the meaning. The validator normalizes the `term` value and rejects a second defining instance for the same term anywhere in the topic.\n\nFor an abbreviation or acronym, write its full expansion in the prose at first use. When the abbreviation itself is the term being defined, nest `abbr` inside `dfn`:\n\n```json\n[\n  "The ",\n  {\n    "type": "dfn",\n    "term": "Document Object Model",\n    "children": [\n      {\n        "type": "abbr",\n        "title": "Document Object Model",\n        "children": "DOM"\n      }\n    ]\n  },\n  " (Document Object Model) is the browser\'s object representation of the document."\n]\n```\n\n### Approved semantic nodes\n\n- `dfn`: the single defining instance of a canonical term. Requires `term` and `children`.\n- `abbr`: an abbreviation or acronym. Requires the full expansion in `title` and visible `children`.\n- `code`: inline computer-recognizable text such as an element, attribute, API name, command, filename, property, or value.\n- `strong`: genuine importance, seriousness, or urgency. Do not use it as a generic bold style.\n- `em`: genuine stress emphasis. Do not use it as a generic italic style.\n- `a`: a real hyperlink. External destinations must use HTTPS. Internal `/`, `#`, `./`, and `../` destinations are allowed.\n- `kbd`: user input, including a keyboard key or literal command the person enters.\n- `samp`: literal program, terminal, or system output.\n- `var`: a variable or placeholder whose value changes.\n\nEvery semantic node requires `children`. Do not add `b`, `i`, arbitrary tag names, raw HTML, `className`, inline styles, event handlers, `target`, `rel`, or arbitrary attributes. If the content model does not expose an attribute, topic JSON cannot author it.\n\nExample with several independent semantics:\n\n```json\n[\n  "Press ",\n  { "type": "kbd", "children": "Enter" },\n  " after running ",\n  { "type": "code", "children": "pnpm check" },\n  ". A successful run may print ",\n  { "type": "samp", "children": "Found 0 warnings and 0 errors." },\n  " The placeholder ",\n  { "type": "var", "children": "PORT" },\n  " represents the port number."\n]\n```\n\nSemantic markup must preserve emphasis scarcity. Do not wrap every technical noun in `code`, every important-looking phrase in `strong`, or every sentence in `em`. Use each element only when its HTML meaning is true at that exact location.\n\nNarration and search flatten rich text back to visible plain language. Semantic node syntax is never spoken or indexed.\n\n## Supported content blocks\n\n- `paragraph`\n- `steps`\n- `cards`\n- `code`\n- `anatomy`\n- `table`\n- `callout`\n- `checklist`\n- `checkpoint`\n\n### Syntax anatomy\n\nUse a syntax anatomy block when the learner benefits from seeing a code, command, header, query, selector, or configuration expression split into meaningful parts. It is a Code Dissection Map: the complete expression stays visible, and each important segment receives a short label and an explanation of what that part controls or means.\n\nDo not add syntax anatomy merely for visual variety. Use it when token boundaries, nesting, argument positions, operators, attributes, options, or protocol fields carry meaning that a plain code listing would make the learner infer.\n\n```json\n{\n  "type": "anatomy",\n  "title": "A fetch request has independent parts",\n  "language": "JavaScript",\n  "caption": "Each labeled segment changes a different part of the request.",\n  "segments": [\n    {\n      "code": "fetch(",\n      "label": "Request API",\n      "explanation": "Starts a browser fetch operation."\n    },\n    {\n      "code": "\\"/api/profile\\"",\n      "label": "Target",\n      "explanation": "Identifies the resource the browser will request."\n    }\n  ]\n}\n```\n\nKeep segment order identical to the visible expression. Explain meaning rather than punctuation. The narration system reads the title, caption, labels, and explanations; it does not read literal source punctuation character by character.\n\nA checkpoint has this shape:\n\n```json\n{\n  "type": "checkpoint",\n  "prompt": "If this earlier stage fails, can the later stage have returned a result?",\n  "answer": "No.",\n  "explanation": "The later stage depends on the earlier stage completing far enough for communication to continue."\n}\n```\n\nSupported visual kinds are `flow`, `layers`, `comparison`, `cycle`, and `map`. Select the kind from the relationship being taught rather than visual variety. A topic does not need a visual merely to match another topic.\n\n## Quality floor\n\nThese checks supplement rather than replace the fuller quality dimensions in `NORTHSTAR.md`.\n\n- No section may open with unexplained specialist vocabulary.\n- Define every major technical term at first meaningful use in the body.\n- Explain what problem a mechanism solves before detailing how it works.\n- Include enough concrete examples or scenarios to establish the mental model before the guide '... 824 more characters,
+    expected: /first defin/i,
+    operator: 'match',
+    diff: 'simple'
+  }
