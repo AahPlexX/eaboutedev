@@ -1,0 +1,72 @@
+name: Semantic inline migration diagnostic
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/semantic-inline-migration-diagnostic.yml
+
+permissions:
+  contents: write
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+        with:
+          run_install: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - name: Reuse exact curated migration script
+        shell: bash
+        run: |
+          python <<'PY'
+          from pathlib import Path
+          text = Path('.github/workflows/semantic-inline-content-migration.yml').read_text()
+          marker = "          node --input-type=module <<'NODE'\n"
+          start = text.index(marker) + len(marker)
+          end = text.index("\n          NODE", start)
+          lines = text[start:end].splitlines()
+          script = '\n'.join(line[10:] if line.startswith('          ') else line for line in lines) + '\n'
+          Path('/tmp/semantic-migrate.mjs').write_text(script)
+          PY
+          node /tmp/semantic-migrate.mjs
+      - name: Capture full project gate
+        id: gate
+        continue-on-error: true
+        shell: bash
+        run: |
+          set +e
+          pnpm run generate > /tmp/semantic-migration-gate.txt 2>&1
+          first=$?
+          if [ "$first" -eq 0 ]; then
+            pnpm run check >> /tmp/semantic-migration-gate.txt 2>&1
+            status=$?
+          else
+            status=$first
+          fi
+          cat /tmp/semantic-migration-gate.txt
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          exit 0
+      - name: Persist diagnostic only
+        if: steps.gate.outputs.status != '0'
+        shell: bash
+        run: |
+          git restore --worktree --staged public/content/topics src/generated public/catalog public/search docs/topic-registry.json 2>/dev/null || true
+          cp /tmp/semantic-migration-gate.txt docs/semantic-inline-migration-diagnostic.txt
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/semantic-inline-migration-diagnostic.txt
+          git commit -m "test: record semantic migration gate failure" || true
+          git push origin HEAD:main
+      - name: Enforce diagnostic result
+        if: steps.gate.outputs.status != '0'
+        run: exit 1
