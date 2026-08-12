@@ -1,13 +1,13 @@
 $ node scripts/generate-content-artifacts.mjs
+generated src/generated/topic-bootstrap.ts
 generated public/catalog/topic-catalog.json
 generated public/search/topic-search.minisearch.json
 generated docs/topic-registry.json
-generated src/generated/topic-bootstrap.ts
 $ pnpm run generate && pnpm run validate:content && pnpm run validate:versions && pnpm run check:generated && pnpm run validate:discovery && pnpm run test && pnpm run typecheck && pnpm run lint && pnpm run build
 $ node scripts/generate-content-artifacts.mjs
-generated docs/topic-registry.json
 generated src/generated/topic-bootstrap.ts
 generated public/catalog/topic-catalog.json
+generated docs/topic-registry.json
 generated public/search/topic-search.minisearch.json
 $ node scripts/validate-content.mjs
 validated 9 topic documents
@@ -17,214 +17,69 @@ $ node scripts/generate-content-artifacts.mjs --check
 $ node scripts/validate-discovery-assets.mjs
 validated discovery assets for 9 topics
 $ node --test --experimental-strip-types tests/**/*.test.ts
-✔ syntax anatomy is typed, rendered, validated, narrated, and documented (11.739029ms)
-✔ catalog loader deduplicates successful requests (36.324935ms)
-✔ catalog loader clears a failed request so retry can succeed (1.228671ms)
-✔ catalog URL state parses supported values and normalizes invalid input (2.208756ms)
-✔ catalog URL serialization omits defaults and empty values (0.332602ms)
-✔ catalog filtering uses aliases, keywords, and category without the deep search corpus (3.815664ms)
-✔ catalog sorting is deterministic for every supported mode (13.900135ms)
-✔ pagination clamps invalid pages and returns at most 24 topics (0.4325ms)
-✔ catalog scale shape remains bounded at 100, 500, and 1000 topics (3.354932ms)
-✔ compact pagination keeps first, last, and nearby pages without hundreds of controls (0.63014ms)
-✖ checkpoint is typed, rendered with native disclosure, and validated (7.01762ms)
-✔ every guide includes at least two immediate comprehension checkpoints (10.636051ms)
-✔ authoring contract requires concrete-first dependency ordering (1.962004ms)
-✔ generation emits bounded catalog bootstrap and prebuilt search assets (9.526035ms)
-✔ full catalog, topic routes, and search implementation are outside the eager home path (4.022081ms)
-✔ serialized MiniSearch index restores and finds representative topics (28.869974ms)
-✔ topic titles extend the browser title without mutating guide content (2.465466ms)
-✔ the base site title is used when no topic is active (0.275275ms)
-✔ North Star remains the single canonical educational quality standard (8.13433ms)
-✔ vendor adapters import or route to the shared governance instead of copying it (2.719161ms)
-✔ agent entry point preserves repository integration safeguards (1.990861ms)
-✔ discovery pages speak to learners instead of describing implementation internals (5.420319ms)
-✔ neural narration worker uses the exact free local-inference contract (7.491376ms)
-✔ topic narration is user initiated, seekable, retryable, and transcript synced (6.574412ms)
-✔ narration controls preserve responsive and forced-color accessibility contracts (1.971799ms)
-✔ narration projects the complete educational topic in reading order (2.037916ms)
-✔ narration leaves literal code and URLs on screen instead of speaking them (0.584554ms)
-✔ narration passages are deterministic, bounded, and addressable (1.763211ms)
-✔ long prose is split without losing words (1.871106ms)
-✔ removes low-value words while retaining meaningful development terms (3.440893ms)
-✔ expands common abbreviations and concept aliases (0.637283ms)
-✔ builds a search string containing normalized and expanded terms (0.782525ms)
-✔ infers comparison and troubleshooting intent (0.635159ms)
-✔ rich text flattens plain strings and nested semantic nodes in source order (1.616296ms)
-✔ rich text link validation permits only explicit safe destinations (0.339195ms)
-✔ inline renderer uses only the approved semantic element set and no raw HTML escape hatch (13.187113ms)
-✔ validator enforces fixed semantic nodes, safe links, and one canonical definition per topic (1.514335ms)
-✔ all learner prose consumers render or flatten rich text instead of assuming strings (2.587605ms)
-✔ authoring contract requires first-definition-only semantics and explains nested abbreviation definitions (1.887093ms)
-✔ topic loader deduplicates successful requests and keeps 404 semantics (40.80466ms)
-✔ topic loader retries non-404 failures and rejects invalid slugs without fetching (1.338756ms)
-✔ topic page separates orientation, learning workspace, and reference zones (5.300755ms)
-✔ topic navigation has desktop and mobile variants without hiding lesson content (2.814998ms)
-✔ topic learning layout constrains reading measure and lets technical blocks escape wider (1.667041ms)
-✔ topic route remains accessible and reflows at narrow widths (1.79939ms)
-✔ visual renderer preserves relationship semantics by visual kind (5.550101ms)
+✔ syntax anatomy is typed, rendered, validated, narrated, and documented (8.928819ms)
+✔ catalog loader deduplicates successful requests (36.317522ms)
+✔ catalog loader clears a failed request so retry can succeed (1.067614ms)
+✔ catalog URL state parses supported values and normalizes invalid input (2.151591ms)
+✔ catalog URL serialization omits defaults and empty values (0.259563ms)
+✔ catalog filtering uses aliases, keywords, and category without the deep search corpus (2.383743ms)
+✔ catalog sorting is deterministic for every supported mode (10.678858ms)
+✔ pagination clamps invalid pages and returns at most 24 topics (0.460398ms)
+✔ catalog scale shape remains bounded at 100, 500, and 1000 topics (2.234483ms)
+✔ compact pagination keeps first, last, and nearby pages without hundreds of controls (0.367202ms)
+✔ checkpoint is typed, rendered with native disclosure, and validated (6.322157ms)
+✔ every guide includes at least two immediate comprehension checkpoints (7.91218ms)
+✔ authoring contract requires concrete-first dependency ordering (1.897857ms)
+✔ generation emits bounded catalog bootstrap and prebuilt search assets (9.802166ms)
+✔ full catalog, topic routes, and search implementation are outside the eager home path (3.419358ms)
+✔ serialized MiniSearch index restores and finds representative topics (23.218347ms)
+✔ topic titles extend the browser title without mutating guide content (4.687985ms)
+✔ the base site title is used when no topic is active (0.193435ms)
+✔ North Star remains the single canonical educational quality standard (8.999628ms)
+✔ vendor adapters import or route to the shared governance instead of copying it (2.230988ms)
+✔ agent entry point preserves repository integration safeguards (2.28003ms)
+✔ discovery pages speak to learners instead of describing implementation internals (6.822735ms)
+✔ neural narration worker uses the exact free local-inference contract (4.820914ms)
+✔ topic narration is user initiated, seekable, retryable, and transcript synced (2.930939ms)
+✔ narration controls preserve responsive and forced-color accessibility contracts (1.546048ms)
+✔ narration projects the complete educational topic in reading order (2.459375ms)
+✔ narration leaves literal code and URLs on screen instead of speaking them (0.625842ms)
+✔ narration passages are deterministic, bounded, and addressable (1.595491ms)
+✔ long prose is split without losing words (1.860251ms)
+✔ removes low-value words while retaining meaningful development terms (3.219134ms)
+✔ expands common abbreviations and concept aliases (0.618932ms)
+✔ builds a search string containing normalized and expanded terms (0.671059ms)
+✔ infers comparison and troubleshooting intent (0.632973ms)
+✔ rich text flattens plain strings and nested semantic nodes in source order (1.293136ms)
+✔ rich text link validation permits only explicit safe destinations (0.249738ms)
+✔ inline renderer uses only the approved semantic element set and no raw HTML escape hatch (8.836332ms)
+✔ validator enforces fixed semantic nodes, safe links, and one canonical definition per topic (1.183625ms)
+✔ all learner prose consumers render or flatten rich text instead of assuming strings (2.164449ms)
+✔ authoring contract requires first-definition-only semantics and explains nested abbreviation definitions (1.644033ms)
+✔ topic loader deduplicates successful requests and keeps 404 semantics (29.224038ms)
+✔ topic loader retries non-404 failures and rejects invalid slugs without fetching (0.887138ms)
+✔ topic page separates orientation, learning workspace, and reference zones (4.265256ms)
+✔ topic navigation has desktop and mobile variants without hiding lesson content (2.38891ms)
+✔ topic learning layout constrains reading measure and lets technical blocks escape wider (1.922764ms)
+✔ topic route remains accessible and reflows at narrow widths (1.461835ms)
+✔ visual renderer preserves relationship semantics by visual kind (4.06495ms)
 ℹ tests 46
 ℹ suites 0
-ℹ pass 45
-ℹ fail 1
+ℹ pass 46
+ℹ fail 0
 ℹ cancelled 0
 ℹ skipped 0
 ℹ todo 0
-ℹ duration_ms 803.71365
+ℹ duration_ms 764.898149
+$ tsc -b
+$ oxlint . --deny-warnings
+::warning file=src/pages/topic-page.tsx,line=76,endLine=76,col=75,endColumn=119,title=react(no-array-index-key)::src/pages/topic-page.tsx:76:75: Usage of Array index in keys is not allowed
+::warning file=src/pages/topic-page.tsx,line=80,endLine=80,col=77,endColumn=126,title=react(no-array-index-key)::src/pages/topic-page.tsx:80:77: Usage of Array index in keys is not allowed
+::error file=tests/rich-text.test.ts,line=57,endLine=57,col=41,endColumn=43,title=eslint(no-useless-escape)::tests/rich-text.test.ts:57:41: Unnecessary escape character '"'
+::error file=tests/rich-text.test.ts,line=57,endLine=57,col=50,endColumn=52,title=eslint(no-useless-escape)::tests/rich-text.test.ts:57:50: Unnecessary escape character '"'
+::warning file=src/components/topics/topic-visual.tsx,line=26,endLine=26,col=13,endColumn=60,title=react(no-array-index-key)::src/components/topics/topic-visual.tsx:26:13: Usage of Array index in keys is not allowed
 
-✖ failing tests:
-
-test at tests/content-blocks.test.ts:9:1
-✖ checkpoint is typed, rendered with native disclosure, and validated (7.01762ms)
-  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /prompt: string/. Input:
-  
-  'export type TopicLevel = "Foundational" | "Intermediate" | "Advanced";\n' +
-    'type VisualKind = "flow" | "layers" | "comparison" | "cycle" | "map";\n' +
-    'type BlockTone = "note" | "tip" | "warning" | "definition";\n' +
-    '\n' +
-    'export type RichText = string | InlineContent[];\n' +
-    '\n' +
-    'export type InlineContent = string | InlineSemanticNode;\n' +
-    '\n' +
-    'interface InlineNodeBase {\n' +
-    '  children: RichText;\n' +
-    '}\n' +
-    '\n' +
-    'export interface DfnInlineNode extends InlineNodeBase {\n' +
-    '  type: "dfn";\n' +
-    '  term: string;\n' +
-    '}\n' +
-    '\n' +
-    'export interface AbbrInlineNode extends InlineNodeBase {\n' +
-    '  type: "abbr";\n' +
-    '  title: string;\n' +
-    '}\n' +
-    '\n' +
-    'export interface LinkInlineNode extends InlineNodeBase {\n' +
-    '  type: "a";\n' +
-    '  href: string;\n' +
-    '}\n' +
-    '\n' +
-    'export interface CodeInlineNode extends InlineNodeBase { type: "code"; }\n' +
-    'export interface StrongInlineNode extends InlineNodeBase { type: "strong"; }\n' +
-    'export interface EmInlineNode extends InlineNodeBase { type: "em"; }\n' +
-    'export interface KbdInlineNode extends InlineNodeBase { type: "kbd"; }\n' +
-    'export interface SampInlineNode extends InlineNodeBase { type: "samp"; }\n' +
-    'export interface VarInlineNode extends InlineNodeBase { type: "var"; }\n' +
-    '\n' +
-    'export type InlineSemanticNode =\n' +
-    '  | DfnInlineNode\n' +
-    '  | AbbrInlineNode\n' +
-    '  | LinkInlineNode\n' +
-    '  | CodeInlineNode\n' +
-    '  | StrongInlineNode\n' +
-    '  | EmInlineNode\n' +
-    '  | KbdInlineNode\n' +
-    '  | SampInlineNode\n' +
-    '  | VarInlineNode;\n' +
-    '\n' +
-    'interface SourceReference {\n' +
-    '  label: string;\n' +
-    '  url: string;\n' +
-    '  accessed: string;\n' +
-    '}\n' +
-    '\n' +
-    'interface VisualNode {\n' +
-    '  label: RichText;\n' +
-    '  detail: RichText;\n' +
-    '}\n' +
-    '\n' +
-    'export interface TopicVisual {\n' +
-    '  kind: VisualKind;\n' +
-    '  title: RichText;\n' +
-    '  caption: RichText;\n' +
-    '  nodes: VisualNode[];\n' +
-    '}\n' +
-    '\n' +
-    'interface ParagraphBlock { type: "paragraph"; text: RichText; }\n' +
-    'interface StepsBlock { type: "steps"; items: Array<{ title: RichText; explanation: RichText; result?: RichText }>; }\n' +
-    'interface CardsBlock { type: "cards"; items: Array<{ title: RichText; summary: RichText; whenToUse?: RichText; avoidWhen?: RichText; example?: RichText }>; }\n' +
-    'interface CodeBlock { type: "code"; language: string; code: string; explanation: RichText; }\n' +
-    'interface AnatomyBlock { type: "anatomy"; title: RichText; language: string; caption: RichText; segments: Array<{ code: string; label: RichText; explanation: RichText }>; }\n' +
-    'interface TableBlock { type: "table"; columns: RichText[]; rows: RichText[][]; caption: RichText; }\n' +
-    'interface CalloutBlock { type: "callout"; tone: BlockTone; title: RichText; body: RichText; }\n' +
-    'interface ChecklistBlock { type: "checklist"; items: RichText[]; }\n' +
-    'interface CheckpointBlock { type: "checkpoint"; prompt: RichText; answer: RichText; explanation: RichText; }\n' +
-    '\n' +
-    'export type ContentBlock = ParagraphBlock | StepsBlock | CardsBlock | CodeBlock | AnatomyBlock | TableBlock | CalloutBlock | ChecklistBlock | CheckpointBlock;\n' +
-    '\n' +
-    'export interface TopicSection {\n' +
-    '  id: string;\n' +
-    '  title: string;\n' +
-    '  summary: RichText;\n' +
-    '  visual?: TopicVisual;\n' +
-    '  blocks: ContentBlock[];\n' +
-    '}\n' +
-    '\n' +
-    'interface GlossaryEntry { term: string; definition: RichText; }\n' +
-    '\n' +
-    'export interface TopicDocument {\n' +
-    '  version: 1;\n' +
-    '  slug: string;\n' +
-    '  title: string;\n' +
-    '  eyebrow: string;\n' +
-    '  summary: RichText;\n' +
-    '  category: string;\n' +
-    '  level: TopicLevel;\n' +
-    '  estimatedMinutes: number;\n' +
-    '  icon: string;\n' +
-    '  accent: string;\n' +
-    '  aliases: string[];\n' +
-    '  keywords: string[];\n' +
-    '  prerequisites: RichText[];\n' +
-    '  learningOutcomes: RichText[];\n' +
-    '  heroVisual: TopicVisual;\n' +
-    '  sections: TopicSection[];\n' +
-    '  glossary: GlossaryEntry[];\n' +
-    '  related: string[];\n' +
-    '  sources: SourceReference[];\n' +
-    '}\n' +
-    '\n' +
-    'export interface TopicCatalogEntry {\n' +
-    '  slug: string;\n' +
-    '  title: string;\n' +
-    '  eyebrow: string;\n' +
-    '  summary: string;\n' +
-    '  category: string;\n' +
-    '  level: TopicLevel;\n' +
-    '  estimatedMinutes: number;\n' +
-    '  icon: string;\n' +
-    '  accent: string;\n' +
-    '  aliases: string[];\n' +
-    '  keywords: string[];\n' +
-    '  order: number;\n' +
-    '}\n' +
-    '\n' +
-    'export interface TopicSearchStoredFields {\n' +
-    '  slug: string;\n' +
-    '  title: string;\n' +
-    '  summary: string;\n' +
-    '  category: string;\n' +
-    '  level: TopicLevel;\n' +
-    '  estimatedMinutes: number;\n' +
-    '}\n' +
-    '\n' +
-    'export interface TopicSearchIndexDocument extends TopicSearchStoredFields {\n' +
-    '  aliases: string;\n' +
-    '  keywords: string;\n' +
-    '  sectionTitles: string;\n' +
-    '  glossaryText: string;\n' +
-    '}\n'
-  
-      at TestContext.<anonymous> (file:///home/runner/work/eaboutedev/eaboutedev/tests/content-blocks.test.ts:18:10)
-      at async Test.run (node:internal/test_runner/test:1332:7)
-      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
-    generatedMessage: true,
-    code: 'ERR_ASSERTION',
-    actual: 'export type TopicLevel = "Foundational" | "Intermediate" | "Advanced";\ntype VisualKind = "flow" | "layers" | "comparison" | "cycle" | "map";\ntype BlockTone = "note" | "tip" | "warning" | "definition";\n\nexport type RichText = string | InlineContent[];\n\nexport type InlineContent = string | InlineSemanticNode;\n\ninterface InlineNodeBase {\n  children: RichText;\n}\n\nexport interface DfnInlineNode extends InlineNodeBase {\n  type: "dfn";\n  term: string;\n}\n\nexport interface AbbrInlineNode extends InlineNodeBase {\n  type: "abbr";\n  title: string;\n}\n\nexport interface LinkInlineNode extends InlineNodeBase {\n  type: "a";\n  href: string;\n}\n\nexport interface CodeInlineNode extends InlineNodeBase { type: "code"; }\nexport interface StrongInlineNode extends InlineNodeBase { type: "strong"; }\nexport interface EmInlineNode extends InlineNodeBase { type: "em"; }\nexport interface KbdInlineNode extends InlineNodeBase { type: "kbd"; }\nexport interface SampInlineNode extends InlineNodeBase { type: "samp"; }\nexport interface VarInlineNode extends InlineNodeBase { type: "var"; }\n\nexport type InlineSemanticNode =\n  | DfnInlineNode\n  | AbbrInlineNode\n  | LinkInlineNode\n  | CodeInlineNode\n  | StrongInlineNode\n  | EmInlineNode\n  | KbdInlineNode\n  | SampInlineNode\n  | VarInlineNode;\n\ninterface SourceReference {\n  label: string;\n  url: string;\n  accessed: string;\n}\n\ninterface VisualNode {\n  label: RichText;\n  detail: RichText;\n}\n\nexport interface TopicVisual {\n  kind: VisualKind;\n  title: RichText;\n  caption: RichText;\n  nodes: VisualNode[];\n}\n\ninterface ParagraphBlock { type: "paragraph"; text: RichText; }\ninterface StepsBlock { type: "steps"; items: Array<{ title: RichText; explanation: RichText; result?: RichText }>; }\ninterface CardsBlock { type: "cards"; items: Array<{ title: RichText; summary: RichText; whenToUse?: RichText; avoidWhen?: RichText; example?: RichText }>; }\ninterface CodeBlock { type: "code"; language: string; code: string; explanation: RichText; }\ninterface AnatomyBlock { type: "anatomy"; title: RichText; language: string; caption: RichText; segments: Array<{ code: string; label: RichText; explanation: RichText }>; }\ninterface TableBlock { type: "table"; columns: RichText[]; rows: RichText[][]; caption: RichText; }\ninterface CalloutBlock { type: "callout"; tone: BlockTone; title: RichText; body: RichText; }\ninterface ChecklistBlock { type: "checklist"; items: RichText[]; }\ninterface CheckpointBlock { type: "checkpoint"; prompt: RichText; answer: RichText; explanation: RichText; }\n\nexport type ContentBlock = ParagraphBlock | StepsBlock | CardsBlock | CodeBlock | AnatomyBlock | TableBlock | CalloutBlock | ChecklistBlock | CheckpointBlock;\n\nexport interface TopicSection {\n  id: string;\n  title: string;\n  summary: RichText;\n  visual?: TopicVisual;\n  blocks: ContentBlock[];\n}\n\ninterface GlossaryEntry { term: string; definition: RichText; }\n\nexport interface TopicDocument {\n  version: 1;\n  slug: string;\n  title: string;\n  eyebrow: string;\n  summary: RichText;\n  category: string;\n  level: TopicLevel;\n  estimatedMinutes: number;\n  icon: string;\n  accent: string;\n  aliases: string[];\n  keywords: string[];\n  prerequisites: RichText[];\n  learningOutcomes: RichText[];\n  heroVisual: TopicVisual;\n  sections: TopicSection[];\n  glossary: GlossaryEntry[];\n  related: string[];\n  sources: SourceReference[];\n}\n\nexport interface TopicCatalogEntry {\n  slug: string;\n  title: string;\n  eyebrow: string;\n  summary: string;\n  category: string;\n  level: TopicLevel;\n  estimatedMinutes: number;\n  icon: string;\n  accent: string;\n  aliases: string[];\n  keywords: string[];\n  order: number;\n}\n\nexport interface TopicSearchStoredFields {\n  slug: string;\n  title: string;\n  summary: string;\n  category: string;\n  level: TopicLevel;\n  estimatedMinutes: number;\n}\n\nexport interface TopicSearchIndexDocument extends TopicSearchStoredFields {\n  aliases: string;\n  keywords: string;\n  sectionTitles: string;\n  glossaryText: string;\n}\n',
-    expected: /prompt: string/,
-    operator: 'match',
-    diff: 'simple'
-  }
-[ELIFECYCLE] Test failed. See above for more details.
+Found 3 warnings and 2 errors.
+Finished in 10ms on 62 files with 162 rules using 4 threads.
+[ELIFECYCLE] Command failed with exit code 1.
 [ELIFECYCLE] Command failed with exit code 1.
