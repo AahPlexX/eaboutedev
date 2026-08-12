@@ -78,7 +78,7 @@ test("all learner prose consumers render or flatten rich text instead of assumin
 
 test("authoring contract requires first-definition-only semantics and explains nested abbreviation definitions", async () => {
   const contract = await readProjectFile("docs/content-authoring.md");
-  assert.match(contract, /first defin/i);
+  assert.match(contract, /first[- ]defin/i);
   assert.match(contract, /only once per topic/i);
   assert.match(contract, /dfn/i);
   assert.match(contract, /abbr/i);
