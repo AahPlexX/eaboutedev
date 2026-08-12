@@ -1,0 +1,15 @@
+$ node scripts/generate-content-artifacts.mjs
+generated public/catalog/topic-catalog.json
+generated docs/topic-registry.json
+generated src/generated/topic-bootstrap.ts
+generated public/search/topic-search.minisearch.json
+$ pnpm run generate && pnpm run validate:content && pnpm run validate:versions && pnpm run check:generated && pnpm run validate:discovery && pnpm run test && pnpm run typecheck && pnpm run lint && pnpm run build
+$ node scripts/generate-content-artifacts.mjs
+generated src/generated/topic-bootstrap.ts
+generated public/search/topic-search.minisearch.json
+generated docs/topic-registry.json
+generated public/catalog/topic-catalog.json
+$ node scripts/validate-content.mjs
+html-css-and-javascript.json: section html summary part 1 children must be a non-empty string or rich-text array
+[ELIFECYCLE] Command failed with exit code 1.
+[ELIFECYCLE] Command failed with exit code 1.
