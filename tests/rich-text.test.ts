@@ -54,7 +54,7 @@ test("inline renderer uses only the approved semantic element set and no raw HTM
 test("validator enforces fixed semantic nodes, safe links, and one canonical definition per topic", async () => {
   const validator = await readProjectFile("scripts/validate-content.mjs");
   for (const type of ["dfn", "abbr", "code", "strong", "em", "a", "kbd", "samp", "var"]) {
-    assert.match(validator, new RegExp(`\"${type}\"`), `validator missing ${type}`);
+    assert.match(validator, new RegExp(`"${type}"`), `validator missing ${type}`);
   }
   assert.match(validator, /definitionTerms/);
   assert.match(validator, /duplicate defining instance/i);

@@ -23,7 +23,9 @@
     {
       "files": [
         "src/components/topics/content-block.tsx",
-        "src/components/topics/topic-section.tsx"
+        "src/components/topics/topic-section.tsx",
+        "src/components/topics/topic-visual.tsx",
+        "src/pages/topic-page.tsx"
       ],
       "rules": {
         "react/no-array-index-key": "off"
