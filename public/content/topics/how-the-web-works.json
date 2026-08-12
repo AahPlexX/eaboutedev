@@ -220,7 +220,7 @@
       "blocks": [
         {
           "type": "paragraph",
-          "text": "DNS, the Domain Name System, is a distributed naming system. The browser needs it because the host name in a URL is convenient for people but is not itself the numeric network address used for IP routing. An IP address identifies where packets can be routed; DNS records help map the host name to that kind of address or to other naming information."
+          "text": "DNS, the <strong>Domain Name System</strong>, is a distributed naming system. The browser needs it because the host name in a URL is convenient for people but is not itself the numeric network address used for IP routing. An IP address identifies where packets can be routed; DNS records help map the host name to that kind of address or to other naming information."
         },
         {
           "type": "steps",
