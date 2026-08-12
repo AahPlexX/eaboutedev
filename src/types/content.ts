@@ -2,6 +2,47 @@ export type TopicLevel = "Foundational" | "Intermediate" | "Advanced";
 type VisualKind = "flow" | "layers" | "comparison" | "cycle" | "map";
 type BlockTone = "note" | "tip" | "warning" | "definition";
 
+export type RichText = string | InlineContent[];
+
+export type InlineContent = string | InlineSemanticNode;
+
+interface InlineNodeBase {
+  children: RichText;
+}
+
+export interface DfnInlineNode extends InlineNodeBase {
+  type: "dfn";
+  term: string;
+}
+
+export interface AbbrInlineNode extends InlineNodeBase {
+  type: "abbr";
+  title: string;
+}
+
+export interface LinkInlineNode extends InlineNodeBase {
+  type: "a";
+  href: string;
+}
+
+export interface CodeInlineNode extends InlineNodeBase { type: "code"; }
+export interface StrongInlineNode extends InlineNodeBase { type: "strong"; }
+export interface EmInlineNode extends InlineNodeBase { type: "em"; }
+export interface KbdInlineNode extends InlineNodeBase { type: "kbd"; }
+export interface SampInlineNode extends InlineNodeBase { type: "samp"; }
+export interface VarInlineNode extends InlineNodeBase { type: "var"; }
+
+export type InlineSemanticNode =
+  | DfnInlineNode
+  | AbbrInlineNode
+  | LinkInlineNode
+  | CodeInlineNode
+  | StrongInlineNode
+  | EmInlineNode
+  | KbdInlineNode
+  | SampInlineNode
+  | VarInlineNode;
+
 interface SourceReference {
   label: string;
   url: string;
@@ -9,45 +50,45 @@ interface SourceReference {
 }
 
 interface VisualNode {
-  label: string;
-  detail: string;
+  label: RichText;
+  detail: RichText;
 }
 
 export interface TopicVisual {
   kind: VisualKind;
-  title: string;
-  caption: string;
+  title: RichText;
+  caption: RichText;
   nodes: VisualNode[];
 }
 
-interface ParagraphBlock { type: "paragraph"; text: string; }
-interface StepsBlock { type: "steps"; items: Array<{ title: string; explanation: string; result?: string }>; }
-interface CardsBlock { type: "cards"; items: Array<{ title: string; summary: string; whenToUse?: string; avoidWhen?: string; example?: string }>; }
-interface CodeBlock { type: "code"; language: string; code: string; explanation: string; }
-interface AnatomyBlock { type: "anatomy"; title: string; language: string; caption: string; segments: Array<{ code: string; label: string; explanation: string }>; }
-interface TableBlock { type: "table"; columns: string[]; rows: string[][]; caption: string; }
-interface CalloutBlock { type: "callout"; tone: BlockTone; title: string; body: string; }
-interface ChecklistBlock { type: "checklist"; items: string[]; }
-interface CheckpointBlock { type: "checkpoint"; prompt: string; answer: string; explanation: string; }
+interface ParagraphBlock { type: "paragraph"; text: RichText; }
+interface StepsBlock { type: "steps"; items: Array<{ title: RichText; explanation: RichText; result?: RichText }>; }
+interface CardsBlock { type: "cards"; items: Array<{ title: RichText; summary: RichText; whenToUse?: RichText; avoidWhen?: RichText; example?: RichText }>; }
+interface CodeBlock { type: "code"; language: string; code: string; explanation: RichText; }
+interface AnatomyBlock { type: "anatomy"; title: RichText; language: string; caption: RichText; segments: Array<{ code: string; label: RichText; explanation: RichText }>; }
+interface TableBlock { type: "table"; columns: RichText[]; rows: RichText[][]; caption: RichText; }
+interface CalloutBlock { type: "callout"; tone: BlockTone; title: RichText; body: RichText; }
+interface ChecklistBlock { type: "checklist"; items: RichText[]; }
+interface CheckpointBlock { type: "checkpoint"; prompt: RichText; answer: RichText; explanation: RichText; }
 
 export type ContentBlock = ParagraphBlock | StepsBlock | CardsBlock | CodeBlock | AnatomyBlock | TableBlock | CalloutBlock | ChecklistBlock | CheckpointBlock;
 
 export interface TopicSection {
   id: string;
   title: string;
-  summary: string;
+  summary: RichText;
   visual?: TopicVisual;
   blocks: ContentBlock[];
 }
 
-interface GlossaryEntry { term: string; definition: string; }
+interface GlossaryEntry { term: string; definition: RichText; }
 
 export interface TopicDocument {
   version: 1;
   slug: string;
   title: string;
   eyebrow: string;
-  summary: string;
+  summary: RichText;
   category: string;
   level: TopicLevel;
   estimatedMinutes: number;
@@ -55,8 +96,8 @@ export interface TopicDocument {
   accent: string;
   aliases: string[];
   keywords: string[];
-  prerequisites: string[];
-  learningOutcomes: string[];
+  prerequisites: RichText[];
+  learningOutcomes: RichText[];
   heroVisual: TopicVisual;
   sections: TopicSection[];
   glossary: GlossaryEntry[];
