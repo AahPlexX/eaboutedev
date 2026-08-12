@@ -1,0 +1,75 @@
+.topic-page dfn {
+  border-block-end: 0.125rem solid color-mix(in oklch, var(--topic-accent, var(--primary)) 55%, transparent);
+  font-style: normal;
+  font-weight: 800;
+}
+
+.topic-page abbr[title] {
+  cursor: help;
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.18em;
+}
+
+.topic-page :not(pre) > code,
+.topic-page kbd,
+.topic-page samp,
+.topic-page var {
+  overflow-wrap: anywhere;
+}
+
+.topic-page :not(pre) > code,
+.topic-page samp {
+  border: 0.0625rem solid var(--border);
+  border-radius: 0.35rem;
+  background: var(--muted);
+  padding-inline: 0.28em;
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
+
+.topic-page kbd {
+  display: inline-block;
+  min-inline-size: 1.75em;
+  border: 0.0625rem solid var(--border);
+  border-block-end-width: 0.15rem;
+  border-radius: 0.4rem;
+  background: var(--card);
+  padding-inline: 0.35em;
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  font-weight: 750;
+  line-height: 1.45;
+  text-align: center;
+}
+
+.topic-page var {
+  font-family: var(--font-mono);
+  font-style: italic;
+}
+
+.topic-page .prose-paragraph a,
+.topic-page .topic-summary a,
+.topic-page .topic-section a:not(.text-link) {
+  color: var(--primary);
+  font-weight: 650;
+  text-decoration: underline;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.18em;
+}
+
+.topic-page .prose-paragraph a:hover,
+.topic-page .topic-summary a:hover,
+.topic-page .topic-section a:not(.text-link):hover {
+  text-decoration-thickness: 0.14em;
+}
+
+@media (forced-colors: active) {
+  .topic-page dfn,
+  .topic-page :not(pre) > code,
+  .topic-page kbd,
+  .topic-page samp {
+    border-color: CanvasText;
+  }
+}
