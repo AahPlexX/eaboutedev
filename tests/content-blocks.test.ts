@@ -15,13 +15,16 @@ test("checkpoint is typed, rendered with native disclosure, and validated", asyn
 
   assert.match(types, /interface CheckpointBlock/);
   assert.match(types, /type: "checkpoint"/);
-  assert.match(types, /prompt: string/);
-  assert.match(types, /answer: string/);
-  assert.match(types, /explanation: string/);
+  assert.match(types, /prompt: RichText/);
+  assert.match(types, /answer: RichText/);
+  assert.match(types, /explanation: RichText/);
 
   assert.match(renderer, /case "checkpoint"/);
   assert.match(renderer, /<details className="checkpoint">/);
   assert.match(renderer, /<summary>/);
+  assert.match(renderer, /InlineContent value=\{block\.prompt\}/);
+  assert.match(renderer, /InlineContent value=\{block\.answer\}/);
+  assert.match(renderer, /InlineContent value=\{block\.explanation\}/);
 
   assert.match(validator, /"checkpoint"/);
   assert.match(validator, /block\.prompt/);
