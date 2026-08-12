@@ -1,0 +1,27 @@
+$ node scripts/generate-content-artifacts.mjs
+generated public/search/topic-search.minisearch.json
+generated src/generated/topic-bootstrap.ts
+generated public/catalog/topic-catalog.json
+generated docs/topic-registry.json
+$ pnpm run generate && pnpm run validate:content && pnpm run validate:versions && pnpm run check:generated && pnpm run validate:discovery && pnpm run test && pnpm run typecheck && pnpm run lint && pnpm run build
+$ node scripts/generate-content-artifacts.mjs
+generated docs/topic-registry.json
+generated public/catalog/topic-catalog.json
+generated src/generated/topic-bootstrap.ts
+generated public/search/topic-search.minisearch.json
+$ node scripts/validate-content.mjs
+file:///home/runner/work/eaboutedev/eaboutedev/src/lib/rich-text.ts:5
+  return value.map((part) => typeof part === "string" ? part : flattenRichText(part.children)).join("");
+               ^
+
+TypeError: value.map is not a function
+    at flattenRichText (file:///home/runner/work/eaboutedev/eaboutedev/src/lib/rich-text.ts:5:16)
+    at file:///home/runner/work/eaboutedev/eaboutedev/src/lib/rich-text.ts:5:64
+    at Array.map (<anonymous>)
+    at flattenRichText (file:///home/runner/work/eaboutedev/eaboutedev/src/lib/rich-text.ts:5:16)
+    at validateRichText (file:///home/runner/work/eaboutedev/eaboutedev/scripts/validate-content.mjs:61:8)
+    at file:///home/runner/work/eaboutedev/eaboutedev/scripts/validate-content.mjs:119:39
+
+Node.js v24.18.0
+[ELIFECYCLE] Command failed with exit code 1.
+[ELIFECYCLE] Command failed with exit code 1.
