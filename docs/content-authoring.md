@@ -33,6 +33,70 @@ The following is a dependency sequence, not a mandatory heading template. Severa
 10. **Verify:** define a reinforcing glossary and link to standards bodies or official project/platform documentation.
 11. **Continue:** add only related slugs that exist in the registry.
 
+## Semantic inline content
+
+Learner-facing prose may remain a plain JSON string. Use structured rich text only when the inline HTML meaning materially helps the reader. A rich-text value is an ordered array of normal text fragments and approved semantic nodes. The renderer does not accept raw HTML.
+
+### The first-definition rule
+
+Use `dfn` only for the passage that actually defines a term. A canonical term may have **only once per topic** as a `dfn` node. Later mentions stay normal text unless another semantic element is independently correct, such as `code` for an API identifier.
+
+Do not mechanically style the first textual appearance. The defining instance is the sentence that establishes the meaning. The validator normalizes the `term` value and rejects a second defining instance for the same term anywhere in the topic.
+
+For an abbreviation or acronym, write its full expansion in the prose at first use. When the abbreviation itself is the term being defined, nest `abbr` inside `dfn`:
+
+```json
+[
+  "The ",
+  {
+    "type": "dfn",
+    "term": "Document Object Model",
+    "children": [
+      {
+        "type": "abbr",
+        "title": "Document Object Model",
+        "children": "DOM"
+      }
+    ]
+  },
+  " (Document Object Model) is the browser's object representation of the document."
+]
+```
+
+### Approved semantic nodes
+
+- `dfn`: the single defining instance of a canonical term. Requires `term` and `children`.
+- `abbr`: an abbreviation or acronym. Requires the full expansion in `title` and visible `children`.
+- `code`: inline computer-recognizable text such as an element, attribute, API name, command, filename, property, or value.
+- `strong`: genuine importance, seriousness, or urgency. Do not use it as a generic bold style.
+- `em`: genuine stress emphasis. Do not use it as a generic italic style.
+- `a`: a real hyperlink. External destinations must use HTTPS. Internal `/`, `#`, `./`, and `../` destinations are allowed.
+- `kbd`: user input, including a keyboard key or literal command the person enters.
+- `samp`: literal program, terminal, or system output.
+- `var`: a variable or placeholder whose value changes.
+
+Every semantic node requires `children`. Do not add `b`, `i`, arbitrary tag names, raw HTML, `className`, inline styles, event handlers, `target`, `rel`, or arbitrary attributes. If the content model does not expose an attribute, topic JSON cannot author it.
+
+Example with several independent semantics:
+
+```json
+[
+  "Press ",
+  { "type": "kbd", "children": "Enter" },
+  " after running ",
+  { "type": "code", "children": "pnpm check" },
+  ". A successful run may print ",
+  { "type": "samp", "children": "Found 0 warnings and 0 errors." },
+  " The placeholder ",
+  { "type": "var", "children": "PORT" },
+  " represents the port number."
+]
+```
+
+Semantic markup must preserve emphasis scarcity. Do not wrap every technical noun in `code`, every important-looking phrase in `strong`, or every sentence in `em`. Use each element only when its HTML meaning is true at that exact location.
+
+Narration and search flatten rich text back to visible plain language. Semantic node syntax is never spoken or indexed.
+
 ## Supported content blocks
 
 - `paragraph`
