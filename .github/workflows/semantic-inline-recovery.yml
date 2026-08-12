@@ -39,6 +39,7 @@ jobs:
           script = '\n'.join(line[10:] if line.startswith('          ') else line for line in lines) + '\n'
           replacements = {
             'dfn("Uniform Resource Locator", abbr("Uniform Resource Locator", "URL"))': 'dfn("Uniform Resource Locator", [abbr("Uniform Resource Locator", "URL")])',
+            'dfn("HyperText Markup Language", abbr("HyperText Markup Language", "HTML"))': 'dfn("HyperText Markup Language", [abbr("HyperText Markup Language", "HTML")])',
             'dfn("Hot Module Replacement", abbr("Hot Module Replacement", "HMR"))': 'dfn("Hot Module Replacement", [abbr("Hot Module Replacement", "HMR")])',
             'dfn("Application Programming Interface", abbr("Application Programming Interface", "API"))': 'dfn("Application Programming Interface", [abbr("Application Programming Interface", "API")])',
           }
