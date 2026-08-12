@@ -1,3 +1,4 @@
+import { flattenRichText } from "./rich-text.ts";
 import type { ContentBlock, TopicDocument, TopicVisual } from "../types/content.ts";
 
 export const MAX_NARRATION_PASSAGE_CHARS = 360;
@@ -72,62 +73,83 @@ function splitSpeechText(text: string) {
 
 function visualDrafts(visual: TopicVisual, label: string, sectionId?: string): PassageDraft[] {
   const drafts: PassageDraft[] = [
-    { label, text: visual.title, ...(sectionId ? { sectionId } : {}) },
-    { label, text: visual.caption, ...(sectionId ? { sectionId } : {}) },
+    { label, text: flattenRichText(visual.title), ...(sectionId ? { sectionId } : {}) },
+    { label, text: flattenRichText(visual.caption), ...(sectionId ? { sectionId } : {}) },
   ];
-  for (const node of visual.nodes) drafts.push({ label, text: `${node.label}. ${node.detail}`, ...(sectionId ? { sectionId } : {}) });
+  for (const node of visual.nodes) drafts.push({ label, text: `${flattenRichText(node.label)}. ${flattenRichText(node.detail)}`, ...(sectionId ? { sectionId } : {}) });
   return drafts;
 }
 
 function blockDrafts(block: ContentBlock, sectionId: string): PassageDraft[] {
   switch (block.type) {
     case "paragraph":
-      return [{ label: "Paragraph", text: block.text, sectionId }];
+      return [{ label: "Paragraph", text: flattenRichText(block.text), sectionId }];
     case "steps":
-      return block.items.map((item, index) => ({ label: `Step ${index + 1}`, text: [item.title, item.explanation, item.result].filter(Boolean).join(". "), sectionId }));
+      return block.items.map((item, index) => ({
+        label: `Step ${index + 1}`,
+        text: [item.title, item.explanation, item.result].filter((value) => value !== undefined).map((value) => flattenRichText(value!)).join(". "),
+        sectionId,
+      }));
     case "cards":
       return block.items.map((item) => ({
-        label: item.title,
-        text: [item.title, item.summary, item.whenToUse ? `Use when: ${item.whenToUse}` : undefined, item.avoidWhen ? `Avoid when: ${item.avoidWhen}` : undefined, item.example ? `Example: ${item.example}` : undefined].filter(Boolean).join(". "),
+        label: flattenRichText(item.title),
+        text: [
+          flattenRichText(item.title),
+          flattenRichText(item.summary),
+          item.whenToUse ? `Use when: ${flattenRichText(item.whenToUse)}` : undefined,
+          item.avoidWhen ? `Avoid when: ${flattenRichText(item.avoidWhen)}` : undefined,
+          item.example ? `Example: ${flattenRichText(item.example)}` : undefined,
+        ].filter(Boolean).join(". "),
         sectionId,
       }));
     case "code":
-      return [{ label: "Code explanation", text: `Code example in ${block.language}. The source code remains visible on screen. ${block.explanation}`, sectionId }];
+      return [{ label: "Code explanation", text: `Code example in ${block.language}. The source code remains visible on screen. ${flattenRichText(block.explanation)}`, sectionId }];
     case "anatomy":
       return [
-        { label: "Syntax anatomy", text: `${block.title}. ${block.caption}`, sectionId },
-        ...block.segments.map((segment, index) => ({ label: `Syntax part ${index + 1}: ${segment.label}`, text: `${segment.label}. ${segment.explanation}`, sectionId })),
+        { label: "Syntax anatomy", text: `${flattenRichText(block.title)}. ${flattenRichText(block.caption)}`, sectionId },
+        ...block.segments.map((segment, index) => ({
+          label: `Syntax part ${index + 1}: ${flattenRichText(segment.label)}`,
+          text: `${flattenRichText(segment.label)}. ${flattenRichText(segment.explanation)}`,
+          sectionId,
+        })),
       ];
     case "table":
       return [
-        { label: "Table", text: block.caption, sectionId },
-        ...block.rows.map((row, rowIndex) => ({ label: `Table row ${rowIndex + 1}`, text: block.columns.map((column, columnIndex) => `${column}: ${row[columnIndex] ?? ""}.`).join(" "), sectionId })),
+        { label: "Table", text: flattenRichText(block.caption), sectionId },
+        ...block.rows.map((row, rowIndex) => ({
+          label: `Table row ${rowIndex + 1}`,
+          text: block.columns.map((column, columnIndex) => `${flattenRichText(column)}: ${row[columnIndex] ? flattenRichText(row[columnIndex]!) : ""}.`).join(" "),
+          sectionId,
+        })),
       ];
     case "callout":
-      return [{ label: block.title, text: `${block.title}. ${block.body}`, sectionId }];
+      return [{ label: flattenRichText(block.title), text: `${flattenRichText(block.title)}. ${flattenRichText(block.body)}`, sectionId }];
     case "checklist":
-      return block.items.map((item, index) => ({ label: `Checklist item ${index + 1}`, text: item, sectionId }));
+      return block.items.map((item, index) => ({ label: `Checklist item ${index + 1}`, text: flattenRichText(item), sectionId }));
     case "checkpoint":
-      return [{ label: "Checkpoint", text: `${block.prompt} Answer: ${block.answer} ${block.explanation}`, sectionId }];
+      return [{ label: "Checkpoint", text: `${flattenRichText(block.prompt)} Answer: ${flattenRichText(block.answer)} ${flattenRichText(block.explanation)}`, sectionId }];
   }
 }
 
 export function buildTopicNarration(topic: TopicDocument): NarrationPassage[] {
   const drafts: PassageDraft[] = [
     { label: "Topic title", text: topic.title },
-    { label: "Topic summary", text: topic.summary },
-    ...topic.learningOutcomes.map((outcome, index) => ({ label: `Learning outcome ${index + 1}`, text: outcome })),
-    ...topic.prerequisites.map((prerequisite, index) => ({ label: `Helpful prerequisite ${index + 1}`, text: prerequisite })),
+    { label: "Topic summary", text: flattenRichText(topic.summary) },
+    ...topic.learningOutcomes.map((outcome, index) => ({ label: `Learning outcome ${index + 1}`, text: flattenRichText(outcome) })),
+    ...topic.prerequisites.map((prerequisite, index) => ({ label: `Helpful prerequisite ${index + 1}`, text: flattenRichText(prerequisite) })),
     ...visualDrafts(topic.heroVisual, "Topic visual"),
   ];
 
   for (const section of topic.sections) {
-    drafts.push({ label: "Section", text: section.title, sectionId: section.id }, { label: "Section summary", text: section.summary, sectionId: section.id });
+    drafts.push(
+      { label: "Section", text: section.title, sectionId: section.id },
+      { label: "Section summary", text: flattenRichText(section.summary), sectionId: section.id },
+    );
     if (section.visual) drafts.push(...visualDrafts(section.visual, "Section visual", section.id));
     for (const block of section.blocks) drafts.push(...blockDrafts(block, section.id));
   }
 
-  for (const entry of topic.glossary) drafts.push({ label: `Glossary: ${entry.term}`, text: `${entry.term}. ${entry.definition}`, sectionId: "glossary" });
+  for (const entry of topic.glossary) drafts.push({ label: `Glossary: ${entry.term}`, text: `${entry.term}. ${flattenRichText(entry.definition)}`, sectionId: "glossary" });
   for (const source of topic.sources) drafts.push({ label: "Primary reference", text: `Primary reference: ${source.label}.`, sectionId: "sources" });
 
   const passages: NarrationPassage[] = [];
