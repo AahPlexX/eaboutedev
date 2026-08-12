@@ -1,4 +1,6 @@
 import { ArrowDown, ArrowRight } from "lucide-react";
+import { InlineContent } from "@/components/topics/inline-content";
+import { flattenRichText } from "@/lib/rich-text";
 import type { TopicVisual } from "@/types/content";
 
 function getNodeMarker(kind: TopicVisual["kind"], index: number) {
@@ -14,20 +16,20 @@ export function TopicVisualPanel({ visual, accent }: { visual: TopicVisual; acce
   return (
     <figure className={`visual-panel visual-panel-${visual.kind}`} style={{ "--topic-accent": accent } as React.CSSProperties}>
       <figcaption>
-        <span>{visual.title}</span>
-        <small>{visual.caption}</small>
+        <span><InlineContent value={visual.title} /></span>
+        <small><InlineContent value={visual.caption} /></small>
       </figcaption>
       <div className={`visual-nodes visual-${visual.kind}`}>
         {visual.nodes.map((node, index) => (
           <div
             className="visual-node-wrap"
-            key={`${node.label}-${node.detail}`}
+            key={`${flattenRichText(node.label)}-${index}`}
             style={visual.kind === "layers" ? { "--layer-index": index } as React.CSSProperties : undefined}
           >
             <div className="visual-node">
               <span className="visual-step">{getNodeMarker(visual.kind, index)}</span>
-              <strong>{node.label}</strong>
-              <p>{node.detail}</p>
+              <strong><InlineContent value={node.label} /></strong>
+              <p><InlineContent value={node.detail} /></p>
             </div>
             {showDirectionalConnector && index < visual.nodes.length - 1 && (
               <span className="visual-arrow" aria-hidden="true">
