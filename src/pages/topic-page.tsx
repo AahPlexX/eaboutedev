@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { ArrowLeft, Clock3, ExternalLink } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
+import { InlineContent } from "@/components/topics/inline-content";
 import { TopicNarration } from "@/components/topics/topic-narration";
 import { TopicSectionView } from "@/components/topics/topic-section";
 import { TopicToc } from "@/components/topics/topic-toc";
@@ -9,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { loadCatalog } from "@/lib/catalog-loader";
 import { getTopicDocumentTitle, SITE_TITLE } from "@/lib/document-title";
+import { flattenRichText } from "@/lib/rich-text";
 import { loadTopic } from "@/lib/topic-loader";
 import type { TopicCatalogEntry, TopicDocument } from "@/types/content";
 import { NotFoundPage } from "@/pages/not-found-page";
@@ -66,16 +68,16 @@ export function TopicPage() {
               </div>
               <p className="topic-kicker">{topic.eyebrow}</p>
               <h1>{topic.title}</h1>
-              <p className="topic-summary">{topic.summary}</p>
+              <p className="topic-summary"><InlineContent value={topic.summary} /></p>
 
               <div className="topic-learning-map">
                 <section aria-labelledby="topic-outcomes-title">
                   <h2 id="topic-outcomes-title">By the end, you will be able to</h2>
-                  <ul>{topic.learningOutcomes.map((outcome) => <li key={outcome}>{outcome}</li>)}</ul>
+                  <ul>{topic.learningOutcomes.map((outcome, index) => <li key={`${flattenRichText(outcome)}-${index}`}><InlineContent value={outcome} /></li>)}</ul>
                 </section>
                 <section aria-labelledby="topic-prerequisites-title">
                   <h2 id="topic-prerequisites-title">Helpful before this guide</h2>
-                  <ul>{topic.prerequisites.map((prerequisite) => <li key={prerequisite}>{prerequisite}</li>)}</ul>
+                  <ul>{topic.prerequisites.map((prerequisite, index) => <li key={`${flattenRichText(prerequisite)}-${index}`}><InlineContent value={prerequisite} /></li>)}</ul>
                 </section>
               </div>
             </div>
@@ -111,7 +113,7 @@ export function TopicPage() {
 }
 
 function Glossary({ topic }: { topic: TopicDocument }) {
-  return <section className="topic-section" id="glossary"><header className="topic-reading-column"><p className="eyebrow">Plain-language glossary</p><h2>Words you have already met in this guide</h2><p>Use this as a quick reminder. The guide introduces these terms in context before they appear here.</p></header><dl className="glossary-grid">{topic.glossary.map((entry) => <div key={entry.term}><dt>{entry.term}</dt><dd>{entry.definition}</dd></div>)}</dl></section>;
+  return <section className="topic-section" id="glossary"><header className="topic-reading-column"><p className="eyebrow">Plain-language glossary</p><h2>Words you have already met in this guide</h2><p>Use this as a quick reminder. The guide introduces these terms in context before they appear here.</p></header><dl className="glossary-grid">{topic.glossary.map((entry) => <div key={entry.term}><dt>{entry.term}</dt><dd><InlineContent value={entry.definition} /></dd></div>)}</dl></section>;
 }
 
 function Sources({ topic }: { topic: TopicDocument }) {
