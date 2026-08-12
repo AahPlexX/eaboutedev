@@ -2,6 +2,7 @@ import type { RichText } from "../types/content.ts";
 
 export function flattenRichText(value: RichText): string {
   if (typeof value === "string") return value;
+  if (!Array.isArray(value)) return "";
   return value.map((part) => typeof part === "string" ? part : flattenRichText(part.children)).join("");
 }
 
