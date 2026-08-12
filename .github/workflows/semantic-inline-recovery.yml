@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - .github/workflows/semantic-inline-recovery.yml
+      - tests/content-blocks.test.ts
 
 permissions:
   contents: write
