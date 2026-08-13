@@ -45,9 +45,19 @@ test("topic narration is user initiated, seekable, retryable, and transcript syn
   assert.doesNotMatch(player, /speechSynthesis|SpeechSynthesisUtterance/);
 });
 
+test("narration is presented as an optional, collapsed-by-default disclosure rather than a persistent control bar", async () => {
+  const player = await readProjectFile("src/components/topics/topic-narration.tsx");
+  assert.match(player, /<details className="topic-narration">/);
+  assert.match(player, /<summary className="narration-summary">/);
+  assert.match(player, /Listen to this guide/);
+  assert.match(player, /Optional/i);
+  assert.doesNotMatch(player, /position:\s*sticky/);
+});
+
 test("narration controls preserve responsive and forced-color accessibility contracts", async () => {
   const css = await readProjectFile("src/learning.css");
   assert.match(css, /\.topic-narration\s*\{/);
+  assert.doesNotMatch(css, /\.topic-narration\s*\{[^}]*position:\s*sticky/s);
   assert.match(css, /\.narration-control[^}]*min-block-size:\s*2\.75rem/s);
   assert.match(css, /\.narration-controls[^}]*grid-template-columns:/s);
   assert.match(css, /\.narration-transcript[^}]*overflow-y:\s*auto/s);

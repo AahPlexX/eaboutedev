@@ -64,6 +64,7 @@ Read `NORTHSTAR.md` before topic work, then use `docs/content-authoring.md` for 
 
 Every loaded `TopicDocument` is projected into bounded narration passages in the same learning order as the guide. The shared player therefore applies automatically to current and future topics rather than requiring per-topic audio files.
 
+- Presentation: narration is an optional, collapsed-by-default disclosure ("Listen to this guide") placed inline in the reading flow rather than a persistent or sticky control bar, so it never competes with the primary reading experience.
 - Runtime: exact `kokoro-js@1.2.1` browser distribution loaded from jsDelivr only after the visitor intentionally requests narration.
 - Model: `onnx-community/Kokoro-82M-v1.0-ONNX`, `q8`, executed through WebAssembly with the `af_heart` voice.
 - Cost/privacy boundary: no account, API key, backend, paid TTS request, or billing path is used; topic text is synthesized in the browser.
