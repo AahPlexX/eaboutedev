@@ -1,9 +1,10 @@
 {
-  "checkedAt": "2026-08-13T13:52:25.549Z",
+  "checkedAt": "2026-08-13T14:04:22.500Z",
   "url": "https://aahplexx.github.io/eaboutedev/#/topics/how-the-web-works",
   "playwright": "1.62.0",
   "heading": true,
-  "ttsDefaultHeightPx": 135.77,
+  "narrationCollapsedByDefault": true,
+  "narrationSummaryHeightPx": 48,
   "transcriptCollapsedByDefault": true,
   "transcriptOpens": true,
   "desktopTocVisible": true,
