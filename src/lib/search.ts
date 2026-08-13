@@ -44,7 +44,3 @@ export async function searchTopics(query: string, limit = 8): Promise<TopicSearc
   for (const result of results) result.intent = intent;
   return results;
 }
-
-export function resetSearchCache(): void {
-  searchPromise = undefined;
-}

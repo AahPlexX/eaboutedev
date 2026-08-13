@@ -15,20 +15,22 @@ function TopicLinks({ sections }: { sections: TopicSection[] }) {
   );
 }
 
-export function TopicToc({ sections }: { sections: TopicSection[] }) {
-  return (
-    <>
+export function TopicToc({ sections, variant }: { sections: TopicSection[]; variant: "desktop" | "mobile" }) {
+  if (variant === "desktop") {
+    return (
       <nav aria-label="On this page" className="topic-toc topic-toc-desktop">
         <p>On this page</p>
         <TopicLinks sections={sections} />
       </nav>
+    );
+  }
 
-      <details className="topic-toc-mobile">
-        <summary>On this page <span>{sections.length} sections</span></summary>
-        <nav aria-label="On this page, mobile">
-          <TopicLinks sections={sections} />
-        </nav>
-      </details>
-    </>
+  return (
+    <details className="topic-toc-mobile">
+      <summary>On this page <span>{sections.length} sections</span></summary>
+      <nav aria-label="On this page, mobile">
+        <TopicLinks sections={sections} />
+      </nav>
+    </details>
   );
 }

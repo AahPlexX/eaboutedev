@@ -289,3 +289,30 @@ This file is append-only. Add a new dated turn section; do not rewrite or remove
 - [x] Diagnose and correct the test-only Markdown backtick false failure without weakening readable governance text.
 - [x] Pass the complete permanent pull-request verification gate after the final governance-discovery implementation.
 - [x] Preserve client-facing topic content, topic JSON, generated discovery assets, narration behavior, dependencies, and application runtime unchanged.
+
+
+## Turn 12 — 2026-08-12
+
+**turncount: 12**
+
+### Lint gate and dependency currency restoration
+
+- [x] Diagnose why `pnpm run check` was red on `main`: two Oxlint `no-useless-escape` errors in `tests/rich-text.test.ts` and three unsuppressed `react/no-array-index-key` warnings under `--deny-warnings`.
+- [x] Remove the unnecessary escapes and extend the existing per-file `react/no-array-index-key` override to `topic-visual.tsx` and `topic-page.tsx`, matching the precedent already set for `content-block.tsx`/`topic-section.tsx`.
+- [x] Regenerate `docs/topic-registry.json`, whose committed `sha256` for `how-the-web-works` had drifted from current source content.
+- [x] Bump `lucide-react`, `vite`, `oxlint`, and `@types/node` to current npm registry `latest`, preserving exact-version pinning.
+- [x] Pass the complete `pnpm check` gate locally and merge squash PR #12 into `main`; confirm both `Deploy GitHub Pages` and `Semantic inline TDD` completed successfully against the merge commit.
+
+### Topic UX health audit follow-up
+
+- [x] Discover that the one-time `topic-ux-health-audit.yml` run at commit `539dfc8` (2026-08-11) failed both its Knip dead-code step and its live-browser Playwright step, and that the failure was never previously recorded in this ledger.
+- [x] Root-cause the browser failure: `locator('.topic-toc-desktop')` resolved to 2 DOM elements because `TopicToc` unconditionally rendered both its desktop `<nav>` and mobile `<details>` markup while `topic-page.tsx` invoked the component twice, once per breakpoint wrapper.
+- [x] Give `TopicToc` an explicit `variant: "desktop" | "mobile"` prop so each call site renders only the landmark it needs, and update both call sites in `topic-page.tsx`.
+- [x] Strengthen the existing UX regression test so it asserts exactly one desktop and one mobile `TopicToc` usage instead of only checking for the presence of both class-name strings in the component source.
+- [x] Remove the confirmed-dead `resetSearchCache` export from `src/lib/search.ts` and un-export the 9 inline-content-node interfaces in `src/types/content.ts` that nothing outside the file imports by name; re-ran Knip locally and confirmed zero remaining unused-export/unused-type findings.
+- [x] Pass the complete `pnpm check` gate locally with the fix in place: 46/46 tests (including the strengthened TOC test), `tsc -b` clean, Oxlint 0 warnings/0 errors, production build succeeds.
+
+### Remaining verification
+
+- [ ] Re-trigger `topic-ux-health-audit.yml` against the corrected `main` (its trigger path is `docs/topic-ux-health-trigger.txt`) and confirm the live-browser step no longer hits the strict-mode duplicate-locator failure.
+- [ ] Confirm the corrected Pages deployment renders exactly one visible desktop and one visible mobile "On this page" landmark per breakpoint on the live site.

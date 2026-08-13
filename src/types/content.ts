@@ -10,27 +10,27 @@ interface InlineNodeBase {
   children: RichText;
 }
 
-export interface DfnInlineNode extends InlineNodeBase {
+interface DfnInlineNode extends InlineNodeBase {
   type: "dfn";
   term: string;
 }
 
-export interface AbbrInlineNode extends InlineNodeBase {
+interface AbbrInlineNode extends InlineNodeBase {
   type: "abbr";
   title: string;
 }
 
-export interface LinkInlineNode extends InlineNodeBase {
+interface LinkInlineNode extends InlineNodeBase {
   type: "a";
   href: string;
 }
 
-export interface CodeInlineNode extends InlineNodeBase { type: "code"; }
-export interface StrongInlineNode extends InlineNodeBase { type: "strong"; }
-export interface EmInlineNode extends InlineNodeBase { type: "em"; }
-export interface KbdInlineNode extends InlineNodeBase { type: "kbd"; }
-export interface SampInlineNode extends InlineNodeBase { type: "samp"; }
-export interface VarInlineNode extends InlineNodeBase { type: "var"; }
+interface CodeInlineNode extends InlineNodeBase { type: "code"; }
+interface StrongInlineNode extends InlineNodeBase { type: "strong"; }
+interface EmInlineNode extends InlineNodeBase { type: "em"; }
+interface KbdInlineNode extends InlineNodeBase { type: "kbd"; }
+interface SampInlineNode extends InlineNodeBase { type: "samp"; }
+interface VarInlineNode extends InlineNodeBase { type: "var"; }
 
 export type InlineSemanticNode =
   | DfnInlineNode
