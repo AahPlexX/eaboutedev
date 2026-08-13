@@ -1,1 +1,1 @@
-Topic UX health audit trigger — 2026-08-13 (re-run after fixing the duplicate topic-toc-desktop landmark from the 2026-08-11 failure)
+Topic UX health audit trigger — 2026-08-13, run 2 (re-run after making topic narration a collapsed, non-sticky disclosure)
