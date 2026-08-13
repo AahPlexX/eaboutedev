@@ -106,7 +106,8 @@ jobs:
             url,
             playwright: '1.62.0',
             heading: false,
-            ttsDefaultHeightPx: null,
+            narrationCollapsedByDefault: false,
+            narrationSummaryHeightPx: null,
             transcriptCollapsedByDefault: false,
             transcriptOpens: false,
             desktopTocVisible: false,
@@ -140,7 +141,9 @@ jobs:
             result.heading = true;
             result.desktopNoHorizontalOverflow = await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1);
             result.desktopTocVisible = await page.locator('.topic-toc-desktop').isVisible();
-            result.ttsDefaultHeightPx = Math.round((await page.locator('.topic-narration').boundingBox()).height * 100) / 100;
+            result.narrationCollapsedByDefault = !(await page.locator('.topic-narration').evaluate(el => el.open));
+            result.narrationSummaryHeightPx = Math.round((await page.locator('.narration-summary').boundingBox()).height * 100) / 100;
+            await page.locator('.narration-summary').click();
             result.transcriptCollapsedByDefault = !(await page.locator('.narration-transcript').isVisible());
             await page.locator('.narration-details > summary').click();
             result.transcriptOpens = await page.locator('.narration-transcript').isVisible();
@@ -175,7 +178,8 @@ jobs:
             result.consoleErrors = consoleErrors;
             result.failedRuntimeResponses = failedRuntimeResponses;
             result.success = Boolean(
-              result.heading && result.ttsDefaultHeightPx <= 180 && result.transcriptCollapsedByDefault && result.transcriptOpens &&
+              result.heading && result.narrationCollapsedByDefault && result.narrationSummaryHeightPx <= 60 &&
+              result.transcriptCollapsedByDefault && result.transcriptOpens &&
               result.desktopTocVisible && result.desktopNoHorizontalOverflow && result.mobileTocVisible && result.mobileDesktopTocHidden &&
               result.mobileNarrationPosition === 'static' && result.mobileNoHorizontalOverflow && result.neuralStarted && result.pauseWorked &&
               result.resumeWorked && result.currentTranscriptCount === 1 && consoleErrors.length === 0 && failedRuntimeResponses.length === 0
