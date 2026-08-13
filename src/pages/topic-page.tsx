@@ -87,9 +87,9 @@ export function TopicPage() {
       </header>
 
       <div className="shell topic-workspace">
-        <aside className="topic-workspace-rail"><TopicToc sections={topic.sections} /></aside>
+        <aside className="topic-workspace-rail"><TopicToc sections={topic.sections} variant="desktop" /></aside>
         <main className="topic-content" id="topic-content">
-          <div className="topic-mobile-map"><TopicToc sections={topic.sections} /></div>
+          <div className="topic-mobile-map"><TopicToc sections={topic.sections} variant="mobile" /></div>
           <TopicNarration topic={topic} />
           <div className="topic-learning-sequence">
             {topic.sections.map((section) => <TopicSectionView section={section} accent={topic.accent} key={section.id} />)}

@@ -17,14 +17,24 @@ test("topic page separates orientation, learning workspace, and reference zones"
   assert.match(source, /<Sources topic=\{topic\}/);
 });
 
-test("topic navigation has desktop and mobile variants without hiding lesson content", async () => {
+test("topic navigation renders exactly one desktop and one mobile variant without duplicate landmarks", async () => {
   const toc = await read("src/components/topics/topic-toc.tsx");
+  const page = await read("src/pages/topic-page.tsx");
 
   assert.match(toc, /topic-toc-desktop/);
   assert.match(toc, /topic-toc-mobile/);
   assert.match(toc, /On this page/);
   assert.match(toc, /sections\.map/);
   assert.doesNotMatch(toc, /display:\s*none/);
+
+  // TopicToc must render only the variant it is asked for, never both landmarks at once,
+  // so the deployed page never exposes two "On this page" navigation landmarks.
+  assert.match(toc, /variant\s*===\s*"desktop"/);
+
+  const desktopUsages = page.match(/<TopicToc[^>]*variant="desktop"/g) ?? [];
+  const mobileUsages = page.match(/<TopicToc[^>]*variant="mobile"/g) ?? [];
+  assert.equal(desktopUsages.length, 1, "expected exactly one desktop TopicToc usage");
+  assert.equal(mobileUsages.length, 1, "expected exactly one mobile TopicToc usage");
 });
 
 test("topic learning layout constrains reading measure and lets technical blocks escape wider", async () => {
