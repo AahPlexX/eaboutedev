@@ -316,3 +316,23 @@ This file is append-only. Add a new dated turn section; do not rewrite or remove
 
 - [ ] Re-trigger `topic-ux-health-audit.yml` against the corrected `main` (its trigger path is `docs/topic-ux-health-trigger.txt`) and confirm the live-browser step no longer hits the strict-mode duplicate-locator failure.
 - [ ] Confirm the corrected Pages deployment renders exactly one visible desktop and one visible mobile "On this page" landmark per breakpoint on the live site.
+
+
+## Turn 13 — 2026-08-13
+
+**turncount: 13**
+
+### Topic narration presentation fix
+
+- [x] Diagnose direct user feedback that the topic narration (TTS) control was sticky and problematic, and needed to be optional rather than front-and-center on every `topics/**` page.
+- [x] Wrap `TopicNarration` in a collapsed-by-default `<details className="topic-narration">` disclosure with a plain-language summary ("Listen to this guide" / "Optional — free, on-device narration"), removing `position: sticky` and the always-expanded floating control-bar treatment from `src/learning.css`.
+- [x] Preserve every existing playback/accessibility contract (Play/Pause/Resume, Restart, retry, seek slider, polite status live region, transcript disclosure, current-passage semantics) unchanged inside the new outer disclosure.
+- [x] Add a regression test asserting the collapsed-disclosure structure and the absence of `position: sticky`.
+- [x] Update the live `topic-ux-health-audit.yml` script to open the new outer disclosure before interacting with controls, and assert the summary is collapsed by default and sized like a normal disclosure row instead of the old always-expanded control-bar height.
+- [x] Note the new optional/collapsed presentation in `README.md`.
+- [x] Pass the complete `pnpm check` gate locally (47/47 tests, `tsc -b` clean, Oxlint 0/0, production build) and merge squash PR #15 into `main`.
+- [x] Re-trigger `topic-ux-health-audit.yml` against the deployed fix and confirm success on the live site: `narrationCollapsedByDefault: true`, `narrationSummaryHeightPx: 48`, `mobileNarrationPosition: "static"`, overall `success: true`.
+
+### Topic UX health audit closure
+
+- [x] Re-trigger `topic-ux-health-audit.yml` against the merged topic-toc duplicate-landmark fix (#13) via PR #14 and confirm the live-browser step no longer hits the strict-mode duplicate-locator failure; full result recorded `success: true` in `docs/topic-ux-health-result.json`.
