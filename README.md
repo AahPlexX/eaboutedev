@@ -11,17 +11,20 @@ A visual, plain-language, deeply sourced reference for understanding web develop
 - **Generated discovery artifacts:** topic source documents generate the catalog, search index, homepage bootstrap, and topic registry together.
 - **Free neural read-aloud:** every topic automatically exposes user-initiated natural narration with transcript navigation without a paid speech API or account.
 
-## Governing topic quality
+## Governing repository work
+
+`SSOT.md` is the canonical directory for **any** CRUD action in this repository, by any model, agent, or human. It maps every governed concern — content quality, the authoring contract, generated artifacts, tests, workflows, ledgers, and dependency policy — to the one file that is authoritative for it, plus how that file may be mutated. Start there before touching anything you haven't worked on before.
 
 `NORTHSTAR.md` is the canonical, model-agnostic quality standard for every topic addition, rewrite, and curriculum expansion. It defines the qualities a publishable guide must preserve—truthfulness, zero-gap learning continuity, mechanistic depth, real-world applicability, source discipline, accessibility, curriculum coherence, and repository integration—without forcing unrelated subjects into one rigid outline.
 
-Agent-specific entry files intentionally stay small and route different coding-agent ecosystems back to the same North Star so the standard does not drift by model or vendor. The current discovery layer includes `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, and `.github/copilot-instructions.md`.
+Agent-specific entry files intentionally stay small and route different coding-agent ecosystems back to the same governance rather than duplicating it. The current discovery layer includes `AGENTS.md`, `SSOT.md`, `NORTHSTAR.md`, `CLAUDE.md`, `GEMINI.md`, and `.github/copilot-instructions.md`.
 
 For topic work, read in this order:
 
-1. `NORTHSTAR.md`
-2. `docs/content-authoring.md`
-3. `docs/topic-registry.json` and the relevant existing topic sources
+1. `SSOT.md` for where the governing rule for anything you're touching actually lives.
+2. `NORTHSTAR.md`
+3. `docs/content-authoring.md`
+4. `docs/topic-registry.json` and the relevant existing topic sources
 
 ## Stack
 

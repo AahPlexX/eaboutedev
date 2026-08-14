@@ -870,6 +870,53 @@
           "responsibility": "Append-only map of cross-agent governance discovery surfaces"
         }
       ]
+    },
+    {
+      "turncount": 14,
+      "date": "2026-08-14",
+      "summary": "Cross-agent Single Source of Truth governance directory",
+      "areas": [
+        {
+          "path": "SSOT.md",
+          "responsibility": "Canonical directory mapping every governed repository concern to its one authoritative file and that file's CRUD mutation rule, for any model/agent/human performing repository work"
+        },
+        {
+          "path": "AGENTS.md",
+          "responsibility": "Vendor-neutral entry point now directing all CRUD work to SSOT.md first, ahead of topic-specific governance"
+        },
+        {
+          "path": "CLAUDE.md",
+          "responsibility": "Claude Code project adapter importing SSOT.md alongside existing governance imports"
+        },
+        {
+          "path": "GEMINI.md",
+          "responsibility": "Gemini CLI native @file import of SSOT.md alongside existing governance imports"
+        },
+        {
+          "path": ".github/copilot-instructions.md",
+          "responsibility": "GitHub Copilot repository-wide adapter importing SSOT.md alongside existing governance imports"
+        },
+        {
+          "path": "README.md",
+          "responsibility": "Human-facing routing to SSOT.md as the first stop for repository governance"
+        },
+        {
+          "path": "tests/ssot-directory.test.ts",
+          "responsibility": "Permanent regression contract verifying SSOT.md's referenced paths exist, it stays a directory rather than a duplicate policy body, and every adapter/README routes to it"
+        },
+        {
+          "path": "changelog.md",
+          "responsibility": "Append-only Turn 14 governance change record"
+        },
+        {
+          "path": "todo.md",
+          "responsibility": "Append-only Turn 14 completion checklist with PR merge and Pages verification remaining"
+        },
+        {
+          "path": "codemap.json",
+          "responsibility": "Append-only map of the SSOT governance directory surfaces"
+        }
+      ]
     }
   ]
 }

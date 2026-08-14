@@ -263,3 +263,18 @@ Append-only project history. The highest recorded `turncount` is authoritative.
 - A later run exposed a test-only Markdown backtick mismatch; CI showed the required `main` rule was present, so the test was corrected to normalize Markdown ticks rather than weakening `AGENTS.md`.
 - The complete permanent PR gate then passed with frozen dependency installation, generated-artifact integrity, all tests, TypeScript, Oxlint, and production build.
 - No client-facing lesson, topic JSON, generated discovery artifact, runtime feature, dependency, or narration behavior changed.
+
+
+## Turn 14 — 2026-08-14
+
+**turncount: 14**
+
+### Cross-agent SSOT governance directory
+
+- Verified the working copy against `origin/main` before making any change and found it was 83 commits stale (through squash-merged PR #17); reset to true current `main` rather than risk silently reverting already-merged fixes.
+- Added `SSOT.md`, a canonical Single Source of Truth directory that maps every governed repository concern to its one authoritative file and that file's CRUD mutation rule, so any LLM or agent — Claude, GPT-family/Codex, Gemini, GitHub Copilot, or an integration not yet added — can find the governing rule for anything it is about to touch without duplicating or drifting from existing policy.
+- Designed `SSOT.md` as a directory rather than a template: it does not restate `NORTHSTAR.md`'s quality body or `docs/content-authoring.md`'s authoring contract, it points to them, and it explicitly defers to `AGENTS.md`'s existing instruction hierarchy.
+- Updated `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `.github/copilot-instructions.md`, and `README.md` to route to `SSOT.md` first, following the same thin-adapter pattern established in Turn 11.
+- Added `tests/ssot-directory.test.ts` verifying every canonical path `SSOT.md` references exists, that it does not duplicate North Star policy, and that every adapter/README references it.
+- Passed the complete `pnpm check` gate locally: 51/51 tests, TypeScript, Oxlint with 0 warnings/errors, generated-artifact freshness, and the production build.
+- No topic source, generated discovery artifact, application code, dependency, or narration behavior changed in this governance turn.

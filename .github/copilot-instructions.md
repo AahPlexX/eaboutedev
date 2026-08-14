@@ -1,9 +1,12 @@
 # GitHub Copilot repository instructions
 
 @../AGENTS.md
+@../SSOT.md
 @../NORTHSTAR.md
 @../docs/content-authoring.md
 @../docs/topic-registry.json
+
+Before any CRUD action in this repository, use `SSOT.md` to find which file governs the thing you are about to touch and how it may be mutated.
 
 For topic additions, rewrites, reviews, or curriculum expansion, `NORTHSTAR.md` is the canonical educational-quality standard. Keep this file as a discovery adapter. Do not duplicate the North Star here.
 

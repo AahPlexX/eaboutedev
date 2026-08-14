@@ -336,3 +336,24 @@ This file is append-only. Add a new dated turn section; do not rewrite or remove
 ### Topic UX health audit closure
 
 - [x] Re-trigger `topic-ux-health-audit.yml` against the merged topic-toc duplicate-landmark fix (#13) via PR #14 and confirm the live-browser step no longer hits the strict-mode duplicate-locator failure; full result recorded `success: true` in `docs/topic-ux-health-result.json`.
+
+
+## Turn 14 — 2026-08-14
+
+**turncount: 14**
+
+### Model-agnostic SSOT governance directory
+
+- [x] Discover before acting: the local working copy was 83 commits behind `origin/main` (through PR #17); reset to true current `main` instead of proceeding from stale state or force-pushing over newer merged work.
+- [x] Add root `SSOT.md` as a canonical Single Source of Truth **directory**, not a second policy body: it maps every governed concern (content quality, authoring contract, generated artifacts, topic sources, tests, CI/deploy workflows, ledgers, spec/plan records, dependency policy) to the one file authoritative for it, plus that file's mutation (CRUD) rule.
+- [x] Keep `SSOT.md` explicitly subordinate to `AGENTS.md`'s existing instruction hierarchy and to `NORTHSTAR.md` on educational quality; it is a map, not a new precedence layer.
+- [x] Wire `SSOT.md` into every existing agent adapter (`AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `.github/copilot-instructions.md`) and into `README.md`, so any current or future LLM/agent — regardless of vendor — is directed to it before performing CRUD in this repository.
+- [x] Add `tests/ssot-directory.test.ts`, asserting every canonical path referenced by `SSOT.md` actually exists, that `SSOT.md` does not duplicate `NORTHSTAR.md`'s substantive quality headings, that every adapter references it, and that adapters stay thin.
+- [x] Pass the complete `pnpm check` gate locally: 51/51 tests (up from 47), `tsc -b` clean, Oxlint 0 warnings/0 errors, generated-artifact drift check clean, production build succeeds.
+- [x] Preserve topic JSON, generated discovery artifacts, application runtime, dependencies, and client-facing content unchanged.
+
+### Remaining release verification
+
+- [ ] Pass the permanent pull-request verification gate (`.github/workflows/actions.yml`) on the PR opened for this turn.
+- [ ] Merge into authoritative `main` and delete the source branch so no competing branch state remains.
+- [ ] Confirm the resulting `main` `Deploy GitHub Pages` workflow completes verification, build, artifact upload, and deployment.
