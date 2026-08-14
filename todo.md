@@ -352,8 +352,9 @@ This file is append-only. Add a new dated turn section; do not rewrite or remove
 - [x] Pass the complete `pnpm check` gate locally: 51/51 tests (up from 47), `tsc -b` clean, Oxlint 0 warnings/0 errors, generated-artifact drift check clean, production build succeeds.
 - [x] Preserve topic JSON, generated discovery artifacts, application runtime, dependencies, and client-facing content unchanged.
 
-### Remaining release verification
+### Release outcome — Turn 14, sequence 2
 
-- [ ] Pass the permanent pull-request verification gate (`.github/workflows/actions.yml`) on the PR opened for this turn.
-- [ ] Merge into authoritative `main` and delete the source branch so no competing branch state remains.
-- [ ] Confirm the resulting `main` `Deploy GitHub Pages` workflow completes verification, build, artifact upload, and deployment.
+- [x] Passed the permanent pull-request verification gate (`Verify pull requests`) on PR #18.
+- [x] Squash-merged PR #18 into authoritative `main` at commit `632f75d17cf4f61381624f927f51b588af015fc7`.
+- [x] Deleted the `docs/governance-ssot-directory` branch (remote and local); zero open PRs and zero non-`main` branches remain.
+- [x] Confirmed the resulting `main` `Deploy GitHub Pages` workflow completed successfully for commit `632f75d17cf4f61381624f927f51b588af015fc7`.
