@@ -2,7 +2,9 @@
 
 This repository treats educational quality as a governed product requirement, not a writing preference.
 
-Before adding, rewriting, expanding, or materially restructuring any topic, read and obey:
+Before performing **any** CRUD action in this repository — not only topic work — start at `SSOT.md`. It is the canonical directory mapping every governed concern (content quality, authoring contract, generated artifacts, tests, workflows, ledgers, dependency policy) to the one file that is authoritative for it, plus the mutation rule for that file. This applies to every model and client: Claude, Codex/GPT-family, Gemini, GitHub Copilot, or any other agent runtime.
+
+For topic work specifically, read and obey in order:
 
 1. `NORTHSTAR.md` — canonical quality standard and project intent.
 2. `docs/content-authoring.md` — current topic-file, block, visual, and authoring contract.
@@ -13,7 +15,7 @@ Before adding, rewriting, expanding, or materially restructuring any topic, read
 
 ## Repository rules
 
-- `main` is the authoritative branch. Do not leave competing branch state behind.
+- `main` is the authoritative branch. It must never be behind any other branch. Do not leave competing branch state behind: merge or delete branches once their work lands.
 - Use pnpm only.
 - Authoritative topic sources live in `public/content/topics/<slug>.json`.
 - Do not hand-author generated catalog/search/bootstrap/registry output as though it were source content.
