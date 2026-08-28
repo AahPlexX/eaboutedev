@@ -415,7 +415,9 @@
     "nodejs-and-package-management",
     "typescript",
     "react",
-    "git-and-github"
+    "git-and-github",
+    "testing-and-quality",
+    "deployment-and-hosting"
   ],
   "sources": [
     {

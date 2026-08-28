@@ -547,7 +547,9 @@
   "related": [
     "html-css-and-javascript",
     "apis-and-data-exchange",
-    "git-and-github"
+    "git-and-github",
+    "security-and-authentication",
+    "deployment-and-hosting"
   ],
   "sources": [
     {

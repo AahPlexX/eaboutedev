@@ -1,0 +1,80 @@
+{
+  "version": 1,
+  "slug": "deployment-and-hosting",
+  "title": "Deployment and Hosting",
+  "eyebrow": "From source to service · Put verified software in the environment where people use it",
+  "summary": "Start with one production build, then follow artifact creation, configuration, hosting choices, domains, HTTPS, release pipelines, observability, rollback, and the failure stages that make deployment diagnosable.",
+  "category": "Operations",
+  "level": "Intermediate",
+  "estimatedMinutes": 40,
+  "icon": "🚀",
+  "accent": "oklch(0.67 0.18 285)",
+  "aliases": ["deployment", "hosting", "shipping software", "ci cd", "continuous delivery", "production deployment"],
+  "keywords": ["deploy", "hosting", "production", "build artifact", "static hosting", "server", "container", "dns", "https", "environment variables", "secrets", "ci cd", "rollback", "observability"],
+  "prerequisites": ["Vite is helpful for the static build example and base paths.", "Git and GitHub is helpful for commits, branches, and GitHub Actions.", "Node.js and Package Management is helpful for runtime and start-command choices.", "How the Web Works is helpful for DNS, HTTP, and HTTPS."],
+  "learningOutcomes": ["Trace source through a reproducible build into a running static site or server.", "Choose a hosting boundary from workload, state, traffic, and operational constraints.", "Diagnose deployment failures by separating build, configuration, routing, runtime, and data stages."],
+  "heroVisual": {"kind": "flow", "title": "A release has more stages than copying files", "caption": "Each stage produces evidence or state the next stage depends on; a deployment is only complete when the running environment serves the intended version.", "nodes": [
+    {"label": "Source revision", "detail": "A reviewed commit identifies the code and dependency inputs."},
+    {"label": "Build", "detail": "The tool produces deployable static assets or a server artifact."},
+    {"label": "Configuration", "detail": "The target environment supplies non-secret settings and protected secrets."},
+    {"label": "Host", "detail": "A static host or process serves the artifact over the network."},
+    {"label": "Observe and recover", "detail": "Checks, logs, metrics, and rollback evidence show whether the release is healthy."}
+  ]},
+  "sections": [
+    {"id": "artifact", "title": "1. Build the same artifact you intend to serve", "summary": "A development server proves a local feedback loop; a production build proves that deployable output can be created.", "blocks": [
+      {"type": "paragraph", "text": "A Vite project may transform TypeScript and JSX during development, but visitors do not receive the source tree or development server. The build command follows imports, emits browser assets, rewrites references, and places the result in an output directory. Deploy that output only after the repository's tests, type checks, lint, and build have passed."},
+      {"type": "code", "language": "Shell", "code": "pnpm install --frozen-lockfile\npnpm run check\npnpm run build\n# publish the generated dist/ directory", "explanation": "The frozen install uses the committed dependency graph. The check command supplies project evidence, and the build produces the artifact. The exact publish directory is a project contract; do not guess it from a development URL."},
+      {"type": "checkpoint", "prompt": "Can a green development server alone prove that a nested production URL will load its hashed chunks?", "answer": "No.", "explanation": "Development and production have different servers, URL rewriting, asset paths, and caching behavior. The production artifact must be built and tested in the deployment shape."}
+    ]},
+    {"id": "hosting-choice", "title": "2. Choose a host from the workload, not the brand", "summary": "Static files, a long-running server, and a managed container have different runtime needs.", "blocks": [
+      {"type": "table", "columns": ["Hosting shape", "Fits when", "Trade-off"], "rows": [["Static hosting", "The build emits files and runtime state lives in the browser or an API.", "Simple and cacheable, but it cannot run a private server process."], ["Managed application platform", "A Node.js or other server must run with managed networking and scaling.", "Less host maintenance, but platform limits and cost become part of the design."], ["Container or virtual machine", "You need control over the process, OS, network, or deployment shape.", "More control requires patching, capacity, health checks, and incident ownership."]], "caption": "The required runtime and state boundary determine the viable hosting shapes."},
+      {"type": "paragraph", "text": "A frontend bundle cannot safely contain database credentials or private API keys. A server can keep secrets behind a trust boundary and expose only the API the browser needs. If the application needs uploads, background work, durable sessions, or a database, include those runtime dependencies in the deployment design instead of treating the frontend artifact as the whole system."}
+    ]},
+    {"id": "configuration", "title": "3. Supply configuration without turning it into source code", "summary": "The same artifact may run in several environments when environment-specific values are injected at the boundary.", "blocks": [
+      {"type": "steps", "title": "Separate code, configuration, and secrets", "items": [
+        {"title": "Name the environment", "explanation": "Use explicit development, preview, and production modes so behavior is not chosen by an accidental machine default.", "result": "The release has a deliberate configuration context."},
+        {"title": "Validate required values", "explanation": "Fail during startup or build when a required URL, port, or feature setting is absent or malformed.", "result": "A bad configuration stops before it serves misleading output."},
+        {"title": "Classify visibility", "explanation": "A browser-exposed value is public configuration; database credentials and signing keys remain server-only secrets.", "result": "Each value is placed on the correct trust boundary."},
+        {"title": "Rotate and audit", "explanation": "Store secrets in the hosting platform or a secret manager, limit access, and replace exposed values rather than hiding them in a new file.", "result": "Secret access can be reviewed and compromised values can be replaced."}
+      ]},
+      {"type": "callout", "tone": "warning", "title": "A frontend environment variable is not secret", "body": "If a value is embedded in JavaScript sent to a browser, every visitor can inspect it. Use public values only for public configuration such as an API origin or feature flag."},
+      {"type": "paragraph", "text": "Configuration errors often look like application bugs. Record which non-secret mode and artifact revision are running, but never log passwords, tokens, or full authorization headers."}
+    ]},
+    {"id": "network", "title": "4. Make the public route reach the intended bytes", "summary": "DNS names a destination, HTTPS protects transport, and the host's routing rules decide which resource handles a URL.", "blocks": [
+      {"type": "paragraph", "text": "A domain name points a human-readable name toward hosting infrastructure through DNS. HTTPS authenticates the domain to the browser and encrypts the connection. The host then maps a request path to a file or server route. Project sites hosted under a path prefix need asset URLs and client routing configured for that prefix; an absolute root path can request the wrong location."},
+      {"type": "cards", "items": [
+        {"title": "Blank page with 404 chunk", "summary": "The HTML loaded but a generated asset URL points at the wrong base path.", "example": "Inspect the failed request URL and compare it with the host's public prefix."},
+        {"title": "Refresh loses a client route", "summary": "The development router handled the path, but the host has no fallback or server route for it.", "example": "Configure the host's history fallback or use a deployment-compatible route strategy."},
+        {"title": "Mixed-content warning", "summary": "A secure page requests an insecure resource.", "example": "Serve API and assets over HTTPS and check generated configuration."}
+      ]},
+      {"type": "checkpoint", "prompt": "If the HTML request succeeds but a JavaScript chunk returns 404, should you begin by changing application state logic?", "answer": "No.", "explanation": "The earliest failing stage is asset resolution or hosting path configuration. Inspect the built URL and deployment prefix before debugging code that never loaded."}
+    ]},
+    {"id": "pipeline", "title": "5. Release through a repeatable pipeline", "summary": "Continuous integration supplies evidence; continuous delivery makes a reviewed artifact available through a controlled release step.", "blocks": [
+      {"type": "code", "language": "YAML", "code": "name: Verify\non: [pull_request]\njobs:\n  check:\n    runs-on: ubuntu-latest\n    steps:\n      - run: pnpm install --frozen-lockfile\n      - run: pnpm run check", "explanation": "The pipeline starts from a clean runner, installs the committed dependency graph, and runs the same project gate as local development. A deployment job should publish only the artifact produced by a verified revision and should limit its permissions."},
+      {"type": "paragraph", "text": "A preview deployment lets reviewers inspect a proposed revision without replacing production. Production promotion should identify the commit, preserve the previous known-good version, and avoid running unreviewed build steps with broad credentials. Git and GitHub provide the history and collaboration boundary; the host provides the runtime boundary."},
+      {"type": "checklist", "title": "Before promotion", "items": ["The revision and dependency lockfile are known.", "Tests, type checking, lint, and production build passed.", "Required configuration exists without secrets in source.", "The artifact has the expected base path, routes, and source maps policy.", "Health checks and rollback instructions are available.", "The release owner can identify what changed and where failures will appear."]}
+    ]},
+    {"id": "operate", "title": "6. Observe, diagnose, and recover the running release", "summary": "A release is an operational change; logs, metrics, checks, and rollback keep a failure bounded.", "blocks": [
+      {"type": "table", "columns": ["Symptom", "Earliest stage to inspect", "Evidence"], "rows": [["Build fails", "Dependency, type, transform, or configuration input", "Clean-run command output and first error location"], ["Host returns 404 for every path", "DNS, host mapping, or deployment artifact", "Response status, requested URL, host configuration, deployed file list"], ["Server starts then exits", "Runtime command, environment, port, or dependency", "Process logs, exit code, health-check history"], ["Users see old code", "Cache or promotion state", "Artifact revision, cache headers, and a fresh request without browser cache"], ["New release raises errors", "Application behavior or external dependency", "Error rate, logs with request correlation, and comparison with the previous revision"]], "caption": "Start at the first stage that could produce the observed symptom."},
+      {"type": "paragraph", "text": "Rollback means returning traffic to a known-good artifact or revision; it does not automatically undo a database migration or an external side effect. Make schema changes backward-compatible when possible, back up data, and plan forward fixes for irreversible operations. Measure latency and error percentiles, resource use, and cost at the scale the workload needs."},
+      {"type": "callout", "tone": "info", "title": "Deployment is complete when the environment is verified", "body": "Do not stop at “upload succeeded.” Request the public URL, exercise a health or smoke path, confirm the expected revision, and check the first logs and error signals after promotion."}
+    ]}
+  ],
+  "glossary": [
+    {"term": "Artifact", "definition": "The files or packaged output produced from a source revision for deployment."},
+    {"term": "Deployment", "definition": "The controlled act of making a built artifact available in a target runtime or hosting environment."},
+    {"term": "Continuous integration", "definition": "Automatically checking proposed changes in a clean, shared build environment."},
+    {"term": "Rollback", "definition": "Returning service traffic or runtime state to a previously known-good release."},
+    {"term": "DNS", "definition": "The distributed naming system that maps domain names to network destinations and related records."},
+    {"term": "Health check", "definition": "An automated observation used to decide whether a runtime is reachable and ready to serve."},
+    {"term": "Observability", "definition": "The ability to understand a running system through its logs, metrics, traces, and other evidence."}
+  ],
+  "related": ["vite", "git-and-github", "nodejs-and-package-management", "how-the-web-works", "apis-and-data-exchange", "testing-and-quality"],
+  "sources": [
+    {"label": "Vite — Deploying a Static Site", "url": "https://vite.dev/guide/static-deploy", "accessed": "2026-08-28"},
+    {"label": "GitHub Docs — Deploying with GitHub Actions", "url": "https://docs.github.com/en/actions/deployment/about-deployments/deploying-with-github-actions", "accessed": "2026-08-28"},
+    {"label": "OWASP — Secrets Management Cheat Sheet", "url": "https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html", "accessed": "2026-08-28"},
+    {"label": "MDN — HTTP Overview", "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Overview", "accessed": "2026-08-28"},
+    {"label": "OpenTelemetry — Documentation", "url": "https://opentelemetry.io/docs/", "accessed": "2026-08-28"}
+  ]
+}

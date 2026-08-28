@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "lastVerified": "2026-08-08",
-  "topicCount": 9,
+  "lastVerified": "2026-08-28",
+  "topicCount": 12,
   "topics": [
     {
       "slug": "apis-and-data-exchange",
@@ -9,9 +9,19 @@
       "category": "Architecture",
       "level": "Intermediate",
       "sourceFile": "public/content/topics/apis-and-data-exchange.json",
-      "sha256": "0bdf5a8552dda2b037bab3f675a617ad6a92ed31b698d468f7ddb2bf682d9496",
+      "sha256": "3672c8458377a34916a5d79e07c813ea09741e4a94f33cf7d0717684f6907521",
       "sectionCount": 8,
       "sourceCount": 6
+    },
+    {
+      "slug": "deployment-and-hosting",
+      "title": "Deployment and Hosting",
+      "category": "Operations",
+      "level": "Intermediate",
+      "sourceFile": "public/content/topics/deployment-and-hosting.json",
+      "sha256": "afb1f451305a5d9b45e769fbdc12eebc84e9f64394f1fe58143c21392f64871f",
+      "sectionCount": 6,
+      "sourceCount": 5
     },
     {
       "slug": "git-and-github",
@@ -19,7 +29,7 @@
       "category": "Tooling",
       "level": "Foundational",
       "sourceFile": "public/content/topics/git-and-github.json",
-      "sha256": "9f3749192ca4735b28b16fb8d71e884f59c278a1869c3159359dbe71171830a4",
+      "sha256": "9f9bc760e3b79b61ba2569b0e2f7cde0efa89b4d832b259b9de53099dda5f740",
       "sectionCount": 8,
       "sourceCount": 6
     },
@@ -29,7 +39,7 @@
       "category": "Web foundations",
       "level": "Foundational",
       "sourceFile": "public/content/topics/how-the-web-works.json",
-      "sha256": "ebf0f81defc97b24e04030722f33e71aafba4a035b2598215a3ca14f67d40491",
+      "sha256": "9b6e48b6a99ec7cd38dbd30977b0dfe7fd1090548942281a2d247e47c0b89e49",
       "sectionCount": 7,
       "sourceCount": 5
     },
@@ -49,7 +59,7 @@
       "category": "Tooling",
       "level": "Foundational",
       "sourceFile": "public/content/topics/nodejs-and-package-management.json",
-      "sha256": "459be21681d5c0b1aeb354fd67e17494c0fa8e54cea7fc6b402fb5c0c86305f6",
+      "sha256": "cef7d2794b456d2dedc635c0054689bb16aa3a34c3f568352e0367cb8d4faf92",
       "sectionCount": 7,
       "sourceCount": 7
     },
@@ -59,9 +69,29 @@
       "category": "Frontend",
       "level": "Intermediate",
       "sourceFile": "public/content/topics/react.json",
-      "sha256": "fd3681a9890bcb2ec036dc8d5ab09990a7851eff36bc7dd1dfdebe93b80b7502",
+      "sha256": "c56e10e6ce5ae3285206340c844bba18c75ffd2c1bd3d5908115a4c999060546",
       "sectionCount": 7,
       "sourceCount": 6
+    },
+    {
+      "slug": "security-and-authentication",
+      "title": "Security and Authentication",
+      "category": "Architecture",
+      "level": "Intermediate",
+      "sourceFile": "public/content/topics/security-and-authentication.json",
+      "sha256": "bc92ffea21baa91ee6373d8912117cfc482c28e5d52fb20048c499b977521c68",
+      "sectionCount": 6,
+      "sourceCount": 5
+    },
+    {
+      "slug": "testing-and-quality",
+      "title": "Testing and Quality",
+      "category": "Tooling",
+      "level": "Intermediate",
+      "sourceFile": "public/content/topics/testing-and-quality.json",
+      "sha256": "7743913564de6c25164b66630fdf7305c469db935a3d9bb1a3fde5d2c5c3e067",
+      "sectionCount": 6,
+      "sourceCount": 4
     },
     {
       "slug": "the-seven-types-of-databases",
@@ -69,7 +99,7 @@
       "category": "Data",
       "level": "Foundational",
       "sourceFile": "public/content/topics/the-seven-types-of-databases.json",
-      "sha256": "a137c78c313797b1c5e8067c37e588ba3b1d65f7cb750f6fe103a53d06531e40",
+      "sha256": "bbe883138f5fd84a819e2c2e7d187eeabaca1fa039bcc864d59d295cdf46e2e4",
       "sectionCount": 8,
       "sourceCount": 7
     },
@@ -89,7 +119,7 @@
       "category": "Tooling",
       "level": "Intermediate",
       "sourceFile": "public/content/topics/vite.json",
-      "sha256": "1decbc28af7d0f475e0990efcb4e541a6d2c1eda04617ea122932e583837fc0d",
+      "sha256": "18ab9dcaf4b1992c8af93a38dc6a97d98b654e56385aa5d3e01aca86280e48b2",
       "sectionCount": 7,
       "sourceCount": 7
     }

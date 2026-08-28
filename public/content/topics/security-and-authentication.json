@@ -1,0 +1,80 @@
+{
+  "version": 1,
+  "slug": "security-and-authentication",
+  "title": "Security and Authentication",
+  "eyebrow": "Trust boundaries · Decide who may do what, and protect the data crossing the boundary",
+  "summary": "Start with a request carrying untrusted input, then follow identity, permission, sessions, browser protections, password storage, common attacks, and practical evidence for finding and fixing security failures.",
+  "category": "Architecture",
+  "level": "Intermediate",
+  "estimatedMinutes": 42,
+  "icon": "🔐",
+  "accent": "oklch(0.68 0.18 25)",
+  "aliases": ["web security", "auth", "authentication", "authorization", "login security", "application security"],
+  "keywords": ["security", "authentication", "authorization", "identity", "session", "cookie", "csrf", "xss", "password", "hash", "encryption", "permissions", "owasp", "secret"],
+  "prerequisites": ["How the Web Works is helpful for HTTP and browser boundaries.", "APIs and Data Exchange is helpful for request contracts and server responses.", "Node.js and Package Management is helpful for server-side environment and dependency examples."],
+  "learningOutcomes": ["Trace identity and permission decisions from a request to an allowed or denied action.", "Choose safer password, session, cookie, input, and secret-handling patterns.", "Investigate common web security symptoms by locating the trust boundary and the missing control."],
+  "heroVisual": {"kind": "flow", "title": "A request crosses several trust decisions", "caption": "Authentication identifies an actor; authorization decides whether that actor may perform this action; input and output controls protect the boundary around the decision.", "nodes": [
+    {"label": "Untrusted request", "detail": "A browser or client supplies credentials, cookies, parameters, and body data."},
+    {"label": "Authentication", "detail": "The server verifies an identity claim or reports that no identity is established."},
+    {"label": "Authorization", "detail": "The server checks the actor, action, resource, and current policy."},
+    {"label": "Validated operation", "detail": "The application performs the smallest permitted action on trusted data."},
+    {"label": "Safe response", "detail": "The response limits disclosure and uses browser/network protections appropriate to its contents."}
+  ]},
+  "sections": [
+    {"id": "boundary", "title": "1. Start by separating identity from permission", "summary": "A login answer does not by itself grant access to every resource.", "blocks": [
+      {"type": "paragraph", "text": "A request to read an invoice contains an identity claim, an invoice identifier, and an action. Authentication answers “which account is this?” Authorization answers “may this account read this invoice?” The server must make both decisions on its own trusted data; hiding a button in the browser is not permission enforcement."},
+      {"type": "table", "columns": ["Decision", "Input", "Safe result"], "rows": [["Authentication", "Credential or session proof", "An established account identity, or no identity"], ["Authorization", "Identity + action + resource + policy", "Allow the operation, or deny it without leaking protected data"], ["Validation", "Request values and expected shape", "A constrained value the operation can safely use"]], "caption": "These are related checks with different jobs."},
+      {"type": "checkpoint", "prompt": "If a user can guess another invoice ID, should a hidden browser link be considered an authorization control?", "answer": "No.", "explanation": "The server must check ownership or permission when it receives the request. Client presentation does not protect a direct request."}
+    ]},
+    {"id": "credentials", "title": "2. Store credentials so a database leak does not reveal passwords", "summary": "Passwords should be transformed with a password-hashing function designed to resist guessing, then compared during login.", "blocks": [
+      {"type": "paragraph", "text": "A password is a secret chosen by a person. Store a one-way password hash, not the password and not a fast general-purpose digest. A password-hashing function such as Argon2id, bcrypt, or scrypt uses a salt and deliberately expensive work so an attacker cannot cheaply test huge numbers of guesses after stealing the database. The exact parameters are an operational choice that must be measured on the service's hardware and reviewed as libraries change."},
+      {"type": "steps", "title": "A password login boundary", "items": [
+        {"title": "Receive over a protected connection", "explanation": "Use HTTPS so credentials are not exposed to network observers.", "result": "The credential reaches the intended server privately in transit."},
+        {"title": "Load the stored record", "explanation": "Retrieve the account's password-hash record without returning it to the client.", "result": "The server has the verifier but not a plaintext password."},
+        {"title": "Verify the candidate", "explanation": "Give the password-hashing library the submitted password and stored hash; compare through its verification API.", "result": "The server accepts or rejects the credential."},
+        {"title": "Create limited session state", "explanation": "On success, establish a session with an expiry and the smallest identity data needed by later requests.", "result": "Later requests can present bounded proof of the authenticated identity."}
+      ]},
+      {"type": "callout", "tone": "warning", "title": "Do not invent cryptography", "body": "Use a maintained library and its current password-storage guidance. Encryption is reversible protection for data that must be recovered; password hashing is a deliberately costly one-way verification process."}
+    ]},
+    {"id": "sessions", "title": "3. Protect the proof that follows a successful login", "summary": "A session identifier is valuable because later requests use it as evidence of the established identity.", "blocks": [
+      {"type": "code", "language": "HTTP", "code": "Set-Cookie: session=opaque-random-value; Secure; HttpOnly; SameSite=Lax; Path=/", "explanation": "The cookie carries an opaque identifier rather than account details. Secure limits it to HTTPS, HttpOnly prevents JavaScript reads, SameSite limits some cross-site sending, and Path scopes where the browser sends it. The server still needs expiry, rotation, revocation, and authorization checks."},
+      {"type": "paragraph", "text": "A session can be stored server-side or represented by a signed token. Signing detects tampering; it does not automatically hide contents or revoke a token. Choose based on revocation, deployment topology, size, and failure recovery. Treat every session as bearer proof: anyone who obtains it may act as that account until the server rejects it."},
+      {"type": "checkpoint", "prompt": "Does HttpOnly make a session safe if the server skips authorization checks?", "answer": "No.", "explanation": "HttpOnly reduces one way browser script can read the cookie. It does not decide which account may access a resource or prevent every attack."}
+    ]},
+    {"id": "input-output", "title": "4. Treat input and output as crossings between different interpreters", "summary": "The same characters can be data in one context and instructions in another.", "blocks": [
+      {"type": "cards", "items": [
+        {"title": "SQL injection", "summary": "User text changes a database command when concatenated into SQL.", "example": "Use parameterized queries so values remain values."},
+        {"title": "Cross-site scripting (XSS)", "summary": "Untrusted text is interpreted as executable browser markup or script.", "example": "Render text as text, encode for its context, and avoid unsafe HTML sinks."},
+        {"title": "Cross-site request forgery (CSRF)", "summary": "A browser sends an ambient session credential with a request an attacker induced.", "example": "Use SameSite cookies and an appropriate anti-CSRF design for state-changing requests."}
+      ]},
+      {"type": "paragraph", "text": "Validation checks whether a value is allowed for the operation: type, length, range, format, and business rule. Encoding or parameterization controls how the value is interpreted by a later system. Validation alone cannot replace context-aware output encoding, and a client-side check cannot replace the server-side check."},
+      {"type": "callout", "tone": "info", "title": "Secrets have a boundary", "body": "API keys, signing keys, database credentials, and server session material belong in a trusted server or secret manager. Do not place them in frontend bundles or repositories; anything shipped to a browser is available to its user."}
+    ]},
+    {"id": "authorization", "title": "5. Make authorization decisions explicit and testable", "summary": "Permission belongs beside the operation that changes or reveals data.", "blocks": [
+      {"type": "code", "language": "TypeScript", "code": "function canReadInvoice(actor: Actor, invoice: Invoice): boolean {\n  return actor.accountId === invoice.accountId || actor.roles.includes(\"billing-admin\");\n}", "explanation": "The policy receives the actor and the resource and returns an allow decision. The handler must call it before loading or returning protected invoice data, and tests should cover both allowed and denied identities."},
+      {"type": "checklist", "title": "Review a protected operation", "items": ["Identify the actor from trusted session state, not a client-supplied account ID.", "Check the resource belongs to or is shareable with that actor.", "Fail closed when identity, resource, or policy data is missing.", "Return an appropriate denial without revealing whether unrelated records exist.", "Log enough security-relevant context for investigation without logging credentials or tokens."]},
+      {"type": "paragraph", "text": "Least privilege means granting only the access needed for the task and time. Separate roles from resource ownership when the domain needs both. A broad administrator path can be valid, but it should be deliberate, audited, and protected by stronger operational controls."}
+    ]},
+    {"id": "failure-response", "title": "6. Diagnose security failures from the earliest trust-boundary mistake", "summary": "Security work is evidence-led: identify what crossed the boundary, how it was interpreted, and which control was absent.", "blocks": [
+      {"type": "table", "columns": ["Symptom", "Likely boundary", "First investigation"], "rows": [["Account sees another account's record", "Authorization/resource lookup", "Reproduce with two identities and inspect the server-side ownership predicate."], ["Login succeeds then immediately disappears", "Session creation or cookie transport", "Inspect status response, cookie attributes, HTTPS, expiry, and subsequent request headers."], ["Script appears in a comment", "Output context", "Trace stored value to rendering sink and remove unsafe interpretation; do not only strip a few characters."], ["Many requests fail after login", "CSRF or origin policy", "Check the request method, cookie policy, token/origin validation, and server logs without exposing secrets."]], "caption": "The symptom is not the diagnosis; locate the first stage that could create it."},
+      {"type": "paragraph", "text": "Use dependency updates, security advisories, rate limits, audit logs, backups, and incident response as operating controls, not as substitutes for correct authorization. Review threat assumptions when the data, actors, deployment, or browser behavior changes."}
+    ]}
+  ],
+  "glossary": [
+    {"term": "Authentication", "definition": "The process of verifying or establishing which actor is making a request."},
+    {"term": "Authorization", "definition": "The decision about whether an identified actor may perform an action on a resource."},
+    {"term": "Session", "definition": "Server-recognized state that lets later requests continue an authenticated interaction."},
+    {"term": "Salt", "definition": "A unique value combined with a password before hashing so equal passwords do not produce equal stored hashes."},
+    {"term": "Least privilege", "definition": "Granting an actor only the access needed for a defined task."},
+    {"term": "XSS", "definition": "Cross-site scripting: untrusted content is interpreted as executable code in another user's browser."},
+    {"term": "CSRF", "definition": "Cross-site request forgery: an attacker causes a browser to send an unwanted authenticated request."}
+  ],
+  "related": ["apis-and-data-exchange", "how-the-web-works", "nodejs-and-package-management", "the-seven-types-of-databases", "testing-and-quality"],
+  "sources": [
+    {"label": "OWASP — Authentication Cheat Sheet", "url": "https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html", "accessed": "2026-08-28"},
+    {"label": "OWASP — Session Management Cheat Sheet", "url": "https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html", "accessed": "2026-08-28"},
+    {"label": "OWASP — Cross Site Scripting Prevention", "url": "https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html", "accessed": "2026-08-28"},
+    {"label": "OWASP — Authorization Cheat Sheet", "url": "https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html", "accessed": "2026-08-28"},
+    {"label": "MDN — Set-Cookie", "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Set-Cookie", "accessed": "2026-08-28"}
+  ]
+}

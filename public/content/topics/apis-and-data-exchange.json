@@ -592,7 +592,10 @@
   "related": [
     "how-the-web-works",
     "the-seven-types-of-databases",
-    "html-css-and-javascript"
+    "html-css-and-javascript",
+    "testing-and-quality",
+    "security-and-authentication",
+    "deployment-and-hosting"
   ],
   "sources": [
     {

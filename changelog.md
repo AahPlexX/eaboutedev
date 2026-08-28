@@ -278,3 +278,15 @@ Append-only project history. The highest recorded `turncount` is authoritative.
 - Added `tests/ssot-directory.test.ts` verifying every canonical path `SSOT.md` references exists, that it does not duplicate North Star policy, and that every adapter/README references it.
 - Passed the complete `pnpm check` gate locally: 51/51 tests, TypeScript, Oxlint with 0 warnings/errors, generated-artifact freshness, and the production build.
 - No topic source, generated discovery artifact, application code, dependency, or narration behavior changed in this governance turn.
+
+## Turn 15 — 2026-08-28
+
+**turncount: 15**
+
+### Curriculum expansion
+
+- Added three dependency-ordered, non-duplicative topics: Testing and Quality, Security and Authentication, and Deployment and Hosting.
+- Connected the new topics to existing prerequisites and continuations with real bidirectional related links.
+- Regenerated the catalog, homepage bootstrap, serialized search index, and topic registry from authoritative topic sources.
+- Content validation passed for all 12 topic documents and generated-artifact drift validation passed.
+- Full `pnpm check` and pull-request verification remain required before the expansion is ready to merge.
