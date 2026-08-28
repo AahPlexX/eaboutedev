@@ -1,0 +1,83 @@
+{
+  "version": 1,
+  "slug": "form-and-input-handling",
+  "title": "Form and Input Handling",
+  "eyebrow": "Browser interaction · Turn user input into safe, understandable state changes",
+  "summary": "Learn how a form collects information, exposes it to people and assistive technology, validates it, submits it, and recovers when something goes wrong.",
+  "category": "Frontend",
+  "level": "Foundational",
+  "estimatedMinutes": 42,
+  "icon": "▤",
+  "accent": "oklch(0.72 0.16 190)",
+  "aliases": ["html forms", "form validation", "input handling", "form submission", "web forms"],
+  "keywords": ["form", "input", "label", "name", "value", "validation", "constraint validation", "submit", "autocomplete", "csrf", "error message", "focus", "formdata"],
+  "prerequisites": [
+    "HTML, CSS, and JavaScript is helpful because examples use native HTML controls and browser events.",
+    "APIs and Data Exchange is helpful for understanding a server request, but the browser-side form model is explained here."
+  ],
+  "learningOutcomes": [
+    "Choose native controls and labels that communicate the requested data and provide useful keyboard and assistive-technology behavior.",
+    "Trace form data from the user's action through validation, serialization, transport, server checks, and a visible result.",
+    "Design error, loading, success, and recovery states without trusting browser validation or client input as a security boundary."
+  ],
+  "heroVisual": {
+    "kind": "flow",
+    "title": "Input travels through several responsibility boundaries",
+    "caption": "A form is complete only when the person can understand the request, submit it, and recover from invalid or failed work.",
+    "nodes": [
+      {"label": "Prompt", "detail": "Labels and instructions explain what information is needed."},
+      {"label": "Control", "detail": "Native inputs collect a value and expose its state."},
+      {"label": "Validate", "detail": "The browser and server check rules at their own boundaries."},
+      {"label": "Transport", "detail": "Named controls become request data when the form submits."},
+      {"label": "Result", "detail": "The interface reports success, correction, or an operational failure."}
+    ]
+  },
+  "sections": [
+    {"id":"purpose","title":"1. Start with the information and outcome","summary":"A form is a contract between a person, a browser, and the system receiving data.","blocks":[
+      {"type":"paragraph","text":"Imagine changing an account email address. The page must explain which value is wanted, let a person enter it, identify the control programmatically, check whether the value is acceptable, send it to the intended operation, and report what happened. The visible box is only one part of that path."},
+      {"type":"steps","title":"Describe the contract before choosing controls","items":[
+        {"title":"Name the fact","explanation":"Decide whether the value is an email address, date, quantity, password, choice, or longer message.","result":"The control can match the data type."},
+        {"title":"Name the required state","explanation":"State whether the value may be empty, repeated, unknown, or temporarily unavailable.","result":"Validation rules have a reason."},
+        {"title":"Name the outcome","explanation":"Explain what changes after acceptance and what the person should do after rejection or failure.","result":"The form has a recovery path, not only a submit button."}
+      ]},
+      {"type":"checkpoint","prompt":"Is a text box by itself a complete explanation of what an email-change form needs?","answer":"No.","explanation":"The label, data name, validation, transport, server decision, and result message are all part of the interaction contract."}
+    ]},
+    {"id":"controls","title":"2. Choose native controls and give them names","summary":"The browser supplies useful behavior when the element matches the task.","blocks":[
+      {"type":"paragraph","text":"Use a link for navigation, a button for an action, and a form control for data entry. A label is the programmatic and visible name that tells a person what a control requests. The name attribute is different: it is the key used when successful controls are serialized for submission."},
+      {"type":"code","language":"HTML","code":"<form action=\"/profile/email\" method=\"post\">\n  <label for=\"email\">New email address</label>\n  <input id=\"email\" name=\"email\" type=\"email\"\n         autocomplete=\"email\" required>\n  <button type=\"submit\">Save email</button>\n</form>","explanation":"for and id connect the label to the input. type communicates the expected kind of value, name gives the submitted field its key, autocomplete describes a reusable value, and required enables a browser constraint. The server must still validate the received value."},
+      {"type":"table","columns":["Need","Control to consider","Important consequence"],"rows":[["One line of text","input type=text","Set a name and a label; choose maxlength only when the product has a real limit."],["Email address","input type=email","The browser can detect a basic shape, not whether the mailbox exists."],["One choice from several","radio group or select","The group needs a clear question and submitted value."],["Several independent choices","checkboxes","Each checked control contributes its own named value."],["Long response","textarea","The value is text content managed by the control, not a child input element."]],"caption":"Select semantics from the question the person must answer, not from the desired appearance."},
+      {"type":"callout","tone":"warning","title":"Placeholder text is not a label","body":"A placeholder disappears while typing and is often lower contrast. Keep a persistent label and use supporting text for format or purpose."}
+    ]},
+    {"id":"browser-model","title":"3. Follow the browser's form model","summary":"Submission is a sequence: an activation selects a form, controls contribute named values, and the browser applies constraints before transport.","blocks":[
+      {"type":"paragraph","text":"When a person submits a form, the browser identifies the form owner and its successful controls. Disabled controls and controls without a name do not contribute ordinary form data. A submit button can also supply its own name and value. The method and action determine how the browser sends the data, while JavaScript can intercept the submit event when the application needs an in-page response."},
+      {"type":"anatomy","title":"A form declaration names transport decisions","language":"HTML","caption":"Each attribute answers a different question about submission.","segments":[{"code":"<form","label":"Owner","explanation":"Starts the element that groups controls and owns submission."},{"code":"action=\"/profile/email\"","label":"Destination","explanation":"Names the URL that receives the submission."},{"code":"method=\"post\"","label":"Method","explanation":"Requests a method suitable for sending a state-changing form body."},{"code":">","label":"Contents","explanation":"The labels, controls, and submit control inside become the interaction surface."}]},
+      {"type":"checkpoint","prompt":"If an input has a visible label but no name attribute, will its value normally appear in submitted form data?","answer":"No.","explanation":"The label names the control for people and accessibility APIs; name supplies the key used by ordinary form serialization. A production form needs both when the value is submitted."}
+    ]},
+    {"id":"validation","title":"4. Validate for guidance, then validate at the server boundary","summary":"Client validation improves feedback; only the receiving system can enforce trust-sensitive rules.","blocks":[
+      {"type":"paragraph","text":"Constraint validation uses attributes and types such as required, min, max, pattern, minlength, and maxlength to identify values that do not meet declared constraints. This helps a person correct an obvious problem before a request. It does not prove identity, authorization, uniqueness, payment, or safety: a client can skip or alter every browser check, so the server must parse and validate the request again."},
+      {"type":"code","language":"JavaScript","code":"form.addEventListener(\"submit\", async (event) => {\n  event.preventDefault();\n  if (!form.checkValidity()) {\n    form.reportValidity();\n    return;\n  }\n  const data = new FormData(form);\n  await saveProfile(data);\n});","explanation":"preventDefault keeps this example in the page. checkValidity asks whether declared constraints pass; reportValidity exposes the browser's guidance. FormData reads successful named controls. saveProfile still needs server-side validation and safe error handling."},
+      {"type":"callout","tone":"info","title":"Validation is not sanitization","body":"Validation asks whether input meets an allowed contract. Output encoding and context-appropriate escaping prevent data from becoming unintended markup or code. Treat untrusted input as data at every boundary."}
+    ]},
+    {"id":"errors","title":"5. Make errors, pending work, and recovery observable","summary":"A useful error identifies the field or operation, explains what to change, and remains available to different ways of navigating.","blocks":[
+      {"type":"steps","title":"Design the broken path","items":[
+        {"title":"Keep the entered value when safe","explanation":"Do not make a person retype unrelated fields after a rejected request.","result":"Correction costs less."},
+        {"title":"Associate the message","explanation":"Connect a field error with aria-describedby or an equivalent semantic relationship, and summarize broad failures near the form.","result":"The message is discoverable by sight, keyboard, and narration."},
+        {"title":"Move attention deliberately","explanation":"After submission, focus the first invalid field or an error summary when that is the least surprising recovery path.","result":"The person knows where to continue."},
+        {"title":"Represent pending and success","explanation":"Disable duplicate submission only while work is pending, expose progress, and confirm the actual saved result.","result":"The interface does not imply success before the server responds."}
+      ]},
+      {"type":"table","columns":["Symptom","Earliest boundary to inspect","Next evidence"],"rows":[["Nothing arrives at the server","Form owner, submit event, action URL, and network request","Inspect the request and whether a handler prevented default."],["Server says a field is missing","name, disabled state, control type, and serialization","Inspect FormData or request body keys."],["Error appears but is not announced","Programmatic association and live/status semantics","Navigate with keyboard and a screen reader or accessibility inspector."],["Duplicate records","Repeated activation, retries, and server idempotency","Correlate request identifiers and server writes before changing UI timing."]],"caption":"Investigate the first boundary that could produce the symptom; do not begin with random CSS or cache changes."}
+    ]},
+    {"id":"security","title":"6. Treat submitted input and requests as untrusted","summary":"A form crosses a trust boundary: the browser is controlled by the user, while the server protects data and actions.","blocks":[
+      {"type":"paragraph","text":"Use HTTPS for transport, authenticate and authorize state-changing operations, and protect requests against cross-site request forgery (CSRF) when the application's authentication model requires it. Validate type, length, range, and business rules on the server. Use parameterized database operations rather than concatenating input into SQL, and encode output for its destination. Rate-limit or otherwise protect expensive operations such as account recovery."},
+      {"type":"checklist","title":"A production form review","items":["Every submitted value has a server-side validation rule and a clear rejection response.","Authorization checks the current user and target resource, not only a hidden field.","Sensitive fields use appropriate autocomplete and are not logged accidentally.","Retries and double activation cannot create unsafe duplicate effects.","Error messages reveal enough to recover without exposing secrets or internal details."]},
+      {"type":"checkpoint","prompt":"Can a hidden input safely grant permission because the person cannot see it?","answer":"No.","explanation":"Hidden fields are still client-controlled input. Authorization must be decided from trusted server-side identity and policy."}
+    ]},
+    {"id":"test-operate","title":"7. Test the complete interaction and its boundaries","summary":"A form is production-ready when normal, invalid, interrupted, and assistive-technology paths are all understandable.","blocks":[
+      {"type":"paragraph","text":"Test with empty, malformed, too-short, too-long, valid, duplicate, expired, and unauthorized values. Exercise keyboard-only navigation, zoom and narrow layouts, slow responses, network failure, refresh after submission, and repeated activation. Use browser automation for the user-visible contract and server tests for parsing, authorization, validation, and persistence. Browser validation may differ by browser version, so it is guidance rather than the only test oracle."},
+      {"type":"checklist","title":"Before shipping a form","items":["The first control has a visible, programmatic label and useful instructions.","The submit path is usable without JavaScript when the product permits a native fallback.","Client and server rules agree on accepted values and display specific recovery guidance.","Loading, success, and failure states are exposed without color alone.","Telemetry records outcome and latency without storing unnecessary sensitive input."]}
+    ]}
+  ],
+  "glossary":[{"term":"Successful control","definition":"A form-associated control whose current state contributes a name and value to ordinary form submission."},{"term":"Constraint validation","definition":"The browser's process for checking declared form constraints before submission."},{"term":"FormData","definition":"A browser interface representing the name-value entries collected from a form."},{"term":"CSRF","definition":"Cross-site request forgery, an attack that tricks an authenticated browser into sending an unwanted state-changing request."},{"term":"Programmatic label","definition":"A control name exposed through the document and accessibility interfaces, whether supplied by a label element or another supported relationship."}],
+  "related":["html-css-and-javascript","accessibility-as-practice","security-and-authentication","apis-and-data-exchange","testing-and-quality"],
+  "sources":[{"label":"WHATWG HTML Living Standard — Forms","url":"https://html.spec.whatwg.org/multipage/forms.html","accessed":"2026-08-28"},{"label":"MDN — Your first form","url":"https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Forms/Your_first_form","accessed":"2026-08-28"},{"label":"MDN — Client-side form validation","url":"https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Forms/Form_validation","accessed":"2026-08-28"},{"label":"OWASP — Input Validation Cheat Sheet","url":"https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html","accessed":"2026-08-28"},{"label":"W3C WAI — Forms Tutorial","url":"https://www.w3.org/WAI/tutorials/forms/","accessed":"2026-08-28"}]
+}

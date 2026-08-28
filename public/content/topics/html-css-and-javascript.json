@@ -469,13 +469,7 @@
       "definition": "Starting with a functional baseline and adding richer supported capabilities without making the baseline unusable."
     }
   ],
-  "related": [
-    "how-the-web-works",
-    "apis-and-data-exchange",
-    "typescript",
-    "react",
-    "vite"
-  ],
+  "related": ["how-the-web-works", "apis-and-data-exchange", "typescript", "react", "vite", "form-and-input-handling", "accessibility-as-practice"],
   "sources": [
     {
       "label": "WHATWG HTML Living Standard",

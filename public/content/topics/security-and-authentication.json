@@ -69,7 +69,7 @@
     {"term": "XSS", "definition": "Cross-site scripting: untrusted content is interpreted as executable code in another user's browser."},
     {"term": "CSRF", "definition": "Cross-site request forgery: an attacker causes a browser to send an unwanted authenticated request."}
   ],
-  "related": ["apis-and-data-exchange", "how-the-web-works", "nodejs-and-package-management", "the-seven-types-of-databases", "testing-and-quality"],
+  "related": ["apis-and-data-exchange", "how-the-web-works", "nodejs-and-package-management", "the-seven-types-of-databases", "testing-and-quality", "form-and-input-handling", "sql-as-working-skill", "accessibility-as-practice"],
   "sources": [
     {"label": "OWASP — Authentication Cheat Sheet", "url": "https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html", "accessed": "2026-08-28"},
     {"label": "OWASP — Session Management Cheat Sheet", "url": "https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html", "accessed": "2026-08-28"},

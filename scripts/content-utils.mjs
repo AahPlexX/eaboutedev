@@ -20,6 +20,9 @@ const recommendedTopicOrder = new Map([
   ["testing-and-quality", 9],
   ["security-and-authentication", 10],
   ["deployment-and-hosting", 11],
+  ["form-and-input-handling", 12],
+  ["sql-as-working-skill", 13],
+  ["accessibility-as-practice", 14],
 ]);
 
 export async function readTopics() {

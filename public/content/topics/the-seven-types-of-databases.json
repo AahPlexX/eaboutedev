@@ -719,12 +719,7 @@
       "definition": "An architecture that intentionally uses multiple data-storage technologies because different workloads benefit from different models."
     }
   ],
-  "related": [
-    "apis-and-data-exchange",
-    "git-and-github",
-    "how-the-web-works",
-    "security-and-authentication"
-  ],
+  "related": ["apis-and-data-exchange", "git-and-github", "how-the-web-works", "security-and-authentication", "sql-as-working-skill"],
   "sources": [
     {
       "label": "PostgreSQL Documentation",

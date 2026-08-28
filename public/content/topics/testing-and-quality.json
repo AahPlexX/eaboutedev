@@ -128,7 +128,7 @@
     {"term": "Flaky test", "definition": "A test whose result changes between runs without a relevant product change."},
     {"term": "TDD", "definition": "Test-driven development: a workflow of failing example, passing implementation, and refactoring."}
   ],
-  "related": ["nodejs-and-package-management", "typescript", "react", "apis-and-data-exchange", "git-and-github"],
+  "related": ["nodejs-and-package-management", "typescript", "react", "apis-and-data-exchange", "git-and-github", "form-and-input-handling", "sql-as-working-skill", "accessibility-as-practice"],
   "sources": [
     {"label": "Node.js — Test runner", "url": "https://nodejs.org/api/test.html", "accessed": "2026-08-28"},
     {"label": "Testing Library — Guiding Principles", "url": "https://testing-library.com/docs/guiding-principles/", "accessed": "2026-08-28"},

@@ -352,15 +352,7 @@
       "definition": "A React mechanism for making a value available to descendant components without passing it through every intermediate component."
     }
   ],
-  "related": [
-    "html-css-and-javascript",
-    "typescript",
-    "vite",
-    "apis-and-data-exchange",
-    "testing-and-quality",
-    "security-and-authentication",
-    "deployment-and-hosting"
-  ],
+  "related": ["html-css-and-javascript", "typescript", "vite", "apis-and-data-exchange", "testing-and-quality", "security-and-authentication", "deployment-and-hosting", "accessibility-as-practice"],
   "sources": [
     {
       "label": "React — Describing the UI",

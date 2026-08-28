@@ -589,14 +589,7 @@
       "definition": "A notice that an interface is still available but is planned to be replaced or removed, accompanied by a migration path and timeline."
     }
   ],
-  "related": [
-    "how-the-web-works",
-    "the-seven-types-of-databases",
-    "html-css-and-javascript",
-    "testing-and-quality",
-    "security-and-authentication",
-    "deployment-and-hosting"
-  ],
+  "related": ["how-the-web-works", "the-seven-types-of-databases", "html-css-and-javascript", "testing-and-quality", "security-and-authentication", "deployment-and-hosting", "form-and-input-handling", "sql-as-working-skill"],
   "sources": [
     {
       "label": "IETF RFC 9110 — HTTP Semantics",

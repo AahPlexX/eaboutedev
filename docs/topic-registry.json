@@ -1,15 +1,25 @@
 {
   "schemaVersion": 1,
   "lastVerified": "2026-08-28",
-  "topicCount": 12,
+  "topicCount": 15,
   "topics": [
+    {
+      "slug": "accessibility-as-practice",
+      "title": "Accessibility as Practice",
+      "category": "Frontend",
+      "level": "Foundational",
+      "sourceFile": "public/content/topics/accessibility-as-practice.json",
+      "sha256": "f82a3a94b581e003f5376bf7ad6c390c4a2d4409b71787d9451814c6e88e424f",
+      "sectionCount": 7,
+      "sourceCount": 5
+    },
     {
       "slug": "apis-and-data-exchange",
       "title": "APIs and Data Exchange",
       "category": "Architecture",
       "level": "Intermediate",
       "sourceFile": "public/content/topics/apis-and-data-exchange.json",
-      "sha256": "3672c8458377a34916a5d79e07c813ea09741e4a94f33cf7d0717684f6907521",
+      "sha256": "250359e8372317e419afe964b0795fbfdd2298b7c2bc5196f0ef754e919bda92",
       "sectionCount": 8,
       "sourceCount": 6
     },
@@ -21,6 +31,16 @@
       "sourceFile": "public/content/topics/deployment-and-hosting.json",
       "sha256": "afb1f451305a5d9b45e769fbdc12eebc84e9f64394f1fe58143c21392f64871f",
       "sectionCount": 6,
+      "sourceCount": 5
+    },
+    {
+      "slug": "form-and-input-handling",
+      "title": "Form and Input Handling",
+      "category": "Frontend",
+      "level": "Foundational",
+      "sourceFile": "public/content/topics/form-and-input-handling.json",
+      "sha256": "2a26643bb5dda90aec601a486edc0d70ff5f404273482e681f769fb1cd85cde4",
+      "sectionCount": 7,
       "sourceCount": 5
     },
     {
@@ -49,7 +69,7 @@
       "category": "Frontend",
       "level": "Foundational",
       "sourceFile": "public/content/topics/html-css-and-javascript.json",
-      "sha256": "350395eaac160a1722bf5e17438227babb9aadfbb050c62994fafc9a2cd076ee",
+      "sha256": "a847b4e485af9492bce59c8509db9a4923216eb97fd327ce04ad1948bbbaed85",
       "sectionCount": 7,
       "sourceCount": 5
     },
@@ -69,7 +89,7 @@
       "category": "Frontend",
       "level": "Intermediate",
       "sourceFile": "public/content/topics/react.json",
-      "sha256": "c56e10e6ce5ae3285206340c844bba18c75ffd2c1bd3d5908115a4c999060546",
+      "sha256": "b7c0ca572f77854fe30ee40140d85948f6fa8e491539c86d2f0c3e908b8ee0a1",
       "sectionCount": 7,
       "sourceCount": 6
     },
@@ -79,8 +99,18 @@
       "category": "Architecture",
       "level": "Intermediate",
       "sourceFile": "public/content/topics/security-and-authentication.json",
-      "sha256": "bc92ffea21baa91ee6373d8912117cfc482c28e5d52fb20048c499b977521c68",
+      "sha256": "1b7911b1e3a4d44c1c37c447925f3f2919497ff7d3d6133f1e4ba7e2cd121cf9",
       "sectionCount": 6,
+      "sourceCount": 5
+    },
+    {
+      "slug": "sql-as-working-skill",
+      "title": "SQL as a Working Skill",
+      "category": "Data",
+      "level": "Foundational",
+      "sourceFile": "public/content/topics/sql-as-working-skill.json",
+      "sha256": "2327767e319f2147444fb15a92d3f0f11bfb5351f5c965bc25724333e450238f",
+      "sectionCount": 7,
       "sourceCount": 5
     },
     {
@@ -89,7 +119,7 @@
       "category": "Tooling",
       "level": "Intermediate",
       "sourceFile": "public/content/topics/testing-and-quality.json",
-      "sha256": "7743913564de6c25164b66630fdf7305c469db935a3d9bb1a3fde5d2c5c3e067",
+      "sha256": "39d5d0e93bd7af09e1a1302f645ccf85d24bf569719054f28ce949f915801b81",
       "sectionCount": 6,
       "sourceCount": 4
     },
@@ -99,7 +129,7 @@
       "category": "Data",
       "level": "Foundational",
       "sourceFile": "public/content/topics/the-seven-types-of-databases.json",
-      "sha256": "bbe883138f5fd84a819e2c2e7d187eeabaca1fa039bcc864d59d295cdf46e2e4",
+      "sha256": "65b3ca167e939e5e66d477e8bf75bb05da23cc7298a575dddec390d3502b78ed",
       "sectionCount": 8,
       "sourceCount": 7
     },

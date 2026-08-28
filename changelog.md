@@ -290,3 +290,15 @@ Append-only project history. The highest recorded `turncount` is authoritative.
 - Regenerated the catalog, homepage bootstrap, serialized search index, and topic registry from authoritative topic sources.
 - Content validation passed for all 12 topic documents and generated-artifact drift validation passed.
 - Full `pnpm check` and pull-request verification remain required before the expansion is ready to merge.
+
+
+## Turn 16 — 2026-08-28
+
+**turncount: 16**
+
+### Curriculum quality expansion
+
+- Deepened the three Turn 15 guides with additional decision, failure, operational, and recovery instruction.
+- Added Form and Input Handling, SQL as a Working Skill, and Accessibility as Practice as non-duplicative next nodes after the 12-topic set.
+- Extended reciprocal related links and recommended ordering, then regenerated all discovery artifacts from authoritative sources.
+- Structural validation passed for all 15 topic documents; the complete repository gate remains required.
