@@ -395,7 +395,10 @@
     "git-and-github",
     "typescript",
     "vite",
-    "apis-and-data-exchange"
+    "apis-and-data-exchange",
+    "testing-and-quality",
+    "security-and-authentication",
+    "deployment-and-hosting"
   ],
   "sources": [
     {

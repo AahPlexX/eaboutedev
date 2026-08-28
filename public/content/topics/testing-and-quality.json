@@ -1,0 +1,138 @@
+{
+  "version": 1,
+  "slug": "testing-and-quality",
+  "title": "Testing and Quality",
+  "eyebrow": "Confidence in change · Turn expected behavior into repeatable evidence",
+  "summary": "Start with a small behavior that can break, write an observable check for it, then expand into test boundaries, assertions, doubles, browser interaction, coverage, flaky failures, and a maintainable verification pipeline.",
+  "category": "Tooling",
+  "level": "Intermediate",
+  "estimatedMinutes": 38,
+  "icon": "✓",
+  "accent": "oklch(0.7 0.16 165)",
+  "aliases": ["software testing", "automated tests", "unit testing", "integration testing", "end to end testing", "test driven development"],
+  "keywords": ["test", "assertion", "unit", "integration", "end to end", "fixture", "mock", "stub", "spy", "coverage", "flaky", "regression", "testing library", "tdd"],
+  "prerequisites": [
+    "HTML, CSS, and JavaScript is helpful because examples use JavaScript behavior.",
+    "Node.js and Package Management is helpful because test commands run through project scripts.",
+    "React is helpful for the browser-interaction example, but the testing model does not depend on React."
+  ],
+  "learningOutcomes": [
+    "Choose a test boundary from the behavior and failure risk rather than from a preferred test label.",
+    "Write tests whose setup, action, observable result, and cleanup make failures diagnosable.",
+    "Use doubles, coverage, and continuous integration without mistaking them for proof that every behavior is correct."
+  ],
+  "heroVisual": {
+    "kind": "layers",
+    "title": "A test checks a behavior at a chosen boundary",
+    "caption": "The smallest useful boundary is not always the smallest piece of code: choose the layer that can observe the behavior a user or dependent system needs.",
+    "nodes": [
+      {"label": "Example input", "detail": "A known request, value, click, or stored state starts the scenario."},
+      {"label": "System boundary", "detail": "The test chooses a function, module, service, or rendered interface to exercise."},
+      {"label": "Observable result", "detail": "The assertion checks returned data, a state change, a request, or visible output."},
+      {"label": "Evidence", "detail": "A repeatable pass or failure helps decide whether the change is safe."}
+    ]
+  },
+  "sections": [
+    {
+      "id": "first-test",
+      "title": "1. Start with a behavior a person can observe",
+      "summary": "A useful test names the input, action, and result before choosing a framework.",
+      "blocks": [
+        {"type": "paragraph", "text": "Suppose a checkout form refuses an empty email address. The behavior is more useful than the implementation detail: given an empty field, submitting the form should show an error and should not send an order request. A test turns that expectation into a repeatable scenario."},
+        {"type": "steps", "title": "Turn one expectation into evidence", "items": [
+          {"title": "Arrange", "explanation": "Create the smallest known starting state, such as an empty email field.", "result": "The scenario starts with controlled input."},
+          {"title": "Act", "explanation": "Perform the same action that matters, such as submitting the form.", "result": "The system processes the scenario."},
+          {"title": "Assert", "explanation": "Check the observable result: the validation message is present and the request was not sent.", "result": "The test records whether the expected behavior occurred."},
+          {"title": "Clean up", "explanation": "Restore timers, files, servers, or other shared resources so the next test starts independently.", "result": "The next test gets an independent starting state."}
+        ]},
+        {"type": "checkpoint", "prompt": "If a test only asserts that a private helper was called, does it prove that the user saw the required validation message?", "answer": "No.", "explanation": "The helper call is an implementation detail. The visible message and prevented request are the behavior the scenario needs to protect."}
+      ]
+    },
+    {
+      "id": "boundaries",
+      "title": "2. Choose the boundary from the question the test must answer",
+      "summary": "Different boundaries trade speed, isolation, and realism.",
+      "blocks": [
+        {"type": "table", "columns": ["Boundary", "Question it answers", "Cost and limitation"], "rows": [
+          ["Unit", "Does one focused piece calculate the expected result for its inputs?", "Fast and isolated, but it can miss wiring between pieces."],
+          ["Integration", "Do several real pieces collaborate through their boundary?", "Finds configuration and data-shape problems, but needs more setup."],
+          ["End to end", "Can a person complete the important journey through the running system?", "Most realistic, but slower and more sensitive to environment failures."]
+        ], "caption": "Use the narrowest boundary that can answer the real question; combine boundaries for important behavior."},
+        {"type": "paragraph", "text": "A unit test is not automatically better because it is fast. If the failure is caused by a form, router, request handler, and response working together, an integration test may provide clearer evidence. End-to-end tests belong around a few high-value journeys, not every internal branch."},
+        {"type": "callout", "tone": "info", "title": "Test behavior, not a frozen implementation", "body": "Prefer stable outputs and user-visible effects. Assertions tied to private names or exact markup can fail during a safe refactor and teach the team to avoid useful change."}
+      ]
+    },
+    {
+      "id": "assertions-and-doubles",
+      "title": "3. Keep assertions precise, and isolate only what you control",
+      "summary": "Assertions explain what failed; test doubles control an external boundary when using the real dependency would be slow, unsafe, or nondeterministic.",
+      "blocks": [
+        {"type": "code", "language": "JavaScript", "code": "test(\"rejects an expired session\", async () => {\n  const response = await authenticate({ token: \"expired-token\" });\n\n  assert.deepEqual(response, { ok: false, code: \"session_expired\" });\n});", "explanation": "The test supplies a known token, calls the public operation, and checks the stable outcome. It does not assert which private parser or branch produced the result."},
+        {"type": "paragraph", "text": "A test double stands in for another component. A stub supplies a controlled answer, a spy records that a call happened, and a mock usually combines configured behavior with interaction expectations. Use a double at a boundary such as a payment provider when a real call would charge money or depend on the network. Keep the real database or browser in tests whose purpose is to verify that boundary."},
+        {"type": "checkpoint", "prompt": "Should a retry test wait for a real network timeout when the question is whether the client retries twice?", "answer": "No.", "explanation": "A controlled boundary can fail immediately and deterministically. A separate integration test can verify the actual transport behavior without making the core retry test slow and flaky."}
+      ]
+    },
+    {
+      "id": "browser-tests",
+      "title": "4. Exercise interfaces through the same controls a person uses",
+      "summary": "Browser tests are strongest when they use semantic controls and observe the resulting interface.",
+      "blocks": [
+        {"type": "paragraph", "text": "For a React form, render the form, find its label and submit button by their accessible roles or names, enter a value, and check the message a person can perceive. This verifies component wiring, state updates, and semantics together. It also catches a missing label that a test querying a private component variable would miss."},
+        {"type": "steps", "title": "A focused interface scenario", "items": [
+          {"title": "Start clean", "explanation": "Render the form with no saved state and wait for only the work the scenario needs.", "result": "The interface has a known initial state."},
+          {"title": "Use the interface", "explanation": "Locate the named input, enter the invalid value, and press the semantic submit control.", "result": "The same controls a person uses trigger validation."},
+          {"title": "Observe the result", "explanation": "Assert the error is exposed and focus or status behavior is correct where the user needs it.", "result": "The test checks the accessible outcome."},
+          {"title": "Cover the recovery", "explanation": "Correct the value and assert that the error clears and the success path becomes available.", "result": "The scenario proves recovery, not only rejection."}
+        ]},
+        {"type": "callout", "tone": "warning", "title": "Do not hide asynchronous work", "body": "A test that asserts before a request or render settles can pass by accident or fail intermittently. Wait for the observable state, then assert it; do not add arbitrary sleeps to guess when work is finished."}
+      ]
+    },
+    {
+      "id": "coverage-and-failure",
+      "title": "5. Read coverage and failures as investigation clues",
+      "summary": "A green suite is evidence for the scenarios it exercises, not a proof of correctness.",
+      "blocks": [
+        {"type": "paragraph", "text": "Coverage reports show which lines, branches, functions, or statements ran. High coverage can still miss a wrong assertion, an invalid test input, or a production configuration. Low coverage identifies unexamined paths; decide whether the missing path changes a user outcome or failure risk before chasing a percentage."},
+        {"type": "table", "columns": ["Symptom", "Earliest place to investigate", "Safe next action"], "rows": [
+          ["Fails only after another test", "Shared state, fake timers, environment variables, or incomplete cleanup", "Run the test alone and in a randomized order; remove the shared dependency."],
+          ["Passes locally but fails in CI", "Runtime version, timezone, filesystem, network, or resource assumptions", "Compare the environments and capture the first failing assertion and logs."],
+          ["Times out", "Unresolved promise, server lifecycle, or wait condition", "Inspect pending work and use a bounded wait for the expected observable result."],
+          ["Snapshot changes everywhere", "Broad serialized output or a real shared behavior change", "Review the diff; do not update snapshots without understanding each changed behavior."]
+        ], "caption": "Diagnose the stage that produced the symptom before changing the test."}
+      ]
+    },
+    {
+      "id": "pipeline",
+      "title": "6. Make the useful checks repeatable in development and CI",
+      "summary": "A quality pipeline gives fast local feedback and a clean, reproducible release gate.",
+      "blocks": [
+        {"type": "code", "language": "JSON", "code": "{\n  \"scripts\": {\n    \"test\": \"node --test\",\n    \"check\": \"pnpm test && pnpm run typecheck && pnpm run build\"\n  }\n}", "explanation": "Named scripts give people and continuous integration the same commands. The test command checks behavior; type checking and the build check different failure classes. One green result must not be treated as the others."},
+        {"type": "checklist", "title": "A maintainable test change", "items": [
+          "Name the behavior and failure risk in the test.",
+          "Use independent setup and deterministic inputs.",
+          "Assert the result that a user or dependent system relies on.",
+          "Keep external calls controlled unless the test is specifically an integration check.",
+          "Run the focused test first, then the repository gate.",
+          "Remove obsolete tests only when the protected behavior is deliberately retired."
+        ]},
+        {"type": "paragraph", "text": "Test-driven development (TDD) is one workflow: write a failing example, make the smallest change that passes it, then refactor while the example remains green. It can clarify a contract, but it is not a requirement that every change begin with a unit test. The durable requirement is evidence matched to risk."}
+      ]
+    }
+  ],
+  "glossary": [
+    {"term": "Assertion", "definition": "A check that compares an observed result with an expected condition and reports a failure when they differ."},
+    {"term": "Fixture", "definition": "Known setup data or resources used to make a test scenario repeatable."},
+    {"term": "Test double", "definition": "A controlled replacement for a dependency used to isolate or observe a test boundary."},
+    {"term": "Regression", "definition": "A previously working behavior that stops working after a change."},
+    {"term": "Coverage", "definition": "A measurement of which recorded code locations or paths a test suite executed."},
+    {"term": "Flaky test", "definition": "A test whose result changes between runs without a relevant product change."},
+    {"term": "TDD", "definition": "Test-driven development: a workflow of failing example, passing implementation, and refactoring."}
+  ],
+  "related": ["nodejs-and-package-management", "typescript", "react", "apis-and-data-exchange", "git-and-github", "form-and-input-handling", "sql-as-working-skill", "accessibility-as-practice"],
+  "sources": [
+    {"label": "Node.js — Test runner", "url": "https://nodejs.org/api/test.html", "accessed": "2026-08-28"},
+    {"label": "Testing Library — Guiding Principles", "url": "https://testing-library.com/docs/guiding-principles/", "accessed": "2026-08-28"},
+    {"label": "Martin Fowler — Test Pyramid", "url": "https://martinfowler.com/articles/practical-test-pyramid.html", "accessed": "2026-08-28"},
+    {"label": "W3C — Web Content Accessibility Guidelines", "url": "https://www.w3.org/TR/WCAG22/", "accessed": "2026-08-28"}
+  ]
+}

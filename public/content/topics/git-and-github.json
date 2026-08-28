@@ -570,7 +570,9 @@
     "apis-and-data-exchange",
     "html-css-and-javascript",
     "nodejs-and-package-management",
-    "vite"
+    "vite",
+    "testing-and-quality",
+    "deployment-and-hosting"
   ],
   "sources": [
     {

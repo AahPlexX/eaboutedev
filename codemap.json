@@ -917,6 +917,108 @@
           "responsibility": "Append-only map of the SSOT governance directory surfaces"
         }
       ]
+    },
+    {
+      "turncount": 15,
+      "date": "2026-08-28",
+      "summary": "Three-topic curriculum expansion",
+      "areas": [
+        {
+          "path": "public/content/topics/testing-and-quality.json",
+          "responsibility": "Behavior-first testing guide covering boundaries, assertions, doubles, browser scenarios, coverage, failures, and repeatable verification"
+        },
+        {
+          "path": "public/content/topics/security-and-authentication.json",
+          "responsibility": "Trust-boundary guide covering identity, permission, password storage, sessions, input/output attacks, secrets, and diagnosis"
+        },
+        {
+          "path": "public/content/topics/deployment-and-hosting.json",
+          "responsibility": "Source-to-production guide covering artifacts, hosting choices, configuration, routes, release pipelines, observability, and recovery"
+        },
+        {
+          "path": "public/catalog/topic-catalog.json",
+          "responsibility": "Regenerated catalog metadata for the 12-topic curriculum"
+        },
+        {
+          "path": "public/search/topic-search.minisearch.json",
+          "responsibility": "Regenerated serialized search index for the expanded curriculum"
+        },
+        {
+          "path": "src/generated/topic-bootstrap.ts",
+          "responsibility": "Regenerated bounded homepage bootstrap for the expanded curriculum"
+        },
+        {
+          "path": "docs/topic-registry.json",
+          "responsibility": "Regenerated 12-topic inventory, source hashes, and counts"
+        },
+        {
+          "path": "changelog.md",
+          "responsibility": "Append-only Turn 15 curriculum expansion record"
+        },
+        {
+          "path": "todo.md",
+          "responsibility": "Append-only Turn 15 curriculum expansion checklist"
+        }
+      ]
+    },
+    {
+      "turncount": 16,
+      "date": "2026-08-28",
+      "summary": "Three additional curriculum topics and completeness expansion",
+      "areas": [
+        {
+          "path": "public/content/topics/form-and-input-handling.json",
+          "responsibility": "Foundational form contract covering native controls, serialization, validation, errors, security, and testing"
+        },
+        {
+          "path": "public/content/topics/sql-as-working-skill.json",
+          "responsibility": "Foundational SQL practice covering query grain, joins, aggregates, transactions, indexes, plans, and operations"
+        },
+        {
+          "path": "public/content/topics/accessibility-as-practice.json",
+          "responsibility": "Practical accessibility guide covering semantics, keyboard/focus, content alternatives, ARIA, testing, and production review"
+        },
+        {
+          "path": "public/content/topics/testing-and-quality.json",
+          "responsibility": "Expanded testing guide with boundary selection, test design, suite operations, and production signals"
+        },
+        {
+          "path": "public/content/topics/security-and-authentication.json",
+          "responsibility": "Expanded security guide with recovery, multifactor authentication, and operational controls"
+        },
+        {
+          "path": "public/content/topics/deployment-and-hosting.json",
+          "responsibility": "Expanded deployment guide with stateful releases, rollout strategy, and recovery"
+        },
+        {
+          "path": "scripts/content-utils.mjs",
+          "responsibility": "Recommended curriculum ordering for the 15-topic dependency sequence"
+        },
+        {
+          "path": "public/catalog/topic-catalog.json",
+          "responsibility": "Regenerated catalog metadata for the 15-topic curriculum"
+        },
+        {
+          "path": "public/search/topic-search.minisearch.json",
+          "responsibility": "Regenerated serialized search index for the expanded curriculum"
+        },
+        {
+          "path": "src/generated/topic-bootstrap.ts",
+          "responsibility": "Regenerated bounded homepage bootstrap for the expanded curriculum"
+        },
+        {
+          "path": "docs/topic-registry.json",
+          "responsibility": "Regenerated 15-topic inventory, source hashes, and counts"
+        },
+        {
+          "path": "changelog.md",
+          "responsibility": "Append-only Turn 16 curriculum expansion record"
+        },
+        {
+          "path": "todo.md",
+          "responsibility": "Append-only Turn 16 curriculum expansion checklist"
+        }
+      ]
     }
   ]
 }

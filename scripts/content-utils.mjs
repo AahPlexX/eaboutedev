@@ -17,6 +17,12 @@ const recommendedTopicOrder = new Map([
   ["vite", 6],
   ["apis-and-data-exchange", 7],
   ["the-seven-types-of-databases", 8],
+  ["testing-and-quality", 9],
+  ["security-and-authentication", 10],
+  ["deployment-and-hosting", 11],
+  ["form-and-input-handling", 12],
+  ["sql-as-working-skill", 13],
+  ["accessibility-as-practice", 14],
 ]);
 
 export async function readTopics() {

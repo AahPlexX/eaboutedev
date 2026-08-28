@@ -358,3 +358,31 @@ This file is append-only. Add a new dated turn section; do not rewrite or remove
 - [x] Squash-merged PR #18 into authoritative `main` at commit `632f75d17cf4f61381624f927f51b588af015fc7`.
 - [x] Deleted the `docs/governance-ssot-directory` branch (remote and local); zero open PRs and zero non-`main` branches remain.
 - [x] Confirmed the resulting `main` `Deploy GitHub Pages` workflow completed successfully for commit `632f75d17cf4f61381624f927f51b588af015fc7`.
+
+## Turn 15 — 2026-08-28
+
+**turncount: 15**
+
+### Curriculum expansion
+
+- [x] Verify the nine existing topics and identify the next non-duplicative dependency nodes.
+- [x] Add Testing and Quality, Security and Authentication, and Deployment and Hosting as complete learner-facing topic sources.
+- [x] Add real bidirectional related-topic links without hand-editing generated artifacts.
+- [x] Regenerate catalog, bootstrap, search, and registry artifacts.
+- [x] Pass content validation and generated-artifact freshness checks.
+- [ ] Run the complete `pnpm check` gate and address any failures.
+- [ ] Open the pull request into `main` without merging it.
+
+
+## Turn 16 — 2026-08-28
+
+**turncount: 16**
+
+### Curriculum quality expansion
+
+- [x] Deepen Testing and Quality, Security and Authentication, and Deployment and Hosting with additional instructional, operational, failure, and decision depth.
+- [x] Add Form and Input Handling, SQL as a Working Skill, and Accessibility as Practice as the next non-duplicative curriculum nodes.
+- [x] Update real bidirectional related links and recommended dependency order.
+- [x] Regenerate catalog, bootstrap, search, and registry artifacts.
+- [ ] Run the complete `pnpm check` gate and address any failures.
+- [ ] Reply to the PR comment with the addressing commit and keep PR #20 open and unmerged.

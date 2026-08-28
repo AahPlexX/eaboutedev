@@ -1,7 +1,7 @@
 import type { TopicCatalogEntry } from "@/types/content";
 
 export const topicBootstrap: { topicCount: number; featuredTopics: TopicCatalogEntry[] } = {
-  "topicCount": 9,
+  "topicCount": 15,
   "featuredTopics": [
     {
       "slug": "how-the-web-works",
